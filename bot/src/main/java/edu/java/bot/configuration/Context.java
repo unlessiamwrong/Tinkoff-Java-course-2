@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
     }
 
-    @Override public void run(String... args){
+    @Override public void run(String... args) {
 
         bot.setUpdatesListener(updates -> {
             for (Update update : updates) {
