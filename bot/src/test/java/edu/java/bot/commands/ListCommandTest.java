@@ -26,7 +26,7 @@ public class ListCommandTest {
         List<Link> links = listCommand.execute(user);
 
         //Assert
-        assertThat(links.size()).isEqualTo(3);
+        assertThat(links).hasSize(3);
 
     }
 }
