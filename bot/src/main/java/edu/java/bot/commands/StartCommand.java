@@ -1,15 +1,20 @@
 package edu.java.bot.commands;
 
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Message;
-import edu.java.bot.models.Users;
-import java.util.ArrayList;
+import edu.java.bot.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Component("/start")
+@Component
 @Order(1)
-public class StartCommand implements Command {
+public class StartCommand implements TelegramBotCommand {
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public StartCommand(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public String name() {
@@ -17,14 +22,11 @@ public class StartCommand implements Command {
     }
 
     @Override
-    public String startProcess(Message message, TelegramBot bot) {
-        Users.dataBase.putIfAbsent(message.chat().id(), new ArrayList<>());
-        return "You are successfully registered";
-    }
-
-    @Override
     public String description() {
         return "Registration";
     }
 
+    public void execute(Long userId) {
+        userRepository.add(userId);
+    }
 }

@@ -3,7 +3,7 @@ package edu.java.bot.configuration;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.request.SetMyCommands;
-import edu.java.bot.commands.Command;
+import edu.java.bot.commands.TelegramBotCommand;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +14,7 @@ public class BotConfig {
 
     private final ApplicationConfig applicationConfig;
 
-    @Autowired
-    public BotConfig(ApplicationConfig applicationConfig) {
+    @Autowired BotConfig(ApplicationConfig applicationConfig) {
         this.applicationConfig = applicationConfig;
     }
 
@@ -25,8 +24,8 @@ public class BotConfig {
     }
 
     @Bean
-    public SetMyCommands myCommands(List<Command> myCommands) {
-        var commandsToBot = myCommands.stream().map(Command::toApiCommand).toList();
+    public SetMyCommands myCommands(List<TelegramBotCommand> myCommands) {
+        List<BotCommand> commandsToBot = myCommands.stream().map(TelegramBotCommand::toApiCommand).toList();
         return new SetMyCommands(commandsToBot.toArray(BotCommand[]::new));
     }
 }

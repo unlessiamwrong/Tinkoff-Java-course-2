@@ -1,6 +1,7 @@
 app:
-  telegram-token: 6920656950:AAENBFbvo2aoOxLPqGh34YIxvGQHB4ZBqlU
-
+  telegram-token: ${TELEGRAM_TOKEN}
+  scheduler:
+    interval: 15
 
 spring:
   application:

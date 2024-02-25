@@ -1,18 +1,11 @@
 package edu.java.bot.commands;
 
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Message;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-@Component("/help")
+@Component
 @Order(2)
-public class HelpCommand implements Command {
-
-    @Override
-    public String startProcess(Message message, TelegramBot bot) {
-        return "";
-    }
+public class HelpCommand implements TelegramBotCommand {
 
     @Override
     public String name() {

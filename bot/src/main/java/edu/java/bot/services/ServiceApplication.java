@@ -1,45 +1,34 @@
 package edu.java.bot.services;
 
-import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
-import edu.java.bot.commands.Command;
+import edu.java.bot.commands.commandmanagers.CommandManager;
+import edu.java.bot.utilities.others.LinkManager;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@SuppressWarnings("ReturnCount")
-@Service public class ServiceApplication {
+@Service
+public class ServiceApplication {
+    private final LinkManager linkManager;
 
-    @Autowired public Map<String, Command> commands;
+    private final Map<String, CommandManager> commandManagerMap = new HashMap<>();
 
-    public String analyzeCommand(Message message, TelegramBot bot) {
-        Command currentCommand;
-        if (message.replyToMessage() != null
-            && message.replyToMessage().text().equals("Please enter your link")) {
-            currentCommand = commands.get("/track");
-            return currentCommand.startProcess(message, bot);
+    @Autowired ServiceApplication(LinkManager linkManager, List<CommandManager> commandManagerList) {
+        this.linkManager = linkManager;
+        for (CommandManager commandManager : commandManagerList) {
+            commandManagerMap.put(commandManager.commandName(), commandManager);
         }
-        if (message.replyToMessage() != null
-            && message.replyToMessage().text().startsWith("Please choose link to untrack")) {
-            currentCommand = commands.get("/untrack");
-            return currentCommand.startProcess(message, bot);
-        }
-        if (message.text().equals("/help")) {
-            String response;
-            response = "These are all available commands: \n";
-            for (String command : commands.keySet()) {
-                response += command + " - " + commands.get(command).description().toLowerCase() + "\n";
-            }
-            return response;
-        }
-        currentCommand = commands.get(message.text());
-        if (currentCommand == null) {
-            return "Unknown command, please use available one.";
-
-        }
-        return currentCommand.startProcess(message, bot);
 
     }
+
+    public void sendCommandRequest(Message message) {
+        CommandManager currentCommandManager = commandManagerMap.get(message.text());
+        if (currentCommandManager == null) {
+            linkManager.startProcess(message);
+        } else {
+            currentCommandManager.startProcess(message);
+        }
+    }
 }
-
-
