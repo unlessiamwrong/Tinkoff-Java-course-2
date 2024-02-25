@@ -1,7 +1,7 @@
 package edu.java.bot.configuration;
 
 import edu.java.bot.clients.GitHubClient;
-import edu.java.bot.clients.StackOverflowClient;
+import edu.java.bot.clients.StackOfClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -19,9 +19,9 @@ public class ClientConfiguration {
     }
 
     @Bean
-    StackOverflowClient StackOverflowClient() {
+    StackOfClient stackOfClient() {
         WebClient client = WebClient.builder().baseUrl("https://api.stackexchange.com").build();
         HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(WebClientAdapter.create(client)).build();
-        return factory.createClient(StackOverflowClient.class);
+        return factory.createClient(StackOfClient.class);
     }
 }

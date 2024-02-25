@@ -4,12 +4,9 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.commands.commandmanagers.StartCommandManager;
 import edu.java.bot.commands.commandmanagers.TrackCommandManager;
-import edu.java.bot.commands.commandmanagers.UntrackCommandManager;
-import edu.java.bot.models.Link;
-import edu.java.bot.models.User;
 import edu.java.bot.repositories.UserRepository;
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,9 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
-
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,7 +31,6 @@ public class TrackCommandManagerTest {
     @Mock
     Chat chat;
 
-
     @Autowired
     TrackCommandManager trackCommandManager;
     @Autowired
@@ -48,12 +42,11 @@ public class TrackCommandManagerTest {
     }
 
     @Test
-    void whenUserNotRegistered_SendCorrectResponse(){
+    void whenUserNotRegistered_SendCorrectResponse() {
         //Arrange
         Long chatId = 1L;
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(chatId);
-
 
         // Act
         trackCommandManager.startProcess(message);
@@ -67,14 +60,13 @@ public class TrackCommandManagerTest {
     }
 
     @Test
-    void whenUserRegistered_AndMessageTextEqualsTrackCommand_SendCorrectResponse(){
+    void whenUserRegistered_AndMessageTextEqualsTrackCommand_SendCorrectResponse() {
         //Arrange
         Long chatId = 1L;
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(chatId);
         when(message.text()).thenReturn("/track");
         userRepository.add(chatId);
-
 
         // Act
         trackCommandManager.startProcess(message);
@@ -88,14 +80,13 @@ public class TrackCommandManagerTest {
     }
 
     @Test
-    void whenUserRegistered_AndMessageTextEqualsLink_SendCorrectResponse(){
+    void whenUserRegistered_AndMessageTextEqualsLink_SendCorrectResponse() {
         //Arrange
         Long chatId = 1L;
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(chatId);
         when(message.text()).thenReturn("UrlStub");
         userRepository.add(chatId);
-
 
         // Act
         trackCommandManager.startProcess(message);
@@ -107,6 +98,5 @@ public class TrackCommandManagerTest {
         assertThat(params.get("text")).isEqualTo("Link added successfully");
 
     }
-
 
 }

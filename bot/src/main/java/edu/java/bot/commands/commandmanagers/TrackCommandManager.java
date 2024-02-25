@@ -4,23 +4,17 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.clients.GitHubClient;
-import edu.java.bot.clients.StackOverflowClient;
-import edu.java.bot.commands.TrackCommand;
 import edu.java.bot.models.Link;
 import edu.java.bot.models.User;
 import edu.java.bot.repositories.UserRepository;
 import edu.java.bot.utilities.others.UserNotRegisteredResponse;
-import edu.java.bot.utilities.parser.GitHubLinkParser;
-import edu.java.bot.utilities.parser.LinkDetector;
-import edu.java.bot.utilities.parser.StackOfLinkParser;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TrackCommandManager implements CommandManager {
 
+    private static final String COMMAND_NAME = "/track";
     private final TelegramBot bot;
     private final UserRepository userRepository;
     private final UserNotRegisteredResponse userNotRegisteredResponse;
@@ -38,7 +32,7 @@ public class TrackCommandManager implements CommandManager {
 
     @Override
     public String commandName() {
-        return "/track";
+        return COMMAND_NAME;
     }
 
     @Override
@@ -49,7 +43,7 @@ public class TrackCommandManager implements CommandManager {
         if (currentUser == null) {
             userNotRegisteredResponse.send(chatId);
         } else {
-            if (message.text().equals("/track")) {
+            if (message.text().equals(COMMAND_NAME)) {
                 bot.execute(new SendMessage(chatId, "Please enter your link").replyMarkup(new ForceReply()));
             } else {
                 currentUser.addLink(new Link(message.text(), "InfoStub"));

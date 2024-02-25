@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class UserRepository {
 
@@ -27,6 +26,7 @@ public class UserRepository {
     public void add(Long userId) {
         users.add(new User(userId));
     }
+
     public void add(User user) {
         users.add(user);
     }

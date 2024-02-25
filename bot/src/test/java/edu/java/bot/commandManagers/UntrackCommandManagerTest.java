@@ -4,12 +4,11 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.commands.UntrackCommand;
-import edu.java.bot.commands.commandmanagers.StartCommandManager;
 import edu.java.bot.commands.commandmanagers.UntrackCommandManager;
 import edu.java.bot.models.Link;
 import edu.java.bot.models.User;
 import edu.java.bot.repositories.UserRepository;
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,11 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
-
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,7 +33,6 @@ public class UntrackCommandManagerTest {
     @Mock
     Chat chat;
 
-
     @Autowired
     UntrackCommandManager untrackCommandManager;
     @Autowired
@@ -50,12 +44,11 @@ public class UntrackCommandManagerTest {
     }
 
     @Test
-    void whenUserNotRegistered_SendCorrectResponse(){
+    void whenUserNotRegistered_SendCorrectResponse() {
         //Arrange
         Long chatId = 1L;
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(chatId);
-
 
         // Act
         untrackCommandManager.startProcess(message);
@@ -69,14 +62,13 @@ public class UntrackCommandManagerTest {
     }
 
     @Test
-    void whenUserRegistered_AndLinksEmpty_SendCorrectResponse(){
+    void whenUserRegistered_AndLinksEmpty_SendCorrectResponse() {
         //Arrange
         Long chatId = 1L;
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(chatId);
         when(message.text()).thenReturn("/untrack");
         userRepository.add(chatId);
-
 
         // Act
         untrackCommandManager.startProcess(message);
@@ -85,12 +77,13 @@ public class UntrackCommandManagerTest {
         Map<String, Object> params = captor.getValue().getParameters();
 
         // Assert
-        assertThat(params.get("text")).isEqualTo("There are no links that are tracked. You can add links with command /track");
+        assertThat(params.get("text")).isEqualTo(
+            "There are no links that are tracked. You can add links with command /track");
 
     }
 
     @Test
-    void whenUserRegistered_AndLinksNotEmpty_AndMessageTextEqualsUntrackCommand_SendCorrectResponse(){
+    void whenUserRegistered_AndLinksNotEmpty_AndMessageTextEqualsUntrackCommand_SendCorrectResponse() {
         //Arrange
         Long chatId = 1L;
         User user = new User(chatId, new Link("UrlStub", "InfoStub"));
@@ -98,7 +91,6 @@ public class UntrackCommandManagerTest {
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(chatId);
         when(message.text()).thenReturn("/untrack");
-
 
         // Act
         untrackCommandManager.startProcess(message);
@@ -109,11 +101,10 @@ public class UntrackCommandManagerTest {
         // Assert
         assertThat(params.get("text").toString().startsWith("Please choose link to untrack")).isTrue();
 
-
     }
 
     @Test
-    void whenUserRegistered_AndLinksNotEmpty_AndMessageTextEqualsLink_AndLinkExist_SendCorrectResponse(){
+    void whenUserRegistered_AndLinksNotEmpty_AndMessageTextEqualsLink_AndLinkExist_SendCorrectResponse() {
         //Arrange
         Long chatId = 1L;
         User user = new User(chatId, new Link("UrlStub", "InfoStub"));
@@ -134,14 +125,13 @@ public class UntrackCommandManagerTest {
     }
 
     @Test
-    void whenUserRegistered_AndLinksNotEmpty_AndMessageTextEqualsLink_AndLinkNotExist_SendCorrectResponse(){
+    void whenUserRegistered_AndLinksNotEmpty_AndMessageTextEqualsLink_AndLinkNotExist_SendCorrectResponse() {
         //Arrange
         Long chatId = 1L;
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(chatId);
         when(message.text()).thenReturn("LinkStub");
         userRepository.add(chatId);
-
 
         // Act
         untrackCommandManager.startProcess(message);

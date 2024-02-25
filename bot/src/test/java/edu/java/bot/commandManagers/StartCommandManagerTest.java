@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.commands.commandmanagers.StartCommandManager;
 import edu.java.bot.repositories.UserRepository;
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,9 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
-
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -43,12 +42,11 @@ public class StartCommandManagerTest {
     }
 
     @Test
-    void whenUserNotRegistered_SendCorrectResponse(){
+    void whenUserNotRegistered_SendCorrectResponse() {
         //Arrange
         Long chatId = 1L;
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(chatId);
-
 
         // Act
         startCommandManager.startProcess(message);
@@ -62,13 +60,12 @@ public class StartCommandManagerTest {
     }
 
     @Test
-    void whenUserRegistered_SendCorrectResponse(){
+    void whenUserRegistered_SendCorrectResponse() {
         //Arrange
         Long chatId = 1L;
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(chatId);
         userRepository.add(chatId);
-
 
         // Act
         startCommandManager.startProcess(message);

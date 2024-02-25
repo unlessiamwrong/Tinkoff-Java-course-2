@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UntrackCommandManager implements CommandManager {
 
+    private static final String COMMAND_NAME = "/untrack";
     private final TelegramBot bot;
     private final UserRepository userRepository;
 
@@ -39,7 +40,7 @@ public class UntrackCommandManager implements CommandManager {
 
     @Override
     public String commandName() {
-        return "/untrack";
+        return COMMAND_NAME;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class UntrackCommandManager implements CommandManager {
         } else {
 
             List<Link> currentLinks = currentUser.links;
-            if (message.text().equals("/untrack")) {
+            if (message.text().equals(COMMAND_NAME)) {
                 ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup("Back");
                 for (Link link : currentLinks) {
                     keyboard.addRow(new KeyboardButton(link.url));
