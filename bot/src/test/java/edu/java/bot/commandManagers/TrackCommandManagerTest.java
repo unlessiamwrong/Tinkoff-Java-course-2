@@ -80,7 +80,47 @@ public class TrackCommandManagerTest {
     }
 
     @Test
-    void whenUserRegistered_AndMessageTextEqualsLink_SendCorrectResponse() {
+    void whenUserRegistered_AndMessageTextEqualsGitHubLink_SendCorrectResponse() {
+        //Arrange
+        Long chatId = 1L;
+        when(message.chat()).thenReturn(chat);
+        when(message.chat().id()).thenReturn(chatId);
+        when(message.text()).thenReturn("https://github.com/unlessiamwrong/Tinkoff-Java-course");
+        userRepository.add(chatId);
+
+        // Act
+        trackCommandManager.startProcess(message);
+        ArgumentCaptor<SendMessage> captor = ArgumentCaptor.forClass(SendMessage.class);
+        verify(bot).execute(captor.capture());
+        Map<String, Object> params = captor.getValue().getParameters();
+
+        // Assert
+        assertThat(params.get("text")).isEqualTo("Link added successfully");
+
+    }
+
+    @Test
+    void whenUserRegistered_AndMessageTextEqualsStackOfLink_SendCorrectResponse() {
+        //Arrange
+        Long chatId = 1L;
+        when(message.chat()).thenReturn(chat);
+        when(message.chat().id()).thenReturn(chatId);
+        when(message.text()).thenReturn("https://stackoverflow.com/questions/10462819/get-keys-from-hashmap-in-java");
+        userRepository.add(chatId);
+
+        // Act
+        trackCommandManager.startProcess(message);
+        ArgumentCaptor<SendMessage> captor = ArgumentCaptor.forClass(SendMessage.class);
+        verify(bot).execute(captor.capture());
+        Map<String, Object> params = captor.getValue().getParameters();
+
+        // Assert
+        assertThat(params.get("text")).isEqualTo("Link added successfully");
+
+    }
+
+    @Test
+    void whenUserRegistered_AndMessageTextEqualsUnsupportedLink_SendCorrectResponse() {
         //Arrange
         Long chatId = 1L;
         when(message.chat()).thenReturn(chat);
@@ -95,7 +135,7 @@ public class TrackCommandManagerTest {
         Map<String, Object> params = captor.getValue().getParameters();
 
         // Assert
-        assertThat(params.get("text")).isEqualTo("Link added successfully");
+        assertThat(params.get("text")).isEqualTo("Unsupported link. Github and StackOverflow are only allowed.");
 
     }
 
