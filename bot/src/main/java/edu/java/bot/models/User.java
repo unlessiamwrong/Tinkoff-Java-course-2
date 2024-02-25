@@ -26,4 +26,13 @@ public class User {
     public void removeLink(Link link) {
         links.remove(link);
     }
+
+    public boolean checkLink(Link possibleLink) {
+        for (Link link : links) {
+            if (link.url.equals(possibleLink.url)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
