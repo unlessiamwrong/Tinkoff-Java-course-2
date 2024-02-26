@@ -3,8 +3,6 @@ package edu.java.bot.commands.commandmanagers;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.request.ForceReply;
-import com.pengrad.telegrambot.model.request.KeyboardButton;
-import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.commands.UntrackCommand;
 import edu.java.bot.models.Link;
@@ -50,39 +48,43 @@ public class UntrackCommandManager implements CommandManager {
         if (currentUser == null) {
             userNotRegisteredResponse.send(chatId);
         } else {
+            analyzeRequest(currentUser, chatId, message);
+        }
+    }
 
-            List<Link> currentLinks = currentUser.links;
-            if (message.text().equals(COMMAND_NAME)) {
-                ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup("Back");
-                for (Link link : currentLinks) {
-                    keyboard.addRow(new KeyboardButton(link.url));
-                }
+    private void analyzeRequest(User currentUser, Long chatId, Message message) {
+        List<Link> currentLinks = currentUser.links;
+        if (message.text().equals(COMMAND_NAME)) {
+            reply(chatId, currentLinks);
+        } else {
+            untrack(currentUser, chatId, currentLinks, message.text());
+        }
+    }
 
-                if (!currentLinks.isEmpty()) {
-                    String responseText = "Please choose link to untrack \n \n" + "Your current tracked links: \n";
-                    int orderCount = 1;
-                    for (Link link : currentLinks) {
-                        responseText += orderCount + ". " + link.url + "\n";
-                        orderCount++;
-                    }
-                    bot.execute(new SendMessage(chatId, responseText).replyMarkup(new ForceReply()));
-
-                } else {
-                    bot.execute(new SendMessage(
-                        chatId,
-                        "There are no links that are tracked. You can add links with command /track"
-                    ));
-                }
-
-            } else {
-                boolean executionIsSuccessful = untrackCommand.execute(currentUser, message.text());
-                if (executionIsSuccessful) {
-                    bot.execute(new SendMessage(chatId, "Link untracked successfully"));
-                } else {
-                    bot.execute(new SendMessage(chatId, "There is no such link. Please choose from current /list"));
-                }
-
+    private void reply(Long chatId, List<Link> currentLinks) {
+        if (!currentLinks.isEmpty()) {
+            String responseText = "Please choose link to untrack \n \n" + "Your current tracked links: \n";
+            int orderCount = 1;
+            for (Link link : currentLinks) {
+                responseText += orderCount + ". " + link.url + "\n";
+                orderCount++;
             }
+            bot.execute(new SendMessage(chatId, responseText).replyMarkup(new ForceReply()));
+
+        } else {
+            bot.execute(new SendMessage(
+                chatId,
+                "There are no links that are tracked. You can add links with command /track"
+            ));
+        }
+    }
+
+    private void untrack(User currentUser, Long chatId, List<Link> currentLinks, String linkToUntrack) {
+        boolean executionIsSuccessful = untrackCommand.execute(currentUser, linkToUntrack);
+        if (executionIsSuccessful) {
+            bot.execute(new SendMessage(chatId, "Link untracked successfully"));
+        } else {
+            bot.execute(new SendMessage(chatId, "There is no such link. Please choose from current /list"));
         }
     }
 }
