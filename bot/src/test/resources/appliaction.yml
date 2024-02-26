@@ -2,8 +2,8 @@ app:
   telegram-token: ${TELEGRAM_TOKEN}
   scheduler:
     interval: 15
-  github_base_url: https://api.github.com
-  stackof_base_url: https://api.stackexchange.com
+  github_base_url: localhost
+  stackof_base_url: localhost
 
 spring:
   application:
@@ -16,4 +16,3 @@ server:
 
 logging:
   config: classpath:log4j2-plain.xml
-

@@ -2,37 +2,27 @@ package edu.java.bot.clients;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import org.junit.After;
-import org.junit.Before;
+import edu.java.bot.BotApplication;
 import org.junit.Test;
-import static org.mockito.Mockito.when;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(classes = BotApplication.class)
 public class GitHubClientTest {
 
+    @Autowired
     GitHubClient gitHubClient;
-    private WireMockServer wireMockServer;
-
-    @Before
-    public void setUp() {
-        wireMockServer = new WireMockServer();
-        wireMockServer.start();
-        WireMock.configureFor("localhost", wireMockServer.port());
-    }
 
     @Test
     public void testGitHubClient() {
-
-        when(gitHubClient.getRepository("testOwner", "testRepo")).thenReturn("Mocked Response");
-
-        WireMock.stubFor(WireMock.get(WireMock.urlEqualTo("/repos/testOwner/testRepo"))
+        WireMockServer wireMockServer = new WireMockServer();
+        wireMockServer.start();
+        WireMock.stubFor(WireMock.get(WireMock.urlEqualTo("/repos/test/test"))
             .willReturn(WireMock.aResponse().withBody("Test Body")));
 
-        String response = gitHubClient.getRepository("testOwner", "testRepo");
+        String response = gitHubClient.getRepository("test", "test");
+        System.out.println(response);
 
     }
 
-    @After
-    public void tearDown() {
-        wireMockServer.stop();
-    }
 }

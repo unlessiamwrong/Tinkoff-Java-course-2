@@ -57,13 +57,13 @@ public class UntrackCommandManager implements CommandManager {
         if (message.text().equals(COMMAND_NAME)) {
             reply(chatId, currentLinks);
         } else {
-            untrack(currentUser, chatId, currentLinks, message.text());
+            untrack(currentUser, chatId, message.text());
         }
     }
 
     private void reply(Long chatId, List<Link> currentLinks) {
         if (!currentLinks.isEmpty()) {
-            String responseText = "Please choose link to untrack \n \n" + "Your current tracked links: \n";
+            String responseText = "Please choose link to untrack \n" + "Your current tracked links: \n";
             int orderCount = 1;
             for (Link link : currentLinks) {
                 responseText += orderCount + ". " + link.url + "\n";
@@ -79,7 +79,7 @@ public class UntrackCommandManager implements CommandManager {
         }
     }
 
-    private void untrack(User currentUser, Long chatId, List<Link> currentLinks, String linkToUntrack) {
+    private void untrack(User currentUser, Long chatId, String linkToUntrack) {
         boolean executionIsSuccessful = untrackCommand.execute(currentUser, linkToUntrack);
         if (executionIsSuccessful) {
             bot.execute(new SendMessage(chatId, "Link untracked successfully"));
