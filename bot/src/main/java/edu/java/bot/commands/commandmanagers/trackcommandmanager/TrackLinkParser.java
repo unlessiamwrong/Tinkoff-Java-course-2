@@ -21,18 +21,18 @@ public class TrackLinkParser {
         this.stackOfClient = stackOfClient;
     }
 
-    public Link execute(String currentLinkUrl) {
-        if (currentLinkUrl.contains("github.com")) {
+    public Link execute(String linkUrl) {
+        if (linkUrl.contains("github.com")) {
             GitHubLinkParser gitHubParser = new GitHubLinkParser();
-            String[] gitHubData = gitHubParser.parse(currentLinkUrl);
+            String[] gitHubData = gitHubParser.parse(linkUrl);
             String json = gitHubClient.getRepository(gitHubData[0], gitHubData[1]);
-            return new Link(currentLinkUrl, json);
+            return new Link(linkUrl, json);
         }
-        if (currentLinkUrl.contains("stackoverflow.com")) {
+        if (linkUrl.contains("stackoverflow.com")) {
             StackOfLinkParser stackParser = new StackOfLinkParser();
-            String questionId = stackParser.parse(currentLinkUrl);
+            String questionId = stackParser.parse(linkUrl);
             String json = stackOfClient.getQuestion(questionId, "stackoverflow");
-            return new Link(currentLinkUrl, json);
+            return new Link(linkUrl, json);
         }
         return null;
 
