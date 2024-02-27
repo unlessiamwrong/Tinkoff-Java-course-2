@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.commands.commandmanagers.UntrackCommandManager;
+import edu.java.bot.commands.commandmanagers.untrackcommandmanager.UntrackCommandManager;
 import edu.java.bot.models.Link;
 import edu.java.bot.models.User;
 import edu.java.bot.repositories.UserRepository;

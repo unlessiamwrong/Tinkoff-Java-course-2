@@ -2,8 +2,8 @@ app:
   telegram-token: ${TELEGRAM_TOKEN}
   scheduler:
     interval: 15
-  github_base_url: localhost
-  stackof_base_url: localhost
+  github_base_url: http://localhost:8080/
+  stackof_base_url: http://localhost:8080/
 
 spring:
   application:

@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.commands.commandmanagers.TrackCommandManager;
+import edu.java.bot.commands.commandmanagers.trackcommandmanager.TrackCommandManager;
 import edu.java.bot.repositories.UserRepository;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
