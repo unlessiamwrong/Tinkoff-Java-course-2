@@ -14,9 +14,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 public class StackOfClientTest {
 
-    public WireMockServer wireMockServer;
     @Autowired
     StackOfClient stackOfClient;
+    public WireMockServer wireMockServer;
+
 
     @BeforeEach
     public void setUp() {

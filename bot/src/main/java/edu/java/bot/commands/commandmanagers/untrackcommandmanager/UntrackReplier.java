@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UntrackReplier {
 
-    TelegramBot bot;
+    private final TelegramBot bot;
 
     @Autowired
     public UntrackReplier(TelegramBot bot) {

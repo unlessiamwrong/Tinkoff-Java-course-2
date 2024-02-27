@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-@Component public class Context implements CommandLineRunner {
+@Component
+public class Context implements CommandLineRunner {
     private final TelegramBot bot;
     private final ServiceApplication serviceApplication;
 
-    @Autowired Context(BotConfig botConfig, ServiceApplication serviceApplication, SetMyCommands botCommands) {
+    @Autowired
+    Context(BotConfig botConfig, ServiceApplication serviceApplication, SetMyCommands botCommands) {
         this.serviceApplication = serviceApplication;
         this.bot = botConfig.buildBot();
         this.bot.execute(botCommands);

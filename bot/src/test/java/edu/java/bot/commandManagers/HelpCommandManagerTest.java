@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.commands.commandmanagers.HelpCommandManager;
 import java.util.Map;
+import edu.java.bot.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -30,14 +31,35 @@ public class HelpCommandManagerTest {
     Chat chat;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     HelpCommandManager helpCommandManager;
 
     @Test
-    void whenUseHelpCommand_SendAllCommands() {
+    void whenUserNotRegistered_SendAllCommands() {
         //Arrange
         Long chatId = 1L;
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(chatId);
+
+        // Act
+        helpCommandManager.startProcess(message);
+        ArgumentCaptor<SendMessage> captor = ArgumentCaptor.forClass(SendMessage.class);
+        verify(bot).execute(captor.capture());
+        Map<String, Object> params = captor.getValue().getParameters();
+
+        // Assert
+        assertThat(params.get("text").toString().startsWith("These are all available commands:")).isTrue();
+
+    }
+    @Test
+    void whenUserRegistered_SendAllCommands() {
+        //Arrange
+        Long chatId = 1L;
+        when(message.chat()).thenReturn(chat);
+        when(message.chat().id()).thenReturn(chatId);
+        userRepository.add(chatId);
 
         // Act
         helpCommandManager.startProcess(message);

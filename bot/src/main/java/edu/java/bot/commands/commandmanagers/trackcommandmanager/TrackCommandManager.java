@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings("MissingSwitchDefault")
 public class TrackCommandManager implements CommandManager {
 
-    private static final String COMMAND_NAME = "/track";
     private final UserRepository userRepository;
     private final UserNotRegisteredResponse userNotRegisteredResponse;
 
@@ -30,7 +29,7 @@ public class TrackCommandManager implements CommandManager {
 
     @Override
     public String commandName() {
-        return COMMAND_NAME;
+        return "/track";
     }
 
     @Override
