@@ -31,13 +31,13 @@ public class TrackExecutor {
         } else {
             boolean linkExists = currentUser.checkLink(link);
             if (linkExists) {
-                trackCommand.execute(currentUser, link);
                 bot.execute(new SendMessage(
                     chatId,
                     "Link is already in track list. Check your current list using /list command"
                 ));
 
             } else {
+                trackCommand.execute(currentUser, link);
                 bot.execute(new SendMessage(chatId, "Link added successfully"));
             }
 
