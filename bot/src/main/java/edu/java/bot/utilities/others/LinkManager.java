@@ -16,8 +16,7 @@ public class LinkManager {
     private final Map<String, CommandManager> commandManagerMap = new HashMap<>();
     private final TelegramBot bot;
 
-    @Autowired
-    LinkManager(TelegramBot bot, List<CommandManager> commandManagerList) {
+    @Autowired LinkManager(TelegramBot bot, List<CommandManager> commandManagerList) {
         this.bot = bot;
         for (CommandManager commandManager : commandManagerList) {
             commandManagerMap.put(commandManager.commandName(), commandManager);

@@ -1,26 +1,22 @@
 package edu.java.bot.commands;
 
+import edu.java.bot.AbstractIntegrationTest;
+import edu.java.bot.models.GitHubResponseDTO;
 import edu.java.bot.models.Link;
 import edu.java.bot.models.User;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-public class ListCommandTest {
-
-    @Autowired
-    ListCommand listCommand;
+public class ListCommandTest extends AbstractIntegrationTest {
 
     @Test
     public void whenUseListCommand_ReturnUserLinks() {
         //Arrange
         User user = new User(1L);
-        user.addLink(new Link("UrlStubOne", "InfoStubOne"));
-        user.addLink(new Link("UrlStubTwo", "InfoStubTwo"));
-        user.addLink(new Link("UrlStubThree", "InfoStubThree"));
+        user.addLink(new Link("UrlStubOne", new GitHubResponseDTO()));
+        user.addLink(new Link("UrlStubTwo", new GitHubResponseDTO()));
+        user.addLink(new Link("UrlStubThree", new GitHubResponseDTO()));
 
         //Act
         List<Link> links = listCommand.execute(user);

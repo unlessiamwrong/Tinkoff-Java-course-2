@@ -1,11 +1,9 @@
 package edu.java.bot.commandManagers;
 
-import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.commands.commandmanagers.trackcommandmanager.TrackCommandManager;
-import edu.java.bot.repositories.UserRepository;
+import edu.java.bot.AbstractIntegrationTest;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -13,28 +11,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class TrackCommandManagerTest {
-
-    @MockBean
-    TelegramBot bot;
+public class TrackCommandManagerTest extends AbstractIntegrationTest {
     @Mock
     Message message;
     @Mock
     Chat chat;
-
-    @Autowired
-    TrackCommandManager trackCommandManager;
-    @Autowired
-    UserRepository userRepository;
 
     @AfterEach
     void afterEach() {

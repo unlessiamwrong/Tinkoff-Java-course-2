@@ -14,8 +14,7 @@ public class BotConfig {
 
     private final ApplicationConfig applicationConfig;
 
-    @Autowired
-    BotConfig(ApplicationConfig applicationConfig) {
+    @Autowired BotConfig(ApplicationConfig applicationConfig) {
         this.applicationConfig = applicationConfig;
     }
 
