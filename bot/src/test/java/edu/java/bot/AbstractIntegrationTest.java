@@ -65,5 +65,6 @@ public abstract class AbstractIntegrationTest {
     @AfterEach
     public void reset() {
         wireMockServer.resetAll();
+        userRepository.users.clear();
     }
 }

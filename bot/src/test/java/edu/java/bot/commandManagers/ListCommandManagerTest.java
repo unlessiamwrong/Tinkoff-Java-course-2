@@ -8,7 +8,6 @@ import edu.java.bot.models.GitHubResponseDTO;
 import edu.java.bot.models.Link;
 import edu.java.bot.models.User;
 import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -25,11 +24,6 @@ public class ListCommandManagerTest extends AbstractIntegrationTest {
     Message message;
     @Mock
     Chat chat;
-
-    @AfterEach
-    void afterEach() {
-        userRepository.users.clear();
-    }
 
     @Test
     void whenUserNotRegistered_SendCorrectResponse() {
