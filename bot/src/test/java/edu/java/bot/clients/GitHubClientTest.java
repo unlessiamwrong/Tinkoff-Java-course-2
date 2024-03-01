@@ -2,7 +2,7 @@ package edu.java.bot.clients;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import edu.java.bot.AbstractIntegrationTest;
-import edu.java.bot.models.GitHubResponseDTO;
+import edu.java.bot.models.responses.GitHubRepositoryResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -29,7 +29,7 @@ public class GitHubClientTest extends AbstractIntegrationTest {
                 .withBody(jsonResponse.toString())));
 
         //Act
-        GitHubResponseDTO response = gitHubClient.getRepository("test", "test");
+        GitHubRepositoryResponse response = gitHubClient.getRepository("test", "test");
 
         //Assert
         assertThat(response).isNotNull();

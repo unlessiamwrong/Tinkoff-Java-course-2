@@ -4,9 +4,9 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.AbstractIntegrationTest;
-import edu.java.bot.models.GitHubResponseDTO;
-import edu.java.bot.models.Link;
-import edu.java.bot.models.User;
+import edu.java.bot.models.responses.GitHubRepositoryResponse;
+import edu.java.bot.repositories.Link;
+import edu.java.bot.repositories.User;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -74,7 +74,7 @@ public class UntrackCommandManagerTest extends AbstractIntegrationTest {
     void whenUserRegistered_AndLinksNotEmpty_AndMessageTextEqualsUntrackCommand_SendCorrectResponse() {
         //Arrange
         Long chatId = 1L;
-        User user = new User(chatId, new Link("UrlStub", new GitHubResponseDTO()));
+        User user = new User(chatId, new Link("UrlStub", new GitHubRepositoryResponse()));
         userRepository.add(user);
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(chatId);
@@ -95,7 +95,7 @@ public class UntrackCommandManagerTest extends AbstractIntegrationTest {
     void whenUserRegistered_AndLinksNotEmpty_AndMessageTextEqualsLink_AndLinkExist_SendCorrectResponse() {
         //Arrange
         Long chatId = 1L;
-        User user = new User(chatId, new Link("UrlStub", new GitHubResponseDTO()));
+        User user = new User(chatId, new Link("UrlStub", new GitHubRepositoryResponse()));
         userRepository.add(user);
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(chatId);

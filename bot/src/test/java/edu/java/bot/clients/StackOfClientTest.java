@@ -2,7 +2,7 @@ package edu.java.bot.clients;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import edu.java.bot.AbstractIntegrationTest;
-import edu.java.bot.models.StackOfResponseDTO;
+import edu.java.bot.models.responses.StackOfQuestionResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -30,7 +30,7 @@ public class StackOfClientTest extends AbstractIntegrationTest {
                 .withBody(jsonResponse.toString())));
 
         //Act
-        StackOfResponseDTO response = stackOfClient.getQuestion("test", "stackoverflow");
+        StackOfQuestionResponse response = stackOfClient.getQuestion("test", "stackoverflow");
 
         //Assert
         assertThat(response).isNotNull();

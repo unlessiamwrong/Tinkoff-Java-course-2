@@ -1,6 +1,7 @@
 package edu.java.bot.configuration;
 
 import edu.java.bot.clients.GitHubClient;
+import edu.java.bot.clients.ScrapperClient;
 import edu.java.bot.clients.StackOfClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,5 +25,12 @@ public class ClientConfiguration {
         WebClient client = WebClient.builder().baseUrl(stackOfBaseUrl).build();
         HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(WebClientAdapter.create(client)).build();
         return factory.createClient(StackOfClient.class);
+    }
+
+    @Bean
+    ScrapperClient scrapperClient(@Value("${app.scrapper_base_url}") String scrapperClientBaseUrl) {
+        WebClient client = WebClient.builder().baseUrl(scrapperClientBaseUrl).build();
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(WebClientAdapter.create(client)).build();
+        return factory.createClient(ScrapperClient.class);
     }
 }

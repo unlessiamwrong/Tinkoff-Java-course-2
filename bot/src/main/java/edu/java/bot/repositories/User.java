@@ -1,4 +1,4 @@
-package edu.java.bot.models;
+package edu.java.bot.repositories;
 
 import java.util.ArrayList;
 import java.util.List;

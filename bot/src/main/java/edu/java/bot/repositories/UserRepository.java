@@ -1,6 +1,5 @@
 package edu.java.bot.repositories;
 
-import edu.java.bot.models.User;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;

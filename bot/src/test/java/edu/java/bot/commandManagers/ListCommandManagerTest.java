@@ -4,9 +4,9 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.AbstractIntegrationTest;
-import edu.java.bot.models.GitHubResponseDTO;
-import edu.java.bot.models.Link;
-import edu.java.bot.models.User;
+import edu.java.bot.models.responses.GitHubRepositoryResponse;
+import edu.java.bot.repositories.Link;
+import edu.java.bot.repositories.User;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +47,7 @@ public class ListCommandManagerTest extends AbstractIntegrationTest {
     void whenUserRegistered_AndLinksNotEmpty_SendAllLinks() {
         //Arrange
         Long chatId = 1L;
-        User user = new User(chatId, new Link("urlStub", new GitHubResponseDTO()));
+        User user = new User(chatId, new Link("urlStub", new GitHubRepositoryResponse()));
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(chatId);
         userRepository.add(user);

@@ -4,8 +4,8 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.commands.TrackCommand;
-import edu.java.bot.models.Link;
-import edu.java.bot.models.User;
+import edu.java.bot.repositories.Link;
+import edu.java.bot.repositories.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

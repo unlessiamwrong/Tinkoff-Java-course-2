@@ -2,7 +2,7 @@ package edu.java.bot.commands.commandmanagers.trackcommandmanager;
 
 import com.pengrad.telegrambot.model.Message;
 import edu.java.bot.commands.commandmanagers.CommandManager;
-import edu.java.bot.models.User;
+import edu.java.bot.repositories.User;
 import edu.java.bot.repositories.UserRepository;
 import edu.java.bot.utilities.others.UserNotRegisteredResponse;
 import org.springframework.beans.factory.annotation.Autowired;

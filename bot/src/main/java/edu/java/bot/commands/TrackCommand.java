@@ -1,7 +1,7 @@
 package edu.java.bot.commands;
 
-import edu.java.bot.models.Link;
-import edu.java.bot.models.User;
+import edu.java.bot.repositories.Link;
+import edu.java.bot.repositories.User;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 

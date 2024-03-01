@@ -3,7 +3,7 @@ package edu.java.bot.commands.commandmanagers.untrackcommandmanager;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.commands.UntrackCommand;
-import edu.java.bot.models.User;
+import edu.java.bot.repositories.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

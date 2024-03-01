@@ -4,6 +4,7 @@ app:
     interval: 15000
   github_base_url: https://api.github.com
   stackof_base_url: https://api.stackexchange.com
+  scrapper_base_url: http://localhost/8090/
 
 spring:
   application:
@@ -12,8 +13,11 @@ spring:
     time-zone: UTC
 
 server:
-  port: 8090
+  port: 8080
 
 logging:
   config: classpath:log4j2-plain.xml
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
