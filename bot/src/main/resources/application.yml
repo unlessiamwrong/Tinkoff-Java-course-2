@@ -4,7 +4,6 @@ app:
     interval: 15000
   github_base_url: https://api.github.com
   stackof_base_url: https://api.stackexchange.com
-  scrapper_base_url: http://localhost/8090/
 
 spring:
   application:
