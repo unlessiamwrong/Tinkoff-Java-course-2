@@ -1,10 +1,7 @@
-package edu.java.bot.commands.commandmanagers;
+package edu.java.bot.commands.commandmanagers.trackcommandmanager;
 
-import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
-import com.pengrad.telegrambot.model.request.ForceReply;
-import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.models.Link;
+import edu.java.bot.commands.commandmanagers.CommandManager;
 import edu.java.bot.models.User;
 import edu.java.bot.repositories.UserRepository;
 import edu.java.bot.utilities.others.UserNotRegisteredResponse;
@@ -12,27 +9,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@SuppressWarnings("MissingSwitchDefault")
 public class TrackCommandManager implements CommandManager {
 
-    private static final String COMMAND_NAME = "/track";
-    private final TelegramBot bot;
     private final UserRepository userRepository;
     private final UserNotRegisteredResponse userNotRegisteredResponse;
 
+    private final TrackRequestAnalyzer trackRequestAnalyzer;
+
     @Autowired TrackCommandManager(
-        TelegramBot bot,
         UserRepository userRepository,
-        UserNotRegisteredResponse userNotRegisteredResponse
+        UserNotRegisteredResponse userNotRegisteredResponse,
+        TrackRequestAnalyzer trackRequestAnalyzer
     ) {
-        this.bot = bot;
         this.userRepository = userRepository;
         this.userNotRegisteredResponse = userNotRegisteredResponse;
-
+        this.trackRequestAnalyzer = trackRequestAnalyzer;
     }
 
     @Override
     public String commandName() {
-        return COMMAND_NAME;
+        return "/track";
     }
 
     @Override
@@ -43,12 +40,7 @@ public class TrackCommandManager implements CommandManager {
         if (currentUser == null) {
             userNotRegisteredResponse.send(chatId);
         } else {
-            if (message.text().equals(COMMAND_NAME)) {
-                bot.execute(new SendMessage(chatId, "Please enter your link").replyMarkup(new ForceReply()));
-            } else {
-                currentUser.addLink(new Link(message.text(), "InfoStub"));
-                bot.execute(new SendMessage(chatId, "Link added successfully"));
-            }
+            trackRequestAnalyzer.execute(currentUser, chatId, message);
         }
     }
 }

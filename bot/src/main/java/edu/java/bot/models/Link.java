@@ -3,15 +3,19 @@ package edu.java.bot.models;
 public class Link {
 
     public final String url;
-    public String info;
 
-    public Link(String url, String json) {
+    public GitHubResponseDTO gitHubInfo;
+    public StackOfResponseDTO stackOfInfo;
+
+    public Link(String url, GitHubResponseDTO json) {
         this.url = url;
-        this.info = json;
+        this.gitHubInfo = json;
 
     }
 
-    public void updateInfo(String newInfo) {
-        info = newInfo;
+    public Link(String url, StackOfResponseDTO json) {
+        this.url = url;
+        this.stackOfInfo = json;
+
     }
 }

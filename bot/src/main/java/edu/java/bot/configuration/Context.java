@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-@Component public class Context implements CommandLineRunner {
+@Component
+public class Context implements CommandLineRunner {
     private final TelegramBot bot;
     private final ServiceApplication serviceApplication;
 
