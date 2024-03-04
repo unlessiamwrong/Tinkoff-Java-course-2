@@ -4,6 +4,7 @@ import edu.java.bot.models.requests.AddLinkRequest;
 import edu.java.bot.models.requests.RemoveLinkRequest;
 import edu.java.bot.models.responses.LinkResponse;
 import edu.java.bot.models.responses.ListLinksResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,9 +25,9 @@ public interface ScrapperClient {
     ListLinksResponse getLinks(@RequestHeader long tgChatId);
 
     @PostExchange(value = "/links", accept = MediaType.APPLICATION_JSON_VALUE)
-    LinkResponse postLink(@RequestHeader long tgChatId, @RequestBody AddLinkRequest addLinkRequest);
+    LinkResponse postLink(@RequestHeader long tgChatId, @RequestBody @Valid AddLinkRequest addLinkRequest);
 
     @DeleteExchange(value = "/links", accept = MediaType.APPLICATION_JSON_VALUE)
-    LinkResponse deleteLink(@RequestHeader long tgChatId, @RequestBody RemoveLinkRequest removeLinkRequest);
+    LinkResponse deleteLink(@RequestHeader long tgChatId, @RequestBody @Valid RemoveLinkRequest removeLinkRequest);
 
 }
