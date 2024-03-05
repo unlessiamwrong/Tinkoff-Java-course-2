@@ -1,7 +1,7 @@
 package edu.java.bot.repositories;
 
-import edu.java.bot.models.responses.GitHubRepositoryResponse;
-import edu.java.bot.models.responses.StackOfQuestionResponse;
+import edu.java.bot.dto.responses.GitHubRepositoryResponse;
+import edu.java.bot.dto.responses.StackOfQuestionResponse;
 
 public class Link {
 

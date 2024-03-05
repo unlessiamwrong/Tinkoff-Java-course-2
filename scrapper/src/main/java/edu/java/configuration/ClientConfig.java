@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.client.support.WebClientAdapter
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @Configuration
-public class ClientConfiguration {
+public class ClientConfig {
 
     @Bean
     BotClient botClient(@Value("${app.bot_base_url}") String botClientBaseUrl) {

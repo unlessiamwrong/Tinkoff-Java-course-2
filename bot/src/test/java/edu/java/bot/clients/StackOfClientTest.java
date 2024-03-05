@@ -2,7 +2,7 @@ package edu.java.bot.clients;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import edu.java.bot.AbstractIntegrationTest;
-import edu.java.bot.models.responses.StackOfQuestionResponse;
+import edu.java.bot.dto.responses.StackOfQuestionResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -13,10 +13,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
-public class StackOfClientTest extends AbstractIntegrationTest {
+class StackOfClientTest extends AbstractIntegrationTest {
 
     @Test
-    public void when_UseGET_ToStackOfQuestion_ReturnMockBody() {
+    void when_UseGET_ToStackOfQuestion_ReturnMockBody() {
         //Arrange
 
         ObjectNode jsonResponse = JsonNodeFactory.instance.objectNode();

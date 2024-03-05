@@ -1,6 +1,6 @@
 package edu.java.bot.controllers;
 
-import edu.java.bot.models.requests.LinkUpdateRequest;
+import edu.java.bot.dto.requests.LinkUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;

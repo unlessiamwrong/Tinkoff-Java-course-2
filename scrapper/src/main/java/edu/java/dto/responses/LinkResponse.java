@@ -1,4 +1,4 @@
-package edu.java.models.responses;
+package edu.java.dto.responses;
 
 import java.net.URI;
 

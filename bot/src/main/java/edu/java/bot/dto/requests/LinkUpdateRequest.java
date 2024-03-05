@@ -1,4 +1,4 @@
-package edu.java.bot.models.requests;
+package edu.java.bot.dto.requests;
 
 import java.net.URI;
 import java.util.List;
