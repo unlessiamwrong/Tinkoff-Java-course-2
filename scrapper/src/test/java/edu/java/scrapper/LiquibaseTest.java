@@ -7,10 +7,10 @@ import java.sql.Statement;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LiquibaseTest extends IntegrationTest {
+class LiquibaseTest extends IntegrationTest {
 
     @Test
-    public void whenUse_Insertion_AddRowToDataBase() throws SQLException {
+    void whenUse_Insertion_AddRowToDataBase() throws SQLException {
         //Arrange
         Connection connection =
             DriverManager.getConnection(POSTGRES.getJdbcUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());

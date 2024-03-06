@@ -40,7 +40,7 @@ public abstract class IntegrationTest {
             DriverManager.getConnection(POSTGRES.getJdbcUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
         Database database =
             DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
-        Liquibase liquibase = new Liquibase("/master.xml", new ClassLoaderResourceAccessor(), database);
+        Liquibase liquibase = new Liquibase("/master.yml", new ClassLoaderResourceAccessor(), database);
         liquibase.update(new Contexts(), new LabelExpression());
     }
 
