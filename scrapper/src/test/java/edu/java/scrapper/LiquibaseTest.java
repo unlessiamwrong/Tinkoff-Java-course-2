@@ -14,7 +14,7 @@ class LiquibaseTest extends IntegrationTest {
         //Arrange
         Connection connection =
             DriverManager.getConnection(POSTGRES.getJdbcUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
-        String query = "INSERT INTO users (name, created_at, created_by) VALUES ('V', '11.11.1111' , 'V')";
+        String query = "INSERT INTO users (name) VALUES ('V')";
         Statement statement = connection.createStatement();
 
         //Act
