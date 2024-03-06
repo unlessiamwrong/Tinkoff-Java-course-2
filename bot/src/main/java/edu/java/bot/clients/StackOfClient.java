@@ -1,6 +1,6 @@
 package edu.java.bot.clients;
 
-import edu.java.bot.models.responses.StackOfQuestionResponse;
+import edu.java.bot.dto.responses.StackOfQuestionResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;

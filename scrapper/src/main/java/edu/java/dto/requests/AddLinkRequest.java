@@ -1,6 +1,6 @@
-package edu.java.bot.models.requests;
+package edu.java.dto.requests;
 
-import edu.java.bot.models.responses.LinkResponse;
+import edu.java.dto.responses.LinkResponse;
 import java.util.List;
 
 public record AddLinkRequest(

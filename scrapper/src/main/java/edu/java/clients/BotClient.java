@@ -1,6 +1,6 @@
 package edu.java.clients;
 
-import edu.java.models.requests.LinkUpdateRequest;
+import edu.java.dto.requests.LinkUpdateRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,4 +1,4 @@
-package edu.java.bot.models.responses;
+package edu.java.dto.responses;
 
 import java.util.List;
 

@@ -1,12 +1,11 @@
-package edu.java.bot.models.responses;
+package edu.java.dto.responses;
 
 import java.util.List;
 
 public record ApiErrorResponse(
-    String description,
     String code,
     String exceptionName,
+    String exceptionMessage,
     List<String> stacktrace
-
 ) {
 }
