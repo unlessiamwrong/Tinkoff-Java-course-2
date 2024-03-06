@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: v1-create-users.sql
+  - include:
+      file: v1-create-links.sql
+  - include:
+      file: v1-create-user_links.sql
