@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.support.WebClientAdapter
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @Configuration
-public class ClientConfiguration {
+public class ClientConfig {
 
     @Bean
     GitHubClient gitHubClient(@Value("${app.github_base_url}") String gitHubBaseUrl) {

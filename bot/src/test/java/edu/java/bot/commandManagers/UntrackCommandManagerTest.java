@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.AbstractIntegrationTest;
-import edu.java.bot.models.responses.GitHubRepositoryResponse;
+import edu.java.bot.dto.responses.GitHubRepositoryResponse;
 import edu.java.bot.repositories.Link;
 import edu.java.bot.repositories.User;
 import java.util.Map;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UntrackCommandManagerTest extends AbstractIntegrationTest {
+class UntrackCommandManagerTest extends AbstractIntegrationTest {
 
     @Mock
     Message message;
@@ -45,7 +45,7 @@ public class UntrackCommandManagerTest extends AbstractIntegrationTest {
         Map<String, Object> params = captor.getValue().getParameters();
 
         // Assert
-        assertThat(params.get("text")).isEqualTo("You are not registered. Please use command /start");
+        assertThat(params).containsEntry("text", "You are not registered. Please use command /start");
 
     }
 
@@ -65,9 +65,10 @@ public class UntrackCommandManagerTest extends AbstractIntegrationTest {
         Map<String, Object> params = captor.getValue().getParameters();
 
         // Assert
-        assertThat(params.get("text")).isEqualTo(
-            "There are no links that are tracked. You can add links with command /track");
-
+        assertThat(params).containsEntry(
+            "text",
+            "There are no links that are tracked. You can add links with command /track"
+        );
     }
 
     @Test
@@ -87,8 +88,7 @@ public class UntrackCommandManagerTest extends AbstractIntegrationTest {
         Map<String, Object> params = captor.getValue().getParameters();
 
         // Assert
-        assertThat(params.get("text").toString().startsWith("Please choose link to untrack")).isTrue();
-
+        assertThat(params.get("text").toString()).startsWith("Please choose link to untrack");
     }
 
     @Test
@@ -108,8 +108,8 @@ public class UntrackCommandManagerTest extends AbstractIntegrationTest {
         Map<String, Object> params = captor.getValue().getParameters();
 
         // Assert
-        assertThat(params.get("text")).isEqualTo("Link untracked successfully");
 
+        assertThat(params).containsEntry("text", "Link untracked successfully");
     }
 
     @Test
@@ -128,8 +128,7 @@ public class UntrackCommandManagerTest extends AbstractIntegrationTest {
         Map<String, Object> params = captor.getValue().getParameters();
 
         // Assert
-        assertThat(params.get("text")).isEqualTo("There is no such link. Please choose from current /list");
-
+        assertThat(params).containsEntry("text", "There is no such link. Please choose from current /list");
     }
 
 }

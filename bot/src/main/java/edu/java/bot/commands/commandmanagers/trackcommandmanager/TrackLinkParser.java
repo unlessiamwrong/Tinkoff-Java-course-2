@@ -2,8 +2,8 @@ package edu.java.bot.commands.commandmanagers.trackcommandmanager;
 
 import edu.java.bot.clients.GitHubClient;
 import edu.java.bot.clients.StackOfClient;
-import edu.java.bot.models.responses.GitHubRepositoryResponse;
-import edu.java.bot.models.responses.StackOfQuestionResponse;
+import edu.java.bot.dto.responses.GitHubRepositoryResponse;
+import edu.java.bot.dto.responses.StackOfQuestionResponse;
 import edu.java.bot.repositories.Link;
 import edu.java.bot.utilities.parser.GitHubLinkParser;
 import edu.java.bot.utilities.parser.StackOfLinkParser;

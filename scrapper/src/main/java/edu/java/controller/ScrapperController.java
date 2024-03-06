@@ -1,9 +1,9 @@
 package edu.java.controller;
 
-import edu.java.models.requests.AddLinkRequest;
-import edu.java.models.requests.RemoveLinkRequest;
-import edu.java.models.responses.LinkResponse;
-import edu.java.models.responses.ListLinksResponse;
+import edu.java.dto.requests.AddLinkRequest;
+import edu.java.dto.requests.RemoveLinkRequest;
+import edu.java.dto.responses.LinkResponse;
+import edu.java.dto.responses.ListLinksResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;

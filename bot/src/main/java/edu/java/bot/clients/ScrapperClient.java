@@ -1,9 +1,9 @@
 package edu.java.bot.clients;
 
-import edu.java.bot.models.requests.AddLinkRequest;
-import edu.java.bot.models.requests.RemoveLinkRequest;
-import edu.java.bot.models.responses.LinkResponse;
-import edu.java.bot.models.responses.ListLinksResponse;
+import edu.java.bot.dto.requests.AddLinkRequest;
+import edu.java.bot.dto.requests.RemoveLinkRequest;
+import edu.java.bot.dto.responses.LinkResponse;
+import edu.java.bot.dto.responses.ListLinksResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
