@@ -1,10 +1,8 @@
 package edu.java.dto.requests;
 
-import edu.java.dto.responses.LinkResponse;
-import java.util.List;
+import java.net.URI;
 
 public record AddLinkRequest(
-    List<LinkResponse> links,
-    long size
+    URI link
 ) {
 }

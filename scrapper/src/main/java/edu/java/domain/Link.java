@@ -1,19 +1,17 @@
 package edu.java.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@RequiredArgsConstructor
 public class Link {
 
     private final long id;
-    private String name;
-    private String value;
+    private final String name;
+    private final String value;
 
-    public Link(long id, String name, String value) {
-        this.id = id;
-        this.name = name;
-        this.value = value;
-    }
 }

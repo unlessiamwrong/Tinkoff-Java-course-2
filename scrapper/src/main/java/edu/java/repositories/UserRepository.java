@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class UserRepository implements Repository<User> {
+public class UserRepository {
 
     JdbcTemplate jdbcTemplate;
 
@@ -19,20 +19,18 @@ public class UserRepository implements Repository<User> {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override public void add(User user) {
-        jdbcTemplate.update("INSERT INTO users(id, name) VALUES(?,?)", user.getId(), user.getName());
+    public void add(User user) {
+        jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
     }
 
-    @Override public void remove(User user) {
+    public void remove(User user) {
         jdbcTemplate.update("DELETE FROM users WHERE id=?", user.getId());
     }
 
-    @Override
     public List<User> findAll() {
         return jdbcTemplate.query("SELECT * FROM users", (rs, row) -> {
             long id = rs.getLong("id");
-            String name = rs.getString("name");
-            return new User(id, name);
+            return new User(id);
         });
     }
 }

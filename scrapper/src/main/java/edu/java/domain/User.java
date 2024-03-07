@@ -1,18 +1,16 @@
 package edu.java.domain;
 
-
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
+@NoArgsConstructor
 public class User {
+    private long id;
 
-    private final long id;
-    private String name;
-
-    public User(long id, String name) {
+    public User(long id) {
         this.id = id;
-        this.name = name;
     }
 }
