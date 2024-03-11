@@ -2,7 +2,7 @@ create table links
 (
     id    bigint generated always as identity,
     name  varchar(200) not null unique,
-    value varchar(200) not null,
+    last_update     timestamp with time zone not null,
     primary key (id)
 );
 
