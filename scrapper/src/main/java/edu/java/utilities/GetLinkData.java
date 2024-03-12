@@ -36,9 +36,7 @@ public class GetLinkData {
             return gitHubClient.getRepository(gitHubData[0], gitHubData[1]).updatedAt();
         }
         if (linkUrl.contains("stackoverflow.com")) {
-            System.out.println(1);
             String questionId = stackOfLinkParser.parse(linkUrl);
-            System.out.println(questionId);
             long lastActivityDate =  stackOfClient.getQuestion(questionId, "stackoverflow").getItems().getFirst().getLastActivityDate();
             Instant instant = Instant.ofEpochSecond(lastActivityDate);
             return instant.atOffset(ZoneOffset.UTC);

@@ -1,9 +1,9 @@
 //package edu.java;
 //
-//import edu.java.domain.User;
+//import edu.java.clients.GitHubClient;
+//import edu.java.clients.StackOfClient;
 //import edu.java.repositories.UserRepository;
-//import java.util.List;
-//import java.util.Random;
+//import edu.java.utilities.GetLinkData;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.context.event.ApplicationReadyEvent;
 //import org.springframework.context.event.EventListener;
@@ -14,12 +14,18 @@
 //
 //    @Autowired
 //    UserRepository userRepository;
+//    @Autowired
+//    GitHubClient gitHubClient;
+//
+//    @Autowired StackOfClient stackOfClient;
+//    @Autowired
+//
+//    GetLinkData getLinkData;
 //
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void test() {
-//        User user = new User(new Random().nextLong());
-//        userRepository.add(user);
-//        List<User> users = userRepository.findAll();
-//        System.out.println(users);
+//        System.out.println(getLinkData.execute(
+//            "https://stackoverflow.com/questions/73097726/spring-boot-cannot-catch-exception-in-controlleradvice"));
+//
 //    }
 //}

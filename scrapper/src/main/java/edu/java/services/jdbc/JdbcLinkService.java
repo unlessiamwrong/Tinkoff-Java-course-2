@@ -1,9 +1,9 @@
 package edu.java.services.jdbc;
 
-import edu.java.advice.InvalidParamsException;
-import edu.java.advice.NotFoundException;
 import edu.java.domain.Link;
 import edu.java.domain.User;
+import edu.java.exceptions.InvalidParamsException;
+import edu.java.exceptions.NotFoundException;
 import edu.java.repositories.LinkRepository;
 import edu.java.repositories.UserRepository;
 import edu.java.services.LinkService;
@@ -28,34 +28,37 @@ public class JdbcLinkService implements LinkService {
     public Link add(long userId, URI url) {
         User user = userRepository.getUser(userId);
         if (user == null) {
-            throw new NotFoundException();
+            throw new NotFoundException("User with id:" + userId + " is not found");
         }
-        if(!isLinkValid(url)){
-            throw new InvalidParamsException();
+        if (!isLinkValid(url)) {
+            throw new InvalidParamsException("Link:" + url + " is invalid. Use Github's or StackOverflow's links");
         }
         return linkRepository.add(userId, url);
     }
 
-
-
     @Override
     public Link remove(long userId, URI url) {
-        User user = userRepository.getUser(userId);;
-        if(user == null) {
-            throw new NotFoundException();
+        User user = userRepository.getUser(userId);
+
+        if (user == null) {
+            throw new NotFoundException("User with id:" + userId + " is not found");
         }
-        else if(!isLinkValid(url)){
-            throw new InvalidParamsException();
+
+        Link link = linkRepository.getLinkFromUser(userId, url);
+        if (link == null) {
+            throw new NotFoundException("Link:" + url + " does not exist");
+        } else {
+            linkRepository.remove(userId, link);
         }
-        return linkRepository.remove(userId, url);
+        return link;
     }
 
     @Override
     public List<Link> listAll(long userId) {
         User user = userRepository.getUser(userId);
         if (user == null) {
-            throw new NotFoundException();
+            throw new NotFoundException("User with id:" + userId + " is not found");
         }
-        return linkRepository.findAll(userId);
+        return linkRepository.findAllUserLinks(userId);
     }
 }
