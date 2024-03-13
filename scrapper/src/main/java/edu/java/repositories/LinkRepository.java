@@ -4,7 +4,6 @@ import edu.java.domain.Link;
 import edu.java.domain.User;
 import edu.java.utilities.GetLinkData;
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -78,17 +77,7 @@ public class LinkRepository {
         );
     }
 
-    public List<Link> findAll(){
-        return jdbcTemplate.query(
-            "SELECT id, name, last_update, last_check_for_update FROM links WHERE last_check_for_update IS NULL OR last_check_for_update < ?",
-            (rs, row) -> new Link(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getTimestamp("last_update").toLocalDateTime().atOffset(ZoneOffset.UTC),
-                rs.getTimestamp("last_check_for_update") != null ? rs.getTimestamp("last_check_for_update").toInstant().atOffset(ZoneOffset.UTC) : null
-            ), OffsetDateTime.now().minusMinutes(5));
 
-    }
 
     public Link getLinkFromUser(long userId, URI url) {
         String urlString = url.toString();
@@ -115,7 +104,33 @@ public class LinkRepository {
 
     }
 
-    public void updateLink(long linkId, OffsetDateTime lastUpdate, OffsetDateTime lastCheckForUpdate){
-        jdbcTemplate.update("UPDATE links SET last_update = ?, last_check_for_update = ? WHERE id = ?", lastUpdate, lastCheckForUpdate, linkId);
+    public List<Link> findAll() {
+        return jdbcTemplate.query(
+            "SELECT id, name, last_update, last_check_for_update FROM links WHERE last_check_for_update IS NULL OR last_check_for_update < ?",
+            (rs, row) -> new Link(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getTimestamp("last_update").toLocalDateTime().atOffset(ZoneOffset.UTC),
+                rs.getTimestamp("last_check_for_update") != null ?
+                    rs.getTimestamp("last_check_for_update").toInstant().atOffset(ZoneOffset.UTC) : null
+            ),
+            OffsetDateTime.now().minusMinutes(1)
+        );
+
+    }
+
+    public List<Long> updateLinkGetRelatedUsers(
+        long linkId,
+        OffsetDateTime lastUpdate,
+        OffsetDateTime lastCheckForUpdate
+    ) {
+
+        jdbcTemplate.update(
+            "UPDATE links SET last_update = ?, last_check_for_update = ? WHERE id = ?",
+            lastUpdate,
+            lastCheckForUpdate,
+            linkId
+        );
+        return jdbcTemplate.queryForList("SELECT user_id FROM user_links WHERE link_id=?", Long.class, linkId);
     }
 }
