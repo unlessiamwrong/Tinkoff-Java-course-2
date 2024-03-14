@@ -1,11 +1,8 @@
 package edu.java.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -16,18 +13,18 @@ public class Link {
     private OffsetDateTime lastUpdate;
     private OffsetDateTime lastCheckForUpdate;
 
-    public Link(long id, String name){
+    public Link(long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-
-    public Link(long id, String name, OffsetDateTime lastUpdate){
+    public Link(long id, String name, OffsetDateTime lastUpdate) {
         this.id = id;
         this.name = name;
         this.lastUpdate = lastUpdate;
     }
-    public Link(long id, String name, OffsetDateTime lastUpdate, OffsetDateTime lastCheckForUpdate){
+
+    public Link(long id, String name, OffsetDateTime lastUpdate, OffsetDateTime lastCheckForUpdate) {
         this.id = id;
         this.name = name;
         this.lastUpdate = lastUpdate;

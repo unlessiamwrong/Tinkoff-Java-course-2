@@ -2,7 +2,9 @@ package edu.java.repositories;
 
 import edu.java.domain.Link;
 import edu.java.domain.User;
-import edu.java.utilities.GetLinkData;
+import edu.java.utilities.links.DataSet;
+import edu.java.utilities.links.GetLinkDataItems;
+import edu.java.utilities.links.GetLinkDataRepository;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -17,12 +19,20 @@ public class LinkRepository {
     private final JdbcTemplate jdbcTemplate;
     private final UserRepository userRepository;
 
-    private final GetLinkData getLinkData;
+    private final GetLinkDataItems getLinkDataItems;
 
-    @Autowired LinkRepository(JdbcTemplate jdbcTemplate, UserRepository userRepository, GetLinkData getLinkData) {
+    private final GetLinkDataRepository getLinkDataRepository;
+
+    @Autowired LinkRepository(
+        JdbcTemplate jdbcTemplate,
+        UserRepository userRepository,
+        GetLinkDataItems getLinkDataItems,
+        GetLinkDataRepository getLinkDataRepository
+    ) {
         this.jdbcTemplate = jdbcTemplate;
         this.userRepository = userRepository;
-        this.getLinkData = getLinkData;
+        this.getLinkDataItems = getLinkDataItems;
+        this.getLinkDataRepository = getLinkDataRepository;
     }
 
     public Link add(long userId, URI url) {
@@ -30,7 +40,13 @@ public class LinkRepository {
         Link link = null;
         if (user != null) {
             String urlString = url.toString();
-            OffsetDateTime lastUpdateAt = getLinkData.execute(urlString);
+            DataSet dataSet = getLinkDataItems.execute(urlString);
+            OffsetDateTime lastUpdateAt;
+            if (dataSet != null) {
+                lastUpdateAt = dataSet.dateTime();
+            } else {
+                lastUpdateAt = getLinkDataRepository.execute(urlString);
+            }
             jdbcTemplate.update(
                 "INSERT INTO links(name, last_update) VALUES(?,?) ON CONFLICT (name) DO NOTHING",
                 urlString,
@@ -77,8 +93,6 @@ public class LinkRepository {
         );
     }
 
-
-
     public Link getLinkFromUser(long userId, URI url) {
         String urlString = url.toString();
         List<Long> listLinkIdFromLinks = jdbcTemplate.queryForList(
@@ -110,11 +124,11 @@ public class LinkRepository {
             (rs, row) -> new Link(
                 rs.getLong("id"),
                 rs.getString("name"),
-                rs.getTimestamp("last_update").toLocalDateTime().atOffset(ZoneOffset.UTC),
+                rs.getTimestamp("last_update").toInstant().atOffset(ZoneOffset.UTC),
                 rs.getTimestamp("last_check_for_update") != null ?
-                    rs.getTimestamp("last_check_for_update").toInstant().atOffset(ZoneOffset.UTC) : null
+                    rs.getTimestamp("last_check_for_update").toInstant().atOffset(ZoneOffset.UTC) : OffsetDateTime.now()
             ),
-            OffsetDateTime.now().minusMinutes(1)
+            OffsetDateTime.now().minusMinutes(5)
         );
 
     }
@@ -132,5 +146,17 @@ public class LinkRepository {
             linkId
         );
         return jdbcTemplate.queryForList("SELECT user_id FROM user_links WHERE link_id=?", Long.class, linkId);
+    }
+
+    public void updateLinkWithLastCheckForUpdate(
+        long linkId,
+        OffsetDateTime lastCheckForUpdate
+    ) {
+
+        jdbcTemplate.update(
+            "UPDATE links SET last_check_for_update = ? WHERE id = ?",
+            lastCheckForUpdate,
+            linkId
+        );
     }
 }

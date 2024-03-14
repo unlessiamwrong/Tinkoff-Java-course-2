@@ -1,17 +1,19 @@
-package edu.java.utilities;
+package edu.java.utilities.links;
 
 import edu.java.clients.GitHubClient;
 import edu.java.clients.StackOfClient;
+import edu.java.dto.responses.github.repository.GitHubRepositoryResponse;
+import edu.java.dto.responses.stackoverflow.question.StackOfQuestionResponse;
 import edu.java.utilities.parser.GitHubLinkParser;
 import edu.java.utilities.parser.StackOfLinkParser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
-public class GetLinkData {
+public class GetLinkDataRepository {
 
     private final GitHubLinkParser gitHubLinkParser;
 
@@ -21,8 +23,12 @@ public class GetLinkData {
 
     private final StackOfClient stackOfClient;
 
-    @Autowired
-    GetLinkData(GitHubLinkParser gitHubLinkParser, StackOfLinkParser stackOfLinkParser, GitHubClient gitHubClient, StackOfClient stackOfClient){
+    @Autowired GetLinkDataRepository(
+        GitHubLinkParser gitHubLinkParser,
+        StackOfLinkParser stackOfLinkParser,
+        GitHubClient gitHubClient,
+        StackOfClient stackOfClient
+    ) {
 
         this.gitHubLinkParser = gitHubLinkParser;
         this.stackOfLinkParser = stackOfLinkParser;
@@ -33,15 +39,21 @@ public class GetLinkData {
     public OffsetDateTime execute(String linkUrl) {
         if (linkUrl.contains("github.com")) {
             String[] gitHubData = gitHubLinkParser.parse(linkUrl);
-            return gitHubClient.getRepository(gitHubData[0], gitHubData[1]).updatedAt();
+            GitHubRepositoryResponse gitHubRepositoryResponse =
+                gitHubClient.getRepository(gitHubData[0], gitHubData[1]);
+            return gitHubRepositoryResponse.updatedAt();
+
         }
         if (linkUrl.contains("stackoverflow.com")) {
             String questionId = stackOfLinkParser.parse(linkUrl);
-            long lastActivityDate =  stackOfClient.getQuestion(questionId, "stackoverflow").getItems().getFirst().getLastActivityDate();
-            Instant instant = Instant.ofEpochSecond(lastActivityDate);
+            StackOfQuestionResponse stackOfQuestionResponse = stackOfClient.getQuestion(questionId, "stackoverflow");
+
+            long date = stackOfQuestionResponse.items().getFirst().lastActivityDate();
+            Instant instant = Instant.ofEpochSecond(date);
+
             return instant.atOffset(ZoneOffset.UTC);
+
         }
         return null;
-
     }
 }

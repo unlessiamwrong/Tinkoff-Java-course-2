@@ -1,4 +1,4 @@
-package edu.java.utilities;
+package edu.java.utilities.links;
 
 import java.net.URI;
 
