@@ -11,6 +11,7 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.JdbcDatabaseContainer;
@@ -33,6 +34,7 @@ public abstract class IntegrationTest {
         } catch (SQLException | LiquibaseException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     private static void runMigrations(JdbcDatabaseContainer<?> c) throws SQLException, LiquibaseException {

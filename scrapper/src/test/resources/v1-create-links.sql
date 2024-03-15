@@ -1,9 +1,9 @@
 create table links
 (
     id    bigint generated always as identity,
-    name  varchar(200) not null,
-    value jsonb not null,
-    created_at      timestamp with time zone not null,
+    name  varchar(200) not null unique,
+    last_update     timestamp with time zone not null,
+    last_check_for_update    timestamp with time zone,
     primary key (id)
-)
+);
 

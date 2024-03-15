@@ -1,12 +1,12 @@
-package edu.java.services.jdbc;
+package edu.java.services.jooq;
 
 import edu.java.domain.jdbc.Link;
 import edu.java.domain.jdbc.User;
 import edu.java.exceptions.InvalidParamsException;
 import edu.java.exceptions.LinkAlreadyExists;
 import edu.java.exceptions.NotFoundException;
-import edu.java.repositories.jdbc.JdbcLinkRepository;
-import edu.java.repositories.jdbc.JdbcUserRepository;
+import edu.java.repositories.jooq.JooqLinkRepository;
+import edu.java.repositories.jooq.JooqUserRepository;
 import edu.java.services.LinkService;
 import java.net.URI;
 import java.util.List;
@@ -15,55 +15,59 @@ import org.springframework.stereotype.Service;
 import static edu.java.utilities.links.LinkChecker.isLinkValid;
 
 @Service
-public class JdbcLinkService implements LinkService {
+public class JooqLinkService implements LinkService {
 
-    private final JdbcLinkRepository jdbcLinkRepository;
-    private final JdbcUserRepository jdbcUserRepository;
+    private final JooqUserRepository jooqUserRepository;
 
-    @Autowired JdbcLinkService(JdbcLinkRepository jdbcLinkRepository, JdbcUserRepository jdbcUserRepository) {
-        this.jdbcLinkRepository = jdbcLinkRepository;
-        this.jdbcUserRepository = jdbcUserRepository;
+    private final JooqLinkRepository jooqLinkRepository;
+
+    @Autowired JooqLinkService(
+
+        JooqUserRepository jooqUserRepository,
+        JooqLinkRepository jooqLinkRepository
+    ) {
+        this.jooqUserRepository = jooqUserRepository;
+        this.jooqLinkRepository = jooqLinkRepository;
     }
 
     @Override
     public Link add(long userId, URI url) {
-        User user = jdbcUserRepository.getUser(userId);
+        User user = jooqUserRepository.getUser(userId);
         if (user == null) {
             throw new NotFoundException("User with id:'" + userId + "' is not found");
         }
         if (!isLinkValid(url)) {
             throw new InvalidParamsException("Link:'" + url + "' is invalid. Use Github's or StackOverflow's links");
         }
-        Link link = jdbcLinkRepository.getLinkFromUser(userId, url);
-        if(link != null){
+        Link link = jooqLinkRepository.getLinkFromUser(userId, url);
+        if (link != null) {
             throw new LinkAlreadyExists("Link:'" + url + "' already exists");
         }
-        return jdbcLinkRepository.add(userId, url);
+        return jooqLinkRepository.add(userId, url);
     }
 
     @Override
     public Link remove(long userId, URI url) {
-        User user = jdbcUserRepository.getUser(userId);
+        User user = jooqUserRepository.getUser(userId);
 
         if (user == null) {
             throw new NotFoundException("User with id:'" + userId + "' is not found");
         }
-
-        Link link = jdbcLinkRepository.getLinkFromUser(userId, url);
+        Link link = jooqLinkRepository.getLinkFromUser(userId, url);
         if (link == null) {
             throw new NotFoundException("Link:'" + url + "' does not exist");
         } else {
-            jdbcLinkRepository.remove(userId, link);
+            jooqLinkRepository.remove(userId, link);
         }
         return link;
     }
 
     @Override
     public List<Link> listAll(long userId) {
-        User user = jdbcUserRepository.getUser(userId);
+        User user = jooqUserRepository.getUser(userId);
         if (user == null) {
             throw new NotFoundException("User with id:'" + userId + "' is not found");
         }
-        return jdbcLinkRepository.findAllUserLinks(userId);
+        return jooqLinkRepository.findAllUserLinks(userId);
     }
 }

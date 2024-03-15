@@ -1,6 +1,6 @@
 package edu.java.services;
 
-import edu.java.domain.Link;
+import edu.java.domain.jdbc.Link;
 import java.net.URI;
 import java.util.List;
 

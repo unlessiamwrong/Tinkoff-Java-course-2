@@ -16,22 +16,22 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jooq</artifactId>
             <version>3.2.3</version>
         </dependency>
+
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-codegen</artifactId>
-            <version>3.19.6</version>
+            <version>3.18.13</version>
         </dependency>
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq-meta-extensions-liquibase</artifactId>
-            <version>3.19.6</version>
+            <version>3.18.13</version>
         </dependency>
 
         <dependency>
@@ -39,5 +39,7 @@
             <artifactId>liquibase-core</artifactId>
             <version>4.26.0</version>
         </dependency>
+
+
     </dependencies>
 </project>

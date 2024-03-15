@@ -1,23 +1,19 @@
-package edu.java.repositories;
+package edu.java.repositories.jdbc;
 
-import edu.java.domain.User;
+import edu.java.domain.jdbc.User;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-
 @Component
-@RequiredArgsConstructor
-public class UserRepository {
+public class JdbcUserRepository {
 
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    UserRepository(JdbcTemplate jdbcTemplate){
+    @Autowired public JdbcUserRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -26,6 +22,23 @@ public class UserRepository {
     }
 
     public void remove(User user) {
+        Long userId = user.getId();
+        List<Long> linkIds = jdbcTemplate.queryForList("SELECT link_id FROM user_links WHERE user_id=?", Long.class, userId);
+        for (Long linkId : linkIds) {
+            List<Long> possibleUserLinkRelation =
+                jdbcTemplate.queryForList(
+                    "SELECT link_id FROM user_links WHERE user_id != ? AND link_id = ?",
+                    Long.class,
+                    userId,
+                    linkId
+                );
+            if (possibleUserLinkRelation.isEmpty()) {
+                jdbcTemplate.update("DELETE FROM user_links WHERE link_id=?", linkId);
+                jdbcTemplate.update("DELETE FROM links WHERE id=?", linkId);
+            } else {
+                jdbcTemplate.update("DELETE FROM user_links WHERE user_id=?", userId);
+            }
+        }
         jdbcTemplate.update("DELETE FROM users WHERE id=?", user.getId());
     }
 

@@ -1,4 +1,4 @@
-package edu.java.domain;
+package edu.java.domain.jdbc;
 
 import java.time.OffsetDateTime;
 import lombok.Getter;

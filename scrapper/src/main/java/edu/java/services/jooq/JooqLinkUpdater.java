@@ -1,8 +1,8 @@
-package edu.java.services.jdbc;
+package edu.java.services.jooq;
 
 import edu.java.domain.jdbc.Link;
 import edu.java.dto.requests.LinkUpdateRequest;
-import edu.java.repositories.jdbc.JdbcLinkRepository;
+import edu.java.repositories.jooq.JooqLinkRepository;
 import edu.java.services.LinkUpdater;
 import edu.java.utilities.links.DataSet;
 import edu.java.utilities.links.GetLinkDataItems;
@@ -14,15 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class JdbcLinkUpdater implements LinkUpdater {
+public class JooqLinkUpdater implements LinkUpdater {
 
-    private final JdbcLinkRepository jdbcLinkRepository;
+    private final JooqLinkRepository jooqLinkRepository;
 
     private final GetLinkDataItems getLinkDataItems;
 
-    @Autowired JdbcLinkUpdater(JdbcLinkRepository jdbcLinkRepository, GetLinkDataItems getLinkDataItems) {
-
-        this.jdbcLinkRepository = jdbcLinkRepository;
+    @Autowired JooqLinkUpdater(JooqLinkRepository jooqLinkRepository, GetLinkDataItems getLinkDataItems) {
+        this.jooqLinkRepository = jooqLinkRepository;
         this.getLinkDataItems = getLinkDataItems;
 
     }
@@ -30,14 +29,14 @@ public class JdbcLinkUpdater implements LinkUpdater {
     @Override
     public List<LinkUpdateRequest> update() {
 
-        List<Link> notUpdatedLinks = jdbcLinkRepository.findAll();
+        List<Link> notUpdatedLinks = jooqLinkRepository.findAll();
         List<LinkUpdateRequest> linkUpdateRequests = new ArrayList<>();
         if (!notUpdatedLinks.isEmpty()) {
             for (Link link : notUpdatedLinks) {
                 String linkUrl = link.getName();
                 DataSet dataSet = getLinkDataItems.execute(linkUrl);
                 if (dataSet == null) {
-                    jdbcLinkRepository.updateLinkWithLastCheckForUpdate(link.getId(), OffsetDateTime.now());
+                    jooqLinkRepository.updateLinkWithLastCheckForUpdate(link.getId(), OffsetDateTime.now());
                     continue;
                 }
                 OffsetDateTime currentDateTime = dataSet.dateTime();
@@ -50,7 +49,7 @@ public class JdbcLinkUpdater implements LinkUpdater {
                         link.getId(),
                         URI.create(link.getName()),
                         message,
-                        jdbcLinkRepository.updateLinkGetRelatedUsers(
+                        jooqLinkRepository.updateLinkGetRelatedUsers(
                             link.getId(),
                             currentDateTime,
                             OffsetDateTime.now()
@@ -58,7 +57,7 @@ public class JdbcLinkUpdater implements LinkUpdater {
                     ))
                     ;
                 } else {
-                    jdbcLinkRepository.updateLinkWithLastCheckForUpdate(link.getId(), OffsetDateTime.now());
+                    jooqLinkRepository.updateLinkWithLastCheckForUpdate(link.getId(), OffsetDateTime.now());
                 }
             }
         }

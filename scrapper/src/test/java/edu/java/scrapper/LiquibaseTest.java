@@ -10,11 +10,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class LiquibaseTest extends IntegrationTest {
 
     @Test
-    void whenUse_Insertion_AddRowToDataBase() throws SQLException {
+    void whenUse_Insertion_AddRowToDB() throws SQLException {
         //Arrange
         Connection connection =
             DriverManager.getConnection(POSTGRES.getJdbcUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
-        String query = "INSERT INTO users (name) VALUES ('V')";
+        String query = "INSERT INTO users (id) VALUES (1)";
         Statement statement = connection.createStatement();
 
         //Act

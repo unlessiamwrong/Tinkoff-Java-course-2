@@ -1,4 +1,4 @@
-package edu.java.domain;
+package edu.java.domain.jdbc;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

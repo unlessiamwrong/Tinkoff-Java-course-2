@@ -1,7 +1,7 @@
-package edu.java.repositories;
+package edu.java.repositories.jdbc;
 
-import edu.java.domain.Link;
-import edu.java.domain.User;
+import edu.java.domain.jdbc.Link;
+import edu.java.domain.jdbc.User;
 import edu.java.utilities.links.DataSet;
 import edu.java.utilities.links.GetLinkDataItems;
 import edu.java.utilities.links.GetLinkDataRepository;
@@ -14,29 +14,29 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LinkRepository {
+public class JdbcLinkRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final UserRepository userRepository;
+    private final JdbcUserRepository jdbcUserRepository;
 
     private final GetLinkDataItems getLinkDataItems;
 
     private final GetLinkDataRepository getLinkDataRepository;
 
-    @Autowired LinkRepository(
+    @Autowired JdbcLinkRepository(
         JdbcTemplate jdbcTemplate,
-        UserRepository userRepository,
+        JdbcUserRepository jdbcUserRepository,
         GetLinkDataItems getLinkDataItems,
         GetLinkDataRepository getLinkDataRepository
     ) {
         this.jdbcTemplate = jdbcTemplate;
-        this.userRepository = userRepository;
+        this.jdbcUserRepository = jdbcUserRepository;
         this.getLinkDataItems = getLinkDataItems;
         this.getLinkDataRepository = getLinkDataRepository;
     }
 
     public Link add(long userId, URI url) {
-        User user = userRepository.getUser(userId);
+        User user = jdbcUserRepository.getUser(userId);
         Link link = null;
         if (user != null) {
             String urlString = url.toString();
@@ -48,7 +48,7 @@ public class LinkRepository {
                 lastUpdateAt = getLinkDataRepository.execute(urlString);
             }
             jdbcTemplate.update(
-                "INSERT INTO links(name, last_update) VALUES(?,?) ON CONFLICT (name) DO NOTHING",
+                "INSERT INTO links(name, last_update) VALUES(?,?)",
                 urlString,
                 lastUpdateAt
             );
@@ -62,7 +62,7 @@ public class LinkRepository {
             if (linkId != null) {
                 link = new Link(linkId, urlString, lastUpdateAt);
                 jdbcTemplate.update(
-                    "INSERT INTO user_links(user_id, link_id) VALUES(?,?) ON CONFLICT (user_id, link_id) DO NOTHING ",
+                    "INSERT INTO user_links(user_id, link_id) VALUES(?,?)",
                     userId,
                     linkId
                 );
@@ -72,11 +72,13 @@ public class LinkRepository {
     }
 
     public Link remove(long userId, Link link) {
-        jdbcTemplate.update("DELETE FROM user_links WHERE (user_id, link_id)=(?,?)", userId, link.getId());
+        Long linkId = link.getId();
+
+        jdbcTemplate.update("DELETE FROM user_links WHERE (user_id, link_id)=(?,?)", userId, linkId);
         List<Long> possibleUserLinkRelation =
-            jdbcTemplate.queryForList("SELECT user_id FROM user_links WHERE link_id=?", Long.class, link.getId());
+            jdbcTemplate.queryForList("SELECT user_id FROM user_links WHERE link_id=?", Long.class, linkId);
         if (possibleUserLinkRelation.isEmpty()) {
-            jdbcTemplate.update("DELETE FROM links WHERE id=?", link.getId());
+            jdbcTemplate.update("DELETE FROM links WHERE id=?", linkId);
         }
         return link;
     }
@@ -92,6 +94,7 @@ public class LinkRepository {
             }
         );
     }
+
 
     public Link getLinkFromUser(long userId, URI url) {
         String urlString = url.toString();

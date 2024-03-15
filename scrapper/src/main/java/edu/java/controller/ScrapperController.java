@@ -1,26 +1,27 @@
 package edu.java.controller;
 
-import edu.java.domain.Link;
+import edu.java.domain.jdbc.Link;
 import edu.java.dto.requests.AddLinkRequest;
 import edu.java.dto.requests.RemoveLinkRequest;
 import edu.java.dto.responses.LinkResponse;
 import edu.java.dto.responses.ListLinksResponse;
 import edu.java.services.jdbc.JdbcLinkService;
 import edu.java.services.jdbc.JdbcUserService;
+import edu.java.services.jooq.JooqLinkService;
+import edu.java.services.jooq.JooqUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class ScrapperController {
@@ -28,10 +29,21 @@ public class ScrapperController {
     private final JdbcUserService jdbcUserService;
     private final JdbcLinkService jdbcLinkService;
 
-    @Autowired ScrapperController(JdbcUserService jdbcUserService, JdbcLinkService jdbcLinkService) {
+    private final JooqUserService jooqUserService;
+
+    private final JooqLinkService jooqLinkService;
+
+    @Autowired ScrapperController(
+        JdbcUserService jdbcUserService,
+        JdbcLinkService jdbcLinkService,
+        JooqUserService jooqUserService,
+        JooqLinkService jooqLinkService
+    ) {
 
         this.jdbcUserService = jdbcUserService;
         this.jdbcLinkService = jdbcLinkService;
+        this.jooqUserService = jooqUserService;
+        this.jooqLinkService = jooqLinkService;
     }
 
     /**
@@ -48,7 +60,8 @@ public class ScrapperController {
     )
     @PostMapping("/user/{id}")
     public void postTgChat(@PathVariable long id) {
-        jdbcUserService.add(id);
+//        jdbcUserService.add(id);
+        jooqUserService.add(id);
     }
 
     /**
@@ -66,7 +79,8 @@ public class ScrapperController {
     )
     @DeleteMapping("/user/{id}")
     public void deleteTgChat(@PathVariable long id) {
-        jdbcUserService.remove(id);
+//        jdbcUserService.remove(id);
+        jooqUserService.remove(id);
     }
 
     /**
@@ -84,18 +98,25 @@ public class ScrapperController {
     )
     @GetMapping("/links")
     public ListLinksResponse getLinks(@RequestHeader long userId) {
-        List<Link> links = jdbcLinkService.listAll(userId);
-        List<LinkResponse> linkResponses = new ArrayList<>();
-        for(Link link: links){
-            linkResponses.add(new LinkResponse(link.getId(), URI.create(link.getName())));
-        }
-        return new ListLinksResponse(linkResponses, linkResponses.size());
+//        List<Link> links = jdbcLinkService.listAll(userId);
+//        List<LinkResponse> linkResponses = new ArrayList<>();
+//        for (Link link : links) {
+//            linkResponses.add(new LinkResponse(link.getId(), URI.create(link.getName())));
+//        }
+//        return new ListLinksResponse(linkResponses, linkResponses.size());
+//    }
+    List<Link> links = jooqLinkService.listAll(userId);
+    List<LinkResponse> linkResponses = new ArrayList<>();
+        for (Link link : links) {
+        linkResponses.add(new LinkResponse(link.getId(), URI.create(link.getName())));
     }
+        return new ListLinksResponse(linkResponses, linkResponses.size());
+}
 
     /**
      * Add tracking link
      *
-     * @param userId user id
+     * @param userId         user id
      * @param addLinkRequest link to track
      * @return LinkResponse
      */
@@ -108,14 +129,16 @@ public class ScrapperController {
     )
     @PostMapping("/links")
     public LinkResponse postLink(@RequestHeader long userId, @RequestBody AddLinkRequest addLinkRequest) {
-        Link link = jdbcLinkService.add(userId, addLinkRequest.link());
+//        Link link = jdbcLinkService.add(userId, addLinkRequest.link());
+//        return new LinkResponse(link.getId(), URI.create(link.getName()));
+        Link link = jooqLinkService.add(userId, addLinkRequest.link());
         return new LinkResponse(link.getId(), URI.create(link.getName()));
     }
 
     /**
      * Delete tracking link
      *
-     * @param userId user id
+     * @param userId            user id
      * @param removeLinkRequest link to delete
      * @return LinkResponse
      */
@@ -129,7 +152,9 @@ public class ScrapperController {
     )
     @DeleteMapping("/links")
     public LinkResponse deleteLink(@RequestHeader long userId, @RequestBody RemoveLinkRequest removeLinkRequest) {
-        Link link = jdbcLinkService.remove(userId, removeLinkRequest.link());
+//        Link link = jdbcLinkService.remove(userId, removeLinkRequest.link());
+//        return new LinkResponse(link.getId(), URI.create(link.getName()));
+        Link link = jooqLinkService.remove(userId, removeLinkRequest.link());
         return new LinkResponse(link.getId(), URI.create(link.getName()));
     }
 

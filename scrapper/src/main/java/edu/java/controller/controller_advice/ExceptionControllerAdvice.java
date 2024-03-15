@@ -2,9 +2,9 @@ package edu.java.controller.controller_advice;
 
 import edu.java.dto.responses.ApiErrorResponse;
 import edu.java.exceptions.InvalidParamsException;
+import edu.java.exceptions.LinkAlreadyExists;
 import edu.java.exceptions.NotFoundException;
 import edu.java.exceptions.UserAlreadyRegisteredException;
-import java.util.Arrays;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -33,6 +33,12 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.status(CONFLICT).body(response);
     }
 
+    @ExceptionHandler(LinkAlreadyExists.class)
+    public ResponseEntity<ApiErrorResponse> linkAlreadyExists(LinkAlreadyExists ex) {
+        ApiErrorResponse response = createError(ex, CONFLICT.getReasonPhrase(), CONFLICT_CODE);
+        return ResponseEntity.status(CONFLICT).body(response);
+    }
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiErrorResponse> notFoundException(NotFoundException ex) {
         ApiErrorResponse response = createError(ex, NOT_FOUND.getReasonPhrase(), NOT_FOUND_CODE);
@@ -44,6 +50,5 @@ public class ExceptionControllerAdvice {
         String exceptionMessage = exception.getMessage();
         return new ApiErrorResponse(description, httpCode, exceptionName, exceptionMessage);
     }
-
 
 }
