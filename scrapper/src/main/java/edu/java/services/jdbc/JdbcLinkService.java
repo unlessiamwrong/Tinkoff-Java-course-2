@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static edu.java.utilities.links.LinkChecker.isLinkValid;
 
+@SuppressWarnings("MultipleStringLiterals")
 @Service
 public class JdbcLinkService implements LinkService {
 
@@ -35,7 +36,7 @@ public class JdbcLinkService implements LinkService {
             throw new InvalidParamsException("Link:'" + url + "' is invalid. Use Github's or StackOverflow's links");
         }
         Link link = jdbcLinkRepository.getLinkFromUser(userId, url);
-        if(link != null){
+        if (link != null) {
             throw new LinkAlreadyExists("Link:'" + url + "' already exists");
         }
         return jdbcLinkRepository.add(userId, url);

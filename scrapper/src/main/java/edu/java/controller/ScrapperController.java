@@ -105,13 +105,13 @@ public class ScrapperController {
 //        }
 //        return new ListLinksResponse(linkResponses, linkResponses.size());
 //    }
-    List<Link> links = jooqLinkService.listAll(userId);
-    List<LinkResponse> linkResponses = new ArrayList<>();
+        List<Link> links = jooqLinkService.listAll(userId);
+        List<LinkResponse> linkResponses = new ArrayList<>();
         for (Link link : links) {
-        linkResponses.add(new LinkResponse(link.getId(), URI.create(link.getName())));
-    }
+            linkResponses.add(new LinkResponse(link.getId(), URI.create(link.getName())));
+        }
         return new ListLinksResponse(linkResponses, linkResponses.size());
-}
+    }
 
     /**
      * Add tracking link

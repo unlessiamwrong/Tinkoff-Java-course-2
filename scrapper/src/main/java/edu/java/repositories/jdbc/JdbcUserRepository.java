@@ -23,7 +23,8 @@ public class JdbcUserRepository {
 
     public void remove(User user) {
         Long userId = user.getId();
-        List<Long> linkIds = jdbcTemplate.queryForList("SELECT link_id FROM user_links WHERE user_id=?", Long.class, userId);
+        List<Long> linkIds =
+            jdbcTemplate.queryForList("SELECT link_id FROM user_links WHERE user_id=?", Long.class, userId);
         for (Long linkId : linkIds) {
             List<Long> possibleUserLinkRelation =
                 jdbcTemplate.queryForList(

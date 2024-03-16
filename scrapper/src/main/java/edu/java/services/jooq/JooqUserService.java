@@ -8,6 +8,7 @@ import edu.java.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@SuppressWarnings("MultipleStringLiterals")
 @Service
 public class JooqUserService implements UserService {
 

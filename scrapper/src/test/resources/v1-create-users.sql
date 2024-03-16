@@ -1,5 +1,5 @@
 create table users
 (
-    id   bigint       not null,
+    id bigint not null,
     primary key (id)
 )

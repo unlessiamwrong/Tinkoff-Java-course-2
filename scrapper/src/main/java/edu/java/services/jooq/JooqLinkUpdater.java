@@ -42,8 +42,8 @@ public class JooqLinkUpdater implements LinkUpdater {
                 OffsetDateTime currentDateTime = dataSet.dateTime();
                 if (currentDateTime.isAfter(link.getLastUpdate())) {
                     String message =
-                        linkUrl + " is updated with " + dataSet.activityType() + " by " + dataSet.authorName() +
-                            " at " + currentDateTime;
+                        linkUrl + " is updated with " + dataSet.activityType() + " by " + dataSet.authorName()
+                            + " at " + currentDateTime;
 
                     linkUpdateRequests.add(new LinkUpdateRequest(
                         link.getId(),
@@ -54,8 +54,7 @@ public class JooqLinkUpdater implements LinkUpdater {
                             currentDateTime,
                             OffsetDateTime.now()
                         )
-                    ))
-                    ;
+                    ));
                 } else {
                     jooqLinkRepository.updateLinkWithLastCheckForUpdate(link.getId(), OffsetDateTime.now());
                 }

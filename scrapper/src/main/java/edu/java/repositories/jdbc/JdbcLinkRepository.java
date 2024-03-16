@@ -13,9 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+@SuppressWarnings({"MultipleStringLiterals", "LineLength"})
 @Component
 public class JdbcLinkRepository {
 
+    private static final int INTERVAL_FOR_CHECK = 5;
     private final JdbcTemplate jdbcTemplate;
     private final JdbcUserRepository jdbcUserRepository;
 
@@ -23,16 +25,17 @@ public class JdbcLinkRepository {
 
     private final GetLinkDataRepository getLinkDataRepository;
 
-    @Autowired JdbcLinkRepository(
+    @Autowired public JdbcLinkRepository(
         JdbcTemplate jdbcTemplate,
         JdbcUserRepository jdbcUserRepository,
-        GetLinkDataItems getLinkDataItems,
-        GetLinkDataRepository getLinkDataRepository
+        GetLinkDataRepository getLinkDataRepository,
+        GetLinkDataItems getLinkDataItems
+
     ) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcUserRepository = jdbcUserRepository;
-        this.getLinkDataItems = getLinkDataItems;
         this.getLinkDataRepository = getLinkDataRepository;
+        this.getLinkDataItems = getLinkDataItems;
     }
 
     public Link add(long userId, URI url) {
@@ -95,7 +98,6 @@ public class JdbcLinkRepository {
         );
     }
 
-
     public Link getLinkFromUser(long userId, URI url) {
         String urlString = url.toString();
         List<Long> listLinkIdFromLinks = jdbcTemplate.queryForList(
@@ -128,10 +130,11 @@ public class JdbcLinkRepository {
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getTimestamp("last_update").toInstant().atOffset(ZoneOffset.UTC),
-                rs.getTimestamp("last_check_for_update") != null ?
-                    rs.getTimestamp("last_check_for_update").toInstant().atOffset(ZoneOffset.UTC) : OffsetDateTime.now()
+                rs.getTimestamp("last_check_for_update") != null
+                    ? rs.getTimestamp("last_check_for_update").toInstant().atOffset(ZoneOffset.UTC)
+                    : OffsetDateTime.now()
             ),
-            OffsetDateTime.now().minusMinutes(5)
+            OffsetDateTime.now().minusMinutes(INTERVAL_FOR_CHECK)
         );
 
     }

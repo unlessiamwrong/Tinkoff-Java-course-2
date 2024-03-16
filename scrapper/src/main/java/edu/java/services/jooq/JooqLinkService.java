@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static edu.java.utilities.links.LinkChecker.isLinkValid;
 
+@SuppressWarnings("MultipleStringLiterals")
 @Service
 public class JooqLinkService implements LinkService {
 
