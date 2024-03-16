@@ -5,8 +5,6 @@ import edu.java.dto.requests.AddLinkRequest;
 import edu.java.dto.requests.RemoveLinkRequest;
 import edu.java.dto.responses.LinkResponse;
 import edu.java.dto.responses.ListLinksResponse;
-import edu.java.services.jdbc.JdbcLinkService;
-import edu.java.services.jdbc.JdbcUserService;
 import edu.java.services.jooq.JooqLinkService;
 import edu.java.services.jooq.JooqUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,27 +24,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class ScrapperController {
-
-    private final JdbcUserService jdbcUserService;
-    private final JdbcLinkService jdbcLinkService;
 
     private final JooqUserService jooqUserService;
 
     private final JooqLinkService jooqLinkService;
 
-    @Autowired ScrapperController(
-        JdbcUserService jdbcUserService,
-        JdbcLinkService jdbcLinkService,
-        JooqUserService jooqUserService,
-        JooqLinkService jooqLinkService
-    ) {
-
-        this.jdbcUserService = jdbcUserService;
-        this.jdbcLinkService = jdbcLinkService;
-        this.jooqUserService = jooqUserService;
-        this.jooqLinkService = jooqLinkService;
-    }
 
     /**
      * Register chat
@@ -58,9 +44,8 @@ public class ScrapperController {
             @ApiResponse(responseCode = "400", description = "Invalid request params"),
         }
     )
-    @PostMapping("/user/{id}")
-    public void postTgChat(@PathVariable long id) {
-//        jdbcUserService.add(id);
+    @PostMapping("/users/{id}")
+    public void postUser(@PathVariable("id") long id) {
         jooqUserService.add(id);
     }
 
@@ -77,9 +62,8 @@ public class ScrapperController {
             @ApiResponse(responseCode = "404", description = "Chat not found")
         }
     )
-    @DeleteMapping("/user/{id}")
-    public void deleteTgChat(@PathVariable long id) {
-//        jdbcUserService.remove(id);
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable("id") long id) {
         jooqUserService.remove(id);
     }
 
@@ -98,13 +82,6 @@ public class ScrapperController {
     )
     @GetMapping("/links")
     public ListLinksResponse getLinks(@RequestHeader long userId) {
-//        List<Link> links = jdbcLinkService.listAll(userId);
-//        List<LinkResponse> linkResponses = new ArrayList<>();
-//        for (Link link : links) {
-//            linkResponses.add(new LinkResponse(link.getId(), URI.create(link.getName())));
-//        }
-//        return new ListLinksResponse(linkResponses, linkResponses.size());
-//    }
         List<Link> links = jooqLinkService.listAll(userId);
         List<LinkResponse> linkResponses = new ArrayList<>();
         for (Link link : links) {
@@ -128,9 +105,7 @@ public class ScrapperController {
         }
     )
     @PostMapping("/links")
-    public LinkResponse postLink(@RequestHeader long userId, @RequestBody AddLinkRequest addLinkRequest) {
-//        Link link = jdbcLinkService.add(userId, addLinkRequest.link());
-//        return new LinkResponse(link.getId(), URI.create(link.getName()));
+    public LinkResponse postLink(@RequestHeader long userId, @RequestBody @Valid AddLinkRequest addLinkRequest) {
         Link link = jooqLinkService.add(userId, addLinkRequest.link());
         return new LinkResponse(link.getId(), URI.create(link.getName()));
     }
@@ -151,9 +126,7 @@ public class ScrapperController {
         }
     )
     @DeleteMapping("/links")
-    public LinkResponse deleteLink(@RequestHeader long userId, @RequestBody RemoveLinkRequest removeLinkRequest) {
-//        Link link = jdbcLinkService.remove(userId, removeLinkRequest.link());
-//        return new LinkResponse(link.getId(), URI.create(link.getName()));
+    public LinkResponse deleteLink(@RequestHeader long userId, @RequestBody @Valid RemoveLinkRequest removeLinkRequest) {
         Link link = jooqLinkService.remove(userId, removeLinkRequest.link());
         return new LinkResponse(link.getId(), URI.create(link.getName()));
     }

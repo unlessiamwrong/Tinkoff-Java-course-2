@@ -12,7 +12,7 @@ public interface StackOfClient {
     String BASE_URL = "/questions/{id}";
 
     @GetExchange(value = BASE_URL, accept = MediaType.APPLICATION_JSON_VALUE)
-    StackOfQuestionResponse getQuestion(@PathVariable String id, @RequestParam("site") String site);
+    StackOfQuestionResponse getQuestion(@PathVariable("id") String id, @RequestParam("site") String site);
 
     /**
      * Get all answers of the question
@@ -23,7 +23,7 @@ public interface StackOfClient {
      */
     @GetExchange(value = BASE_URL + "/answers", accept = MediaType.APPLICATION_JSON_VALUE)
     StackOfAnswersResponse getAnswers(
-        @PathVariable String id,
+        @PathVariable("id") String id,
         @RequestParam("order") String order,
         @RequestParam("sort") String sort,
         @RequestParam("site") String site

@@ -25,10 +25,6 @@ public class LinkUpdaterScheduler {
 
     @Scheduled(fixedDelayString = "${app.scheduler.interval}")
     public void update() {
-        List<LinkUpdateRequest> linkUpdateRequests = linkUpdater.update();
-//        for(LinkUpdateRequest linkUpdateRequest: linkUpdateRequests){
-//            botClient.getUpdates(linkUpdateRequest);
-//
-//        }
+        linkUpdater.update();
     }
 }
