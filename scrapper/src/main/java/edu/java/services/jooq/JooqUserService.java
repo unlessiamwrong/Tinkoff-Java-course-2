@@ -5,19 +5,16 @@ import edu.java.domain.jooq.tables.records.UsersRecord;
 import edu.java.exceptions.UserAlreadyRegisteredException;
 import edu.java.repositories.jooq.JooqUserRepository;
 import edu.java.services.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @SuppressWarnings("MultipleStringLiterals")
+@RequiredArgsConstructor
 @Service
 public class JooqUserService implements UserService {
 
     private final JooqUserRepository jooqUserRepository;
-
-    @Autowired
-    public JooqUserService(JooqUserRepository jooqUserRepository) {
-        this.jooqUserRepository = jooqUserRepository;
-    }
 
     @Override
     public void add(long userId) {

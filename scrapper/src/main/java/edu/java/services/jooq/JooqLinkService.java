@@ -10,26 +10,19 @@ import edu.java.repositories.jooq.JooqUserRepository;
 import edu.java.services.LinkService;
 import java.net.URI;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static edu.java.utilities.links.LinkChecker.isLinkValid;
 
 @SuppressWarnings("MultipleStringLiterals")
+@RequiredArgsConstructor
 @Service
 public class JooqLinkService implements LinkService {
 
     private final JooqUserRepository jooqUserRepository;
 
     private final JooqLinkRepository jooqLinkRepository;
-
-    @Autowired JooqLinkService(
-
-        JooqUserRepository jooqUserRepository,
-        JooqLinkRepository jooqLinkRepository
-    ) {
-        this.jooqUserRepository = jooqUserRepository;
-        this.jooqLinkRepository = jooqLinkRepository;
-    }
 
     @Override
     public Link add(long userId, URI url) {

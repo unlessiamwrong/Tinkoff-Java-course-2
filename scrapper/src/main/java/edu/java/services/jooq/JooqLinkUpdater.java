@@ -10,21 +10,17 @@ import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class JooqLinkUpdater implements LinkUpdater {
 
     private final JooqLinkRepository jooqLinkRepository;
 
     private final GetLinkDataItems getLinkDataItems;
-
-    @Autowired JooqLinkUpdater(JooqLinkRepository jooqLinkRepository, GetLinkDataItems getLinkDataItems) {
-        this.jooqLinkRepository = jooqLinkRepository;
-        this.getLinkDataItems = getLinkDataItems;
-
-    }
 
     @Override
     public List<LinkUpdateRequest> update() {

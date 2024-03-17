@@ -10,22 +10,17 @@ import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class JdbcLinkUpdater implements LinkUpdater {
 
     private final JdbcLinkRepository jdbcLinkRepository;
 
     private final GetLinkDataItems getLinkDataItems;
-
-    @Autowired JdbcLinkUpdater(JdbcLinkRepository jdbcLinkRepository, GetLinkDataItems getLinkDataItems) {
-
-        this.jdbcLinkRepository = jdbcLinkRepository;
-        this.getLinkDataItems = getLinkDataItems;
-
-    }
 
     @Override
     public List<LinkUpdateRequest> update() {

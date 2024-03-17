@@ -4,6 +4,7 @@ import edu.java.domain.jdbc.User;
 import edu.java.domain.jooq.tables.records.UsersRecord;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,14 +12,11 @@ import static edu.java.domain.jooq.tables.Links.LINKS;
 import static edu.java.domain.jooq.tables.UserLinks.USER_LINKS;
 import static edu.java.domain.jooq.tables.Users.USERS;
 
+@RequiredArgsConstructor
 @Component
 public class JooqUserRepository {
 
     private final DSLContext create;
-
-    @Autowired JooqUserRepository(DSLContext create) {
-        this.create = create;
-    }
 
     public void add(UsersRecord user) {
         create.insertInto(USERS).set(USERS.ID, user.getId()).execute();

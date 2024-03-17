@@ -5,18 +5,16 @@ import edu.java.exceptions.NotFoundException;
 import edu.java.exceptions.UserAlreadyRegisteredException;
 import edu.java.repositories.jdbc.JdbcUserRepository;
 import edu.java.services.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @SuppressWarnings("MultipleStringLiterals")
+@RequiredArgsConstructor
 @Service
 public class JdbcUserService implements UserService {
 
     private final JdbcUserRepository jdbcUserRepository;
-
-    @Autowired JdbcUserService(JdbcUserRepository jdbcUserRepository) {
-        this.jdbcUserRepository = jdbcUserRepository;
-    }
 
     @Override
     public void add(long userId) {

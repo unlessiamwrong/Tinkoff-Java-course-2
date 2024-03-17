@@ -9,9 +9,10 @@ import edu.java.utilities.parser.StackOfLinkParser;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class GetLinkDataRepository {
 
@@ -22,19 +23,6 @@ public class GetLinkDataRepository {
     private final GitHubClient gitHubClient;
 
     private final StackOfClient stackOfClient;
-
-    @Autowired GetLinkDataRepository(
-        GitHubLinkParser gitHubLinkParser,
-        StackOfLinkParser stackOfLinkParser,
-        GitHubClient gitHubClient,
-        StackOfClient stackOfClient
-    ) {
-
-        this.gitHubLinkParser = gitHubLinkParser;
-        this.stackOfLinkParser = stackOfLinkParser;
-        this.gitHubClient = gitHubClient;
-        this.stackOfClient = stackOfClient;
-    }
 
     public OffsetDateTime execute(String linkUrl) {
         if (linkUrl.contains("github.com")) {

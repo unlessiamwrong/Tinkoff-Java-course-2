@@ -10,21 +10,18 @@ import edu.java.repositories.jdbc.JdbcUserRepository;
 import edu.java.services.LinkService;
 import java.net.URI;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static edu.java.utilities.links.LinkChecker.isLinkValid;
 
 @SuppressWarnings("MultipleStringLiterals")
+@RequiredArgsConstructor
 @Service
 public class JdbcLinkService implements LinkService {
 
     private final JdbcLinkRepository jdbcLinkRepository;
     private final JdbcUserRepository jdbcUserRepository;
-
-    @Autowired JdbcLinkService(JdbcLinkRepository jdbcLinkRepository, JdbcUserRepository jdbcUserRepository) {
-        this.jdbcLinkRepository = jdbcLinkRepository;
-        this.jdbcUserRepository = jdbcUserRepository;
-    }
 
     @Override
     public Link add(long userId, URI url) {

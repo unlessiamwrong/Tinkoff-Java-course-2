@@ -9,12 +9,11 @@ import edu.java.services.jooq.JooqLinkService;
 import edu.java.services.jooq.JooqUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,14 +22,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequiredArgsConstructor
+@RestController
 public class ScrapperController {
 
     private final JooqUserService jooqUserService;
 
     private final JooqLinkService jooqLinkService;
-
 
     /**
      * Register chat
@@ -126,7 +124,10 @@ public class ScrapperController {
         }
     )
     @DeleteMapping("/links")
-    public LinkResponse deleteLink(@RequestHeader long userId, @RequestBody @Valid RemoveLinkRequest removeLinkRequest) {
+    public LinkResponse deleteLink(
+        @RequestHeader long userId,
+        @RequestBody @Valid RemoveLinkRequest removeLinkRequest
+    ) {
         Link link = jooqLinkService.remove(userId, removeLinkRequest.link());
         return new LinkResponse(link.getId(), URI.create(link.getName()));
     }

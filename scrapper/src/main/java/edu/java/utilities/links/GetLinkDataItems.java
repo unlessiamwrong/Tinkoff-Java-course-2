@@ -10,10 +10,12 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @SuppressWarnings("ReturnCount")
+@RequiredArgsConstructor
 @Component
 public class GetLinkDataItems {
 
@@ -25,18 +27,6 @@ public class GetLinkDataItems {
 
     private final StackOfClient stackOfClient;
 
-    @Autowired GetLinkDataItems(
-        GitHubLinkParser gitHubLinkParser,
-        StackOfLinkParser stackOfLinkParser,
-        GitHubClient gitHubClient,
-        StackOfClient stackOfClient
-    ) {
-
-        this.gitHubLinkParser = gitHubLinkParser;
-        this.stackOfLinkParser = stackOfLinkParser;
-        this.gitHubClient = gitHubClient;
-        this.stackOfClient = stackOfClient;
-    }
 
     public DataSet execute(String linkUrl) {
         if (linkUrl.contains("github.com")) {

@@ -2,20 +2,18 @@ package edu.java.repositories.jdbc;
 
 import edu.java.domain.jdbc.User;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class JdbcUserRepository {
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired public JdbcUserRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public void add(User user) {
         jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());

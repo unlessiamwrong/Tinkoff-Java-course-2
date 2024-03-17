@@ -8,6 +8,7 @@ import edu.java.utilities.links.GetLinkDataRepository;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import static edu.java.domain.jooq.tables.Links.LINKS;
 import static edu.java.domain.jooq.tables.UserLinks.USER_LINKS;
 
 @SuppressWarnings("LineLength")
+@RequiredArgsConstructor
 @Component
 public class JooqLinkRepository {
 
@@ -26,19 +28,6 @@ public class JooqLinkRepository {
     private final GetLinkDataItems getLinkDataItems;
 
     private final GetLinkDataRepository getLinkDataRepository;
-
-    @Autowired JooqLinkRepository(
-        DSLContext create, JooqUserRepository jooqUserRepository,
-        GetLinkDataRepository getLinkDataRepository,
-        GetLinkDataItems getLinkDataItems
-
-    ) {
-        this.create = create;
-        this.jooqUserRepository = jooqUserRepository;
-        this.getLinkDataRepository = getLinkDataRepository;
-        this.getLinkDataItems = getLinkDataItems;
-
-    }
 
     public Link add(long userId, URI url) {
         User user = jooqUserRepository.getUser(userId);

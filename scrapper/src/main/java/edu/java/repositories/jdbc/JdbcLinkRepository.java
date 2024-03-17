@@ -9,34 +9,24 @@ import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @SuppressWarnings({"MultipleStringLiterals", "LineLength"})
+@RequiredArgsConstructor
 @Component
 public class JdbcLinkRepository {
 
     private static final int INTERVAL_FOR_CHECK = 5;
     private final JdbcTemplate jdbcTemplate;
     private final JdbcUserRepository jdbcUserRepository;
+    private final GetLinkDataRepository getLinkDataRepository;
 
     private final GetLinkDataItems getLinkDataItems;
 
-    private final GetLinkDataRepository getLinkDataRepository;
 
-    @Autowired public JdbcLinkRepository(
-        JdbcTemplate jdbcTemplate,
-        JdbcUserRepository jdbcUserRepository,
-        GetLinkDataRepository getLinkDataRepository,
-        GetLinkDataItems getLinkDataItems
-
-    ) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.jdbcUserRepository = jdbcUserRepository;
-        this.getLinkDataRepository = getLinkDataRepository;
-        this.getLinkDataItems = getLinkDataItems;
-    }
 
     public Link add(long userId, URI url) {
         User user = jdbcUserRepository.getUser(userId);
