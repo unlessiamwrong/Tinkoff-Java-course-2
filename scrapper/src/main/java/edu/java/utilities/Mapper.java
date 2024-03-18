@@ -9,6 +9,10 @@ import java.util.List;
 
 public class Mapper {
 
+    private Mapper() {
+
+    }
+
     public static LinkResponse executeForObject(Link link) {
         return new LinkResponse(link.getId(), URI.create(link.getName()));
     }

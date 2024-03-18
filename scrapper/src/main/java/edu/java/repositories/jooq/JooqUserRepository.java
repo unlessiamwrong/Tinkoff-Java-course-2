@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import static edu.java.domain.jooq.tables.Links.LINKS;
 import static edu.java.domain.jooq.tables.UserLinks.USER_LINKS;

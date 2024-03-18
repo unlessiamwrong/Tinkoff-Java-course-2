@@ -6,7 +6,6 @@ import edu.java.dto.responses.LinkResponse;
 import edu.java.dto.responses.ListLinksResponse;
 import edu.java.services.jooq.JooqLinkService;
 import edu.java.services.jooq.JooqUserService;
-import edu.java.utilities.Mapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -77,7 +76,7 @@ public class ScrapperController {
     )
     @GetMapping("/links")
     public ListLinksResponse getLinks(@RequestHeader long userId) {
-        return Mapper.executeForList(jooqLinkService.listAll(userId));
+        return jooqLinkService.listAll(userId);
 
     }
 
@@ -97,7 +96,7 @@ public class ScrapperController {
     )
     @PostMapping("/links")
     public LinkResponse postLink(@RequestHeader long userId, @RequestBody @Valid AddLinkRequest addLinkRequest) {
-        return Mapper.executeForObject(jooqLinkService.add(userId, addLinkRequest.link()));
+        return jooqLinkService.add(userId, addLinkRequest.link());
 
     }
 
@@ -121,7 +120,7 @@ public class ScrapperController {
         @RequestHeader long userId,
         @RequestBody @Valid RemoveLinkRequest removeLinkRequest
     ) {
-        return Mapper.executeForObject(jooqLinkService.remove(userId, removeLinkRequest.link()));
+        return jooqLinkService.remove(userId, removeLinkRequest.link());
     }
 
 }

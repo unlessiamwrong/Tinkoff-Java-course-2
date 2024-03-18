@@ -66,7 +66,7 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     void whenUse_Add_AddRowToLinks() {
         //Arrange
         User user = new User(1);
-        Link link = new Link(1, "linkStubOne");
+        Link link = Link.builder().id(1).name("linkStubOne").build();
         jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
 
         //Act
@@ -82,7 +82,7 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     void whenUse_Add_AddRowToUserLinks() {
         //Arrange
         User user = new User(1);
-        Link link = new Link(1, "linkStubOne");
+        Link link = Link.builder().id(1).name("linkStubOne").build();
         jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
 
         //Act
@@ -98,7 +98,7 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     void whenUse_Remove_RemoveRowFromLinks() {
         //Arrange
         User user = new User(1);
-        Link link = new Link(1, "linkStubOne");
+        Link link = Link.builder().id(1).name("linkStubOne").build();
         jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
         jdbcLinkRepository.add(user.getId(), URI.create(link.getName()));
 
@@ -116,7 +116,7 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     void whenUse_Remove_RemoveRowFromUserLinks() {
         //Arrange
         User user = new User(1);
-        Link link = new Link(1, "linkStubOne");
+        Link link = Link.builder().id(1).name("linkStubOne").build();
         jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
         jdbcLinkRepository.add(user.getId(), URI.create(link.getName()));
 
@@ -134,8 +134,8 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     void whenUse_findAllUserLinks_AndUserHasLinks_ReturnListOfLinks() {
         //Arrange
         User user = new User(1);
-        Link linkOne = new Link(1, "linkStubOne");
-        Link linkTwo = new Link(2, "linkStubTwo");
+        Link linkOne = Link.builder().id(1).name("linkStubOne").build();
+        Link linkTwo = Link.builder().id(2).name("linkStubTwo").build();
         jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
         jdbcLinkRepository.add(user.getId(), URI.create(linkOne.getName()));
         jdbcLinkRepository.add(user.getId(), URI.create(linkTwo.getName()));
@@ -164,7 +164,7 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     void whenUse_getLinkFromUser_AndUserHasLink_ReturnLink() {
         //Arrange
         User user = new User(1);
-        Link link = new Link(1, "linkStubOne");
+        Link link = Link.builder().id(1).name("linkStubOne").build();
         jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
         jdbcLinkRepository.add(user.getId(), URI.create(link.getName()));
 

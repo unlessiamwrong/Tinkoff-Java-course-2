@@ -10,7 +10,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -26,34 +25,23 @@ public class JdbcLinkRepository {
 
     private final GetLinkDataItems getLinkDataItems;
 
-
-
     public Link add(long userId, URI url) {
         User user = jdbcUserRepository.getUser(userId);
         Link link = null;
+
         if (user != null) {
             String urlString = url.toString();
-            DataSet dataSet = getLinkDataItems.execute(urlString);
-            OffsetDateTime lastUpdateAt;
-            if (dataSet != null) {
-                lastUpdateAt = dataSet.dateTime();
-            } else {
-                lastUpdateAt = getLinkDataRepository.execute(urlString);
-            }
+            OffsetDateTime lastUpdateAt = getLinkLastUpdate(urlString);
+
             jdbcTemplate.update(
-                "INSERT INTO links(name, last_update) VALUES(?,?)",
+                "INSERT INTO links(name, last_update) VALUES(?,?) ON CONFLICT (name) DO NOTHING ",
                 urlString,
                 lastUpdateAt
             );
 
-            Long linkId = jdbcTemplate.queryForObject(
-                "SELECT id FROM links WHERE name = ?",
-                Long.class,
-                urlString
-            );
-
+            Long linkId = jdbcTemplate.queryForObject("SELECT id FROM links WHERE name = ?", Long.class, urlString);
             if (linkId != null) {
-                link = new Link(linkId, urlString, lastUpdateAt);
+                link = Link.builder().id(linkId).name(urlString).lastUpdate(lastUpdateAt).build();
                 jdbcTemplate.update(
                     "INSERT INTO user_links(user_id, link_id) VALUES(?,?)",
                     userId,
@@ -79,12 +67,12 @@ public class JdbcLinkRepository {
     public List<Link> findAllUserLinks(long userId) {
         return jdbcTemplate.query(
             "SELECT l.* FROM links l INNER JOIN user_links ul ON l.id = ul.link_id WHERE ul.user_id=?",
-            new Object[] {userId},
             (rs, row) -> {
                 long id = rs.getLong("id");
                 String name = rs.getString("name");
-                return new Link(id, name);
-            }
+                return Link.builder().id(id).name(name).build();
+            },
+            userId
         );
     }
 
@@ -109,7 +97,8 @@ public class JdbcLinkRepository {
         if (listLinkIdFromUserLinks.isEmpty()) {
             return null;
         }
-        return new Link(listLinkIdFromUserLinks.getFirst(), urlString);
+
+        return Link.builder().id(listLinkIdFromUserLinks.getFirst()).name(urlString).build();
 
     }
 
@@ -154,5 +143,17 @@ public class JdbcLinkRepository {
             lastCheckForUpdate,
             linkId
         );
+    }
+
+    private OffsetDateTime getLinkLastUpdate(String urlString) {
+        OffsetDateTime lastUpdateAt;
+        DataSet dataSet = getLinkDataItems.execute(urlString);
+        if (dataSet != null) {
+            lastUpdateAt = dataSet.dateTime();
+        } else {
+            lastUpdateAt = getLinkDataRepository.execute(urlString);
+        }
+
+        return lastUpdateAt;
     }
 }

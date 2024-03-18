@@ -6,7 +6,6 @@ import edu.java.exceptions.UserAlreadyRegisteredException;
 import edu.java.repositories.jdbc.JdbcUserRepository;
 import edu.java.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @SuppressWarnings("MultipleStringLiterals")

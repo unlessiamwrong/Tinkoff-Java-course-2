@@ -3,7 +3,6 @@ package edu.java.repositories.jdbc;
 import edu.java.domain.jdbc.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -52,8 +51,8 @@ public class JdbcUserRepository {
         try {
             return jdbcTemplate.queryForObject(
                 "SELECT * FROM users WHERE id=?",
-                new Object[] {userId},
-                new BeanPropertyRowMapper<>(User.class)
+                new BeanPropertyRowMapper<>(User.class),
+                userId
             );
         } catch (EmptyResultDataAccessException e) {
             return null;

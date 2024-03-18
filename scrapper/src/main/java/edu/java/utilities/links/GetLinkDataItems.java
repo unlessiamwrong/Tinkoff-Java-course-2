@@ -11,7 +11,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @SuppressWarnings("ReturnCount")
@@ -26,7 +25,6 @@ public class GetLinkDataItems {
     private final GitHubClient gitHubClient;
 
     private final StackOfClient stackOfClient;
-
 
     public DataSet execute(String linkUrl) {
         if (linkUrl.contains("github.com")) {

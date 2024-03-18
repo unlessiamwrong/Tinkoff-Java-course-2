@@ -1,13 +1,13 @@
 package edu.java.services;
 
-import edu.java.domain.jdbc.Link;
+import edu.java.dto.responses.LinkResponse;
+import edu.java.dto.responses.ListLinksResponse;
 import java.net.URI;
-import java.util.List;
 
 public interface LinkService {
-    Link add(long userId, URI url);
+    LinkResponse add(long userId, URI url);
 
-    Link remove(long userId, URI url);
+    LinkResponse remove(long userId, URI url);
 
-    List<Link> listAll(long userId);
+    ListLinksResponse listAll(long userId);
 }

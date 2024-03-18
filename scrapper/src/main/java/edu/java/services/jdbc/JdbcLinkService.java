@@ -2,16 +2,17 @@ package edu.java.services.jdbc;
 
 import edu.java.domain.jdbc.Link;
 import edu.java.domain.jdbc.User;
+import edu.java.dto.responses.LinkResponse;
+import edu.java.dto.responses.ListLinksResponse;
 import edu.java.exceptions.InvalidParamsException;
 import edu.java.exceptions.LinkAlreadyExists;
 import edu.java.exceptions.NotFoundException;
 import edu.java.repositories.jdbc.JdbcLinkRepository;
 import edu.java.repositories.jdbc.JdbcUserRepository;
 import edu.java.services.LinkService;
+import edu.java.utilities.Mapper;
 import java.net.URI;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static edu.java.utilities.links.LinkChecker.isLinkValid;
 
@@ -24,7 +25,7 @@ public class JdbcLinkService implements LinkService {
     private final JdbcUserRepository jdbcUserRepository;
 
     @Override
-    public Link add(long userId, URI url) {
+    public LinkResponse add(long userId, URI url) {
         User user = jdbcUserRepository.getUser(userId);
         if (user == null) {
             throw new NotFoundException("User with id:'" + userId + "' is not found");
@@ -36,11 +37,11 @@ public class JdbcLinkService implements LinkService {
         if (link != null) {
             throw new LinkAlreadyExists("Link:'" + url + "' already exists");
         }
-        return jdbcLinkRepository.add(userId, url);
+        return Mapper.executeForObject(jdbcLinkRepository.add(userId, url));
     }
 
     @Override
-    public Link remove(long userId, URI url) {
+    public LinkResponse remove(long userId, URI url) {
         User user = jdbcUserRepository.getUser(userId);
 
         if (user == null) {
@@ -53,15 +54,15 @@ public class JdbcLinkService implements LinkService {
         } else {
             jdbcLinkRepository.remove(userId, link);
         }
-        return link;
+        return Mapper.executeForObject(link);
     }
 
     @Override
-    public List<Link> listAll(long userId) {
+    public ListLinksResponse listAll(long userId) {
         User user = jdbcUserRepository.getUser(userId);
         if (user == null) {
             throw new NotFoundException("User with id:'" + userId + "' is not found");
         }
-        return jdbcLinkRepository.findAllUserLinks(userId);
+        return Mapper.executeForList(jdbcLinkRepository.findAllUserLinks(userId));
     }
 }

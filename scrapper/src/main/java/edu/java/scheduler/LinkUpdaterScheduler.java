@@ -1,9 +1,7 @@
 package edu.java.scheduler;
 
 import edu.java.clients.BotClient;
-import edu.java.dto.requests.LinkUpdateRequest;
 import edu.java.services.LinkUpdater;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
