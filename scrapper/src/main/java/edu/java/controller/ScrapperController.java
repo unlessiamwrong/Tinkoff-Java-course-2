@@ -1,18 +1,15 @@
 package edu.java.controller;
 
-import edu.java.domain.jdbc.Link;
 import edu.java.dto.requests.AddLinkRequest;
 import edu.java.dto.requests.RemoveLinkRequest;
 import edu.java.dto.responses.LinkResponse;
 import edu.java.dto.responses.ListLinksResponse;
 import edu.java.services.jooq.JooqLinkService;
 import edu.java.services.jooq.JooqUserService;
+import edu.java.utilities.Mapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,12 +77,8 @@ public class ScrapperController {
     )
     @GetMapping("/links")
     public ListLinksResponse getLinks(@RequestHeader long userId) {
-        List<Link> links = jooqLinkService.listAll(userId);
-        List<LinkResponse> linkResponses = new ArrayList<>();
-        for (Link link : links) {
-            linkResponses.add(new LinkResponse(link.getId(), URI.create(link.getName())));
-        }
-        return new ListLinksResponse(linkResponses, linkResponses.size());
+        return Mapper.executeForList(jooqLinkService.listAll(userId));
+
     }
 
     /**
@@ -104,8 +97,8 @@ public class ScrapperController {
     )
     @PostMapping("/links")
     public LinkResponse postLink(@RequestHeader long userId, @RequestBody @Valid AddLinkRequest addLinkRequest) {
-        Link link = jooqLinkService.add(userId, addLinkRequest.link());
-        return new LinkResponse(link.getId(), URI.create(link.getName()));
+        return Mapper.executeForObject(jooqLinkService.add(userId, addLinkRequest.link()));
+
     }
 
     /**
@@ -128,8 +121,7 @@ public class ScrapperController {
         @RequestHeader long userId,
         @RequestBody @Valid RemoveLinkRequest removeLinkRequest
     ) {
-        Link link = jooqLinkService.remove(userId, removeLinkRequest.link());
-        return new LinkResponse(link.getId(), URI.create(link.getName()));
+        return Mapper.executeForObject(jooqLinkService.remove(userId, removeLinkRequest.link()));
     }
 
 }
