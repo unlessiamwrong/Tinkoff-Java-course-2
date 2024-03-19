@@ -1,4 +1,4 @@
-package edu.java.scrapper;
+package edu.java.scrapper.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -33,6 +33,7 @@ public abstract class IntegrationTest {
         } catch (SQLException | LiquibaseException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     private static void runMigrations(JdbcDatabaseContainer<?> c) throws SQLException, LiquibaseException {

@@ -4,22 +4,32 @@ import edu.java.dto.requests.AddLinkRequest;
 import edu.java.dto.requests.RemoveLinkRequest;
 import edu.java.dto.responses.LinkResponse;
 import edu.java.dto.responses.ListLinksResponse;
+import edu.java.services.jooq.JooqLinkService;
+import edu.java.services.jooq.JooqUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequiredArgsConstructor
 @RestController
 public class ScrapperController {
+
+    private final JooqUserService jooqUserService;
+
+    private final JooqLinkService jooqLinkService;
+
     /**
      * Register chat
      *
-     * @param id telegram chat id
+     * @param id user id
      */
     @Operation(
         summary = "Register chat",
@@ -28,14 +38,15 @@ public class ScrapperController {
             @ApiResponse(responseCode = "400", description = "Invalid request params"),
         }
     )
-    @PostMapping("/tg-chat/{id}")
-    public void postTgChat(@PathVariable long id) {
+    @PostMapping("/users/{id}")
+    public void postUser(@PathVariable("id") long id) {
+        jooqUserService.add(id);
     }
 
     /**
      * Delete chat
      *
-     * @param id telegram chat id
+     * @param id user id
      */
     @Operation(
         summary = "Delete chat",
@@ -45,14 +56,15 @@ public class ScrapperController {
             @ApiResponse(responseCode = "404", description = "Chat not found")
         }
     )
-    @DeleteMapping("/tg-chat/{id}")
-    public void deleteTgChat(@PathVariable long id) {
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable("id") long id) {
+        jooqUserService.remove(id);
     }
 
     /**
      * Get all tracked links
      *
-     * @param tgChatId telegram chat id
+     * @param userId user id
      * @return ListLinksResponse
      */
     @Operation(
@@ -63,14 +75,15 @@ public class ScrapperController {
         }
     )
     @GetMapping("/links")
-    public ListLinksResponse getLinks(@RequestHeader long tgChatId) {
-        return new ListLinksResponse(null, 0);
+    public ListLinksResponse getLinks(@RequestParam long userId) {
+        return jooqLinkService.listAll(userId);
+
     }
 
     /**
      * Add tracking link
      *
-     * @param tgChatId       telegram chat id
+     * @param userId         user id
      * @param addLinkRequest link to track
      * @return LinkResponse
      */
@@ -82,14 +95,15 @@ public class ScrapperController {
         }
     )
     @PostMapping("/links")
-    public LinkResponse postLink(@RequestHeader long tgChatId, @RequestBody AddLinkRequest addLinkRequest) {
-        return new LinkResponse(0, null);
+    public LinkResponse postLink(@RequestParam long userId, @RequestBody @Valid AddLinkRequest addLinkRequest) {
+        return jooqLinkService.add(userId, addLinkRequest.link());
+
     }
 
     /**
      * Delete tracking link
      *
-     * @param tgChatId          telegram chat id
+     * @param userId            user id
      * @param removeLinkRequest link to delete
      * @return LinkResponse
      */
@@ -102,8 +116,11 @@ public class ScrapperController {
         }
     )
     @DeleteMapping("/links")
-    public LinkResponse deleteLink(@RequestHeader long tgChatId, @RequestBody RemoveLinkRequest removeLinkRequest) {
-        return new LinkResponse(0, null);
+    public LinkResponse deleteLink(
+        @RequestParam long userId,
+        @RequestBody @Valid RemoveLinkRequest removeLinkRequest
+    ) {
+        return jooqLinkService.remove(userId, removeLinkRequest.link());
     }
 
 }
