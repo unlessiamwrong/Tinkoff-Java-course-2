@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -75,7 +75,7 @@ public class ScrapperController {
         }
     )
     @GetMapping("/links")
-    public ListLinksResponse getLinks(@RequestHeader long userId) {
+    public ListLinksResponse getLinks(@RequestParam long userId) {
         return jooqLinkService.listAll(userId);
 
     }
@@ -95,7 +95,7 @@ public class ScrapperController {
         }
     )
     @PostMapping("/links")
-    public LinkResponse postLink(@RequestHeader long userId, @RequestBody @Valid AddLinkRequest addLinkRequest) {
+    public LinkResponse postLink(@RequestParam long userId, @RequestBody @Valid AddLinkRequest addLinkRequest) {
         return jooqLinkService.add(userId, addLinkRequest.link());
 
     }
@@ -117,7 +117,7 @@ public class ScrapperController {
     )
     @DeleteMapping("/links")
     public LinkResponse deleteLink(
-        @RequestHeader long userId,
+        @RequestParam long userId,
         @RequestBody @Valid RemoveLinkRequest removeLinkRequest
     ) {
         return jooqLinkService.remove(userId, removeLinkRequest.link());

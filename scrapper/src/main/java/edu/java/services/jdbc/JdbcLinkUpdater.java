@@ -24,9 +24,9 @@ public class JdbcLinkUpdater implements LinkUpdater {
     @Override
     public List<LinkUpdateRequest> update() {
         List<Link> notUpdatedLinks = jdbcLinkRepository.findAll();
-        List<LinkUpdateRequest> linkUpdateRequests = new ArrayList<>();
+        List<LinkUpdateRequest> linkUpdateRequests = new ArrayList<>(notUpdatedLinks.size());
         if (notUpdatedLinks.isEmpty()) {
-            return null;
+            return linkUpdateRequests;
         }
         for (Link link : notUpdatedLinks) {
             DataSet dataSet = getLinkDataItems.execute(link.getName());

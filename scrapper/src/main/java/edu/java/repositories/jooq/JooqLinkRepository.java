@@ -36,13 +36,26 @@ public class JooqLinkRepository {
             String urlString = url.toString();
             OffsetDateTime lastUpdateAt = getLinkLastUpdate(urlString);
 
-            create.insertInto(LINKS, LINKS.NAME, LINKS.LAST_UPDATE).values(urlString, lastUpdateAt)
-                .onConflict(LINKS.NAME).doNothing().execute();
+            create.insertInto(LINKS, LINKS.NAME, LINKS.LAST_UPDATE)
+                .values(urlString, lastUpdateAt)
+                .onConflict(LINKS.NAME)
+                .doNothing()
+                .execute();
 
-            Long linkId = create.selectFrom(LINKS).where(LINKS.NAME.eq(urlString)).fetchOne().getId();
+            Long linkId = create.selectFrom(LINKS)
+                .where(LINKS.NAME.eq(urlString))
+                .fetchOne()
+                .getId();
             if (linkId != null) {
-                link = Link.builder().id(linkId).name(urlString).lastUpdate(lastUpdateAt).build();
-                create.insertInto(USER_LINKS).set(USER_LINKS.USER_ID, userId).set(USER_LINKS.LINK_ID, linkId).execute();
+                link = Link.builder()
+                    .id(linkId)
+                    .name(urlString)
+                    .lastUpdate(lastUpdateAt)
+                    .build();
+                create.insertInto(USER_LINKS)
+                    .set(USER_LINKS.USER_ID, userId)
+                    .set(USER_LINKS.LINK_ID, linkId)
+                    .execute();
             }
         }
         return link;
@@ -51,11 +64,17 @@ public class JooqLinkRepository {
     public Link remove(long userId, Link link) {
         Long linkId = link.getId();
 
-        create.deleteFrom(USER_LINKS).where(USER_LINKS.USER_ID.eq(userId), USER_LINKS.LINK_ID.eq(linkId)).execute();
+        create.deleteFrom(USER_LINKS)
+            .where(USER_LINKS.USER_ID.eq(userId), USER_LINKS.LINK_ID.eq(linkId))
+            .execute();
         List<Long> possibleUserLinkRelation =
-            create.selectFrom(USER_LINKS).where(USER_LINKS.LINK_ID.eq(linkId)).fetch(USER_LINKS.LINK_ID, Long.class);
+            create.selectFrom(USER_LINKS)
+                .where(USER_LINKS.LINK_ID.eq(linkId))
+                .fetchInto(Long.class);
         if (possibleUserLinkRelation.isEmpty()) {
-            create.deleteFrom(LINKS).where(LINKS.ID.eq(linkId)).execute();
+            create.deleteFrom(LINKS)
+                .where(LINKS.ID.eq(linkId))
+                .execute();
         }
         return link;
 
@@ -68,27 +87,37 @@ public class JooqLinkRepository {
             .where(USER_LINKS.USER_ID.eq(userId))
             .fetch()
 
-            .map(r -> Link.builder().id(r.get(LINKS.ID)).name(r.get(LINKS.NAME)).build());
+            .map(r -> Link.builder()
+                .id(r.get(LINKS.ID))
+                .name(r.get(LINKS.NAME))
+                .build());
     }
 
     public Link getLinkFromUser(long userId, URI url) {
         String urlString = url.toString();
         List<Long> listLinkIdFromLinks =
-            create.selectFrom(LINKS).where(LINKS.NAME.eq(urlString)).fetch(LINKS.ID, Long.class);
+            create.selectFrom(LINKS)
+                .where(LINKS.NAME.eq(urlString))
+                .fetchInto(Long.class);
         if (listLinkIdFromLinks.isEmpty()) {
             return null;
         }
-        List<Long> listLinkIdFromUserLinks = create.select(USER_LINKS.LINK_ID).from(USER_LINKS)
+        List<Long> listLinkIdFromUserLinks = create.select(USER_LINKS.LINK_ID)
+            .from(USER_LINKS)
             .where(USER_LINKS.USER_ID.eq(userId), USER_LINKS.LINK_ID.eq(listLinkIdFromLinks.getFirst()))
-            .fetch(USER_LINKS.LINK_ID, Long.class);
+            .fetchInto(Long.class);
         if (listLinkIdFromUserLinks.isEmpty()) {
             return null;
         }
-        return Link.builder().id(listLinkIdFromUserLinks.getFirst()).name(urlString).build();
+        return Link.builder()
+            .id(listLinkIdFromUserLinks.getFirst())
+            .name(urlString)
+            .build();
     }
 
     public List<Link> findAll() {
-        return create.select(LINKS.ID, LINKS.NAME, LINKS.LAST_UPDATE, LINKS.LAST_CHECK_FOR_UPDATE).from(LINKS)
+        return create.select(LINKS.ID, LINKS.NAME, LINKS.LAST_UPDATE, LINKS.LAST_CHECK_FOR_UPDATE)
+            .from(LINKS)
             .where(LINKS.LAST_CHECK_FOR_UPDATE.isNull())
             .or(LINKS.LAST_CHECK_FOR_UPDATE.lessThan(OffsetDateTime.now().minusMinutes(INTERVAL_FOR_CHECK))).fetch()
             .map(
@@ -109,10 +138,15 @@ public class JooqLinkRepository {
         OffsetDateTime lastUpdate,
         OffsetDateTime lastCheckForUpdate
     ) {
-        create.update(LINKS).set(LINKS.LAST_UPDATE, lastUpdate).set(LINKS.LAST_CHECK_FOR_UPDATE, lastCheckForUpdate)
-            .where(LINKS.ID.eq(linkId)).execute();
-        return create.selectFrom(USER_LINKS).where(USER_LINKS.LINK_ID.eq(linkId)).fetch()
-            .map(r -> r.get(USER_LINKS.USER_ID));
+        create.update(LINKS)
+            .set(LINKS.LAST_UPDATE, lastUpdate)
+            .set(LINKS.LAST_CHECK_FOR_UPDATE, lastCheckForUpdate)
+            .where(LINKS.ID.eq(linkId))
+            .execute();
+        return create.select(USER_LINKS.USER_ID)
+            .from(USER_LINKS)
+            .where(USER_LINKS.LINK_ID.eq(linkId))
+            .fetchInto(Long.class);
 
     }
 
@@ -120,7 +154,10 @@ public class JooqLinkRepository {
         long linkId,
         OffsetDateTime lastCheckForUpdate
     ) {
-        create.update(LINKS).set(LINKS.LAST_CHECK_FOR_UPDATE, lastCheckForUpdate).where(LINKS.ID.eq(linkId)).execute();
+        create.update(LINKS)
+            .set(LINKS.LAST_CHECK_FOR_UPDATE, lastCheckForUpdate)
+            .where(LINKS.ID.eq(linkId))
+            .execute();
     }
 
     private OffsetDateTime getLinkLastUpdate(String urlString) {

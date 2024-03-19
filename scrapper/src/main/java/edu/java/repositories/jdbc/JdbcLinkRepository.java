@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +42,11 @@ public class JdbcLinkRepository {
 
             Long linkId = jdbcTemplate.queryForObject("SELECT id FROM links WHERE name = ?", Long.class, urlString);
             if (linkId != null) {
-                link = Link.builder().id(linkId).name(urlString).lastUpdate(lastUpdateAt).build();
+                link = Link.builder()
+                    .id(linkId)
+                    .name(urlString)
+                    .lastUpdate(lastUpdateAt)
+                    .build();
                 jdbcTemplate.update(
                     "INSERT INTO user_links(user_id, link_id) VALUES(?,?)",
                     userId,
@@ -55,11 +60,22 @@ public class JdbcLinkRepository {
     public Link remove(long userId, Link link) {
         Long linkId = link.getId();
 
-        jdbcTemplate.update("DELETE FROM user_links WHERE (user_id, link_id)=(?,?)", userId, linkId);
+        jdbcTemplate.update(
+            "DELETE FROM user_links WHERE (user_id, link_id)=(?,?)",
+            userId,
+            linkId
+        );
         List<Long> possibleUserLinkRelation =
-            jdbcTemplate.queryForList("SELECT user_id FROM user_links WHERE link_id=?", Long.class, linkId);
+            jdbcTemplate.queryForList(
+                "SELECT user_id FROM user_links WHERE link_id=?",
+                Long.class,
+                linkId
+            );
         if (possibleUserLinkRelation.isEmpty()) {
-            jdbcTemplate.update("DELETE FROM links WHERE id=?", linkId);
+            jdbcTemplate.update(
+                "DELETE FROM links WHERE id=?",
+                linkId
+            );
         }
         return link;
     }
@@ -67,11 +83,7 @@ public class JdbcLinkRepository {
     public List<Link> findAllUserLinks(long userId) {
         return jdbcTemplate.query(
             "SELECT l.* FROM links l INNER JOIN user_links ul ON l.id = ul.link_id WHERE ul.user_id=?",
-            (rs, row) -> {
-                long id = rs.getLong("id");
-                String name = rs.getString("name");
-                return Link.builder().id(id).name(name).build();
-            },
+            new BeanPropertyRowMapper<>(Link.class),
             userId
         );
     }
@@ -98,7 +110,10 @@ public class JdbcLinkRepository {
             return null;
         }
 
-        return Link.builder().id(listLinkIdFromUserLinks.getFirst()).name(urlString).build();
+        return Link.builder()
+            .id(listLinkIdFromUserLinks.getFirst())
+            .name(urlString)
+            .build();
 
     }
 
