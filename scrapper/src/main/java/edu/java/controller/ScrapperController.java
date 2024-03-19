@@ -4,8 +4,10 @@ import edu.java.dto.requests.AddLinkRequest;
 import edu.java.dto.requests.RemoveLinkRequest;
 import edu.java.dto.responses.LinkResponse;
 import edu.java.dto.responses.ListLinksResponse;
+import edu.java.repositories.jpa.JpaUserRepository;
 import edu.java.services.jooq.JooqLinkService;
 import edu.java.services.jooq.JooqUserService;
+import edu.java.services.jpa.JpaUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -26,6 +28,8 @@ public class ScrapperController {
 
     private final JooqLinkService jooqLinkService;
 
+    private final JpaUserService jpaUserService;
+
     /**
      * Register chat
      *
@@ -40,7 +44,7 @@ public class ScrapperController {
     )
     @PostMapping("/users/{id}")
     public void postUser(@PathVariable("id") long id) {
-        jooqUserService.add(id);
+        jpaUserService.add(id);
     }
 
     /**
@@ -58,7 +62,7 @@ public class ScrapperController {
     )
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable("id") long id) {
-        jooqUserService.remove(id);
+        jpaUserService.remove(id);
     }
 
     /**
