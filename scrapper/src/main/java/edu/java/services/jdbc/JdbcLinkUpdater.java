@@ -11,11 +11,9 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
-@Service
-public class JdbcLinkUpdater implements LinkUpdater {
+public class JdbcLinkUpdater implements LinkUpdater<Link> {
 
     private final JdbcLinkRepository jdbcLinkRepository;
 

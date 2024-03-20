@@ -12,11 +12,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 
 @SuppressWarnings({"MultipleStringLiterals", "LineLength"})
 @RequiredArgsConstructor
-@Component
 public class JdbcLinkRepository {
 
     private static final int INTERVAL_FOR_CHECK = 5;

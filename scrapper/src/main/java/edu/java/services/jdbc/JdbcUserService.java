@@ -6,11 +6,9 @@ import edu.java.exceptions.UserAlreadyRegisteredException;
 import edu.java.repositories.jdbc.JdbcUserRepository;
 import edu.java.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @SuppressWarnings("MultipleStringLiterals")
 @RequiredArgsConstructor
-@Service
 public class JdbcUserService implements UserService {
 
     private final JdbcUserRepository jdbcUserRepository;

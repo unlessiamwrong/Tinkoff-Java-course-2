@@ -10,10 +10,8 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
-@Component
 public class GetLinkDataRepository {
 
     private final GitHubLinkParser gitHubLinkParser;

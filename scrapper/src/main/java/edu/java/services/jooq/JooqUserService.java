@@ -7,11 +7,9 @@ import edu.java.exceptions.UserAlreadyRegisteredException;
 import edu.java.repositories.jooq.JooqUserRepository;
 import edu.java.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @SuppressWarnings("MultipleStringLiterals")
 @RequiredArgsConstructor
-@Service
 public class JooqUserService implements UserService {
 
     private final JooqUserRepository jooqUserRepository;

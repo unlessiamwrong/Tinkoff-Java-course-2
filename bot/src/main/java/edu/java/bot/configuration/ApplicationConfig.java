@@ -11,6 +11,8 @@ public record ApplicationConfig(
     @NotEmpty
     String telegramToken,
     Scheduler scheduler,
+
+    String scrapperBaseUrl,
     String gitHubBaseUrl,
     String stackOfBaseUrl
 

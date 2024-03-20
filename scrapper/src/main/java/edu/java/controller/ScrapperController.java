@@ -4,10 +4,8 @@ import edu.java.dto.requests.AddLinkRequest;
 import edu.java.dto.requests.RemoveLinkRequest;
 import edu.java.dto.responses.LinkResponse;
 import edu.java.dto.responses.ListLinksResponse;
-import edu.java.repositories.jpa.JpaUserRepository;
-import edu.java.services.jooq.JooqLinkService;
-import edu.java.services.jooq.JooqUserService;
-import edu.java.services.jpa.JpaUserService;
+import edu.java.services.LinkService;
+import edu.java.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -24,11 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ScrapperController {
 
-    private final JooqUserService jooqUserService;
-
-    private final JooqLinkService jooqLinkService;
-
-    private final JpaUserService jpaUserService;
+    private final UserService userService;
+    private final LinkService linkService;
 
     /**
      * Register chat
@@ -44,7 +39,7 @@ public class ScrapperController {
     )
     @PostMapping("/users/{id}")
     public void postUser(@PathVariable("id") long id) {
-        jpaUserService.add(id);
+        userService.add(id);
     }
 
     /**
@@ -62,7 +57,7 @@ public class ScrapperController {
     )
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable("id") long id) {
-        jpaUserService.remove(id);
+        userService.remove(id);
     }
 
     /**
@@ -80,7 +75,7 @@ public class ScrapperController {
     )
     @GetMapping("/links")
     public ListLinksResponse getLinks(@RequestParam long userId) {
-        return jooqLinkService.listAll(userId);
+        return linkService.listAll(userId);
 
     }
 
@@ -100,7 +95,7 @@ public class ScrapperController {
     )
     @PostMapping("/links")
     public LinkResponse postLink(@RequestParam long userId, @RequestBody @Valid AddLinkRequest addLinkRequest) {
-        return jooqLinkService.add(userId, addLinkRequest.link());
+        return linkService.add(userId, addLinkRequest.link());
 
     }
 
@@ -124,7 +119,7 @@ public class ScrapperController {
         @RequestParam long userId,
         @RequestBody @Valid RemoveLinkRequest removeLinkRequest
     ) {
-        return jooqLinkService.remove(userId, removeLinkRequest.link());
+        return linkService.remove(userId, removeLinkRequest.link());
     }
 
 }

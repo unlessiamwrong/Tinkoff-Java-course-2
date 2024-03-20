@@ -4,22 +4,24 @@ import edu.java.domain.jpa.Link;
 import edu.java.domain.jpa.User;
 import edu.java.dto.responses.LinkResponse;
 import edu.java.dto.responses.ListLinksResponse;
+import edu.java.exceptions.InvalidParamsException;
+import edu.java.exceptions.LinkAlreadyExists;
 import edu.java.exceptions.NotFoundException;
-import edu.java.exceptions.UserAlreadyRegisteredException;
 import edu.java.repositories.jpa.JpaLinkRepository;
 import edu.java.repositories.jpa.JpaUserRepository;
 import edu.java.services.LinkService;
 import edu.java.utilities.links.DataSet;
 import edu.java.utilities.links.GetLinkDataItems;
 import edu.java.utilities.links.GetLinkDataRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import static edu.java.utilities.links.LinkChecker.isLinkValid;
 
 @RequiredArgsConstructor
-@Service
-public class JpaLinkService implements LinkService  {
+public class JpaLinkService implements LinkService {
 
     private final JpaUserRepository jpaUserRepository;
     private final JpaLinkRepository jpaLinkRepository;
@@ -33,28 +35,79 @@ public class JpaLinkService implements LinkService  {
         if (user == null) {
             throw new NotFoundException("User with id:'" + userId + "' is not found");
         }
+
+        if (!isLinkValid(url)) {
+            throw new InvalidParamsException("Link:'" + url + "' is invalid. Use Github's or StackOverflow's links");
+        }
+
         String urlString = url.toString();
-        OffsetDateTime lastUpdateAt = getLinkLastUpdate(urlString);
         Link link = new Link();
-        link.setLastUpdate(lastUpdateAt);
+        link.setLastUpdate(getLinkLastUpdate(urlString));
         link.setName(urlString);
-        jpaLinkRepository.saveAndFlush(link);
 
+        List<Link> allUserLinks = jpaUserRepository.findAllUserLinksByUserId(userId);
+        for (Link linkToCheck : allUserLinks) {
+            if (linkToCheck.getName().equals(urlString)) {
+                throw new LinkAlreadyExists("Link:'" + url + "' already exists");
+            }
+        }
 
+        Long linkId;
+        Link possibleLinkFromLinks = jpaLinkRepository.findByNameLike(urlString);
+        if (possibleLinkFromLinks == null) {
+            jpaLinkRepository.saveAndFlush(link);
+            linkId = link.getId();
+        } else {
+            linkId = possibleLinkFromLinks.getId();
+        }
 
+        jpaUserRepository.addUserLink(userId, linkId);
 
-
-        return new LinkResponse();
+        return new LinkResponse(linkId, url);
     }
 
     @Override
     public LinkResponse remove(long userId, URI url) {
-        return null;
+        User user = jpaUserRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new NotFoundException("User with id:'" + userId + "' is not found");
+        }
+
+        String urlString = url.toString();
+        Link linkFromLinks = jpaLinkRepository.findByNameLike(urlString);
+
+        if (linkFromLinks == null) {
+            throw new NotFoundException("Link:'" + url + "' does not exist");
+        }
+
+        Link possibleLinkFromUserLinks = jpaUserRepository.findUserLinkByUserIdAndLinkId(userId, linkFromLinks.getId());
+        if (possibleLinkFromUserLinks == null) {
+            throw new NotFoundException("Link:'" + url + "' does not exist");
+        }
+
+        jpaUserRepository.removeUserLink(userId, linkFromLinks.getId());
+        if (jpaLinkRepository.findUsersByLinkId(linkFromLinks.getId()).isEmpty()) {
+            jpaLinkRepository.delete(linkFromLinks);
+        }
+
+        return new LinkResponse(linkFromLinks.getId(), url);
+
     }
 
     @Override
     public ListLinksResponse listAll(long userId) {
-        return null;
+        User user = jpaUserRepository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new NotFoundException("User with id:'" + userId + "' is not found");
+        }
+
+        List<Link> allUserLinks = jpaUserRepository.findAllUserLinksByUserId(userId);
+        List<LinkResponse> allUserLinksDTO = new ArrayList<>(allUserLinks.size());
+        for (Link link : allUserLinks) {
+            allUserLinksDTO.add(new LinkResponse(link.getId(), URI.create(link.getName())));
+        }
+
+        return new ListLinksResponse(allUserLinksDTO, allUserLinksDTO.size());
     }
 
     private OffsetDateTime getLinkLastUpdate(String urlString) {

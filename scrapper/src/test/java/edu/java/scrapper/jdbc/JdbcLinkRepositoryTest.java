@@ -4,6 +4,7 @@ import edu.java.domain.jdbc.Link;
 import edu.java.domain.jdbc.User;
 import edu.java.repositories.jdbc.JdbcLinkRepository;
 import edu.java.repositories.jdbc.JdbcUserRepository;
+import edu.java.scrapper.IntegrationTest;
 import edu.java.utilities.links.DataSet;
 import edu.java.utilities.links.GetLinkDataItems;
 import edu.java.utilities.links.GetLinkDataRepository;

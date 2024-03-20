@@ -6,13 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Component;
 import static edu.java.domain.jooq.tables.Links.LINKS;
 import static edu.java.domain.jooq.tables.UserLinks.USER_LINKS;
 import static edu.java.domain.jooq.tables.Users.USERS;
 
 @RequiredArgsConstructor
-@Component
 public class JooqUserRepository {
 
     private final DSLContext create;

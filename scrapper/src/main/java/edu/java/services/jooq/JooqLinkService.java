@@ -13,17 +13,15 @@ import edu.java.services.LinkService;
 import edu.java.utilities.Mapper;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import static edu.java.utilities.links.LinkChecker.isLinkValid;
 
 @SuppressWarnings("MultipleStringLiterals")
 @RequiredArgsConstructor
-@Service
 public class JooqLinkService implements LinkService {
 
-    private final JooqUserRepository jooqUserRepository;
-
     private final JooqLinkRepository jooqLinkRepository;
+
+    private final JooqUserRepository jooqUserRepository;
 
     @Override
     public LinkResponse add(long userId, URI url) {
@@ -48,12 +46,13 @@ public class JooqLinkService implements LinkService {
         if (user == null) {
             throw new NotFoundException("User with id:'" + userId + "' is not found");
         }
+
         Link link = jooqLinkRepository.getLinkFromUser(userId, url);
         if (link == null) {
             throw new NotFoundException("Link:'" + url + "' does not exist");
-        } else {
-            jooqLinkRepository.remove(userId, link);
         }
+
+        jooqLinkRepository.remove(userId, link);
         return Mapper.executeForObject(link);
     }
 

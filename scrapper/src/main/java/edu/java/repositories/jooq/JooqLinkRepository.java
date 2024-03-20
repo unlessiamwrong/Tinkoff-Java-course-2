@@ -10,23 +10,18 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Component;
 import static edu.java.domain.jooq.tables.Links.LINKS;
 import static edu.java.domain.jooq.tables.UserLinks.USER_LINKS;
 
 @SuppressWarnings("LineLength")
 @RequiredArgsConstructor
-@Component
 public class JooqLinkRepository {
 
     private static final int INTERVAL_FOR_CHECK = 5;
     private final DSLContext create;
-
     private final JooqUserRepository jooqUserRepository;
-
-    private final GetLinkDataItems getLinkDataItems;
-
     private final GetLinkDataRepository getLinkDataRepository;
+    private final GetLinkDataItems getLinkDataItems;
 
     public Link add(long userId, URI url) {
         User user = jooqUserRepository.getUser(userId);

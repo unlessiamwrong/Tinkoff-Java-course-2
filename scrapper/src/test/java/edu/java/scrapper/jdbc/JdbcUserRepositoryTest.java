@@ -2,6 +2,7 @@ package edu.java.scrapper.jdbc;
 
 import edu.java.domain.jdbc.User;
 import edu.java.repositories.jdbc.JdbcUserRepository;
+import edu.java.scrapper.IntegrationTest;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

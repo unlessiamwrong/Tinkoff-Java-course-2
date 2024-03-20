@@ -13,12 +13,10 @@ import edu.java.services.LinkService;
 import edu.java.utilities.Mapper;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import static edu.java.utilities.links.LinkChecker.isLinkValid;
 
 @SuppressWarnings("MultipleStringLiterals")
 @RequiredArgsConstructor
-@Service
 public class JdbcLinkService implements LinkService {
 
     private final JdbcLinkRepository jdbcLinkRepository;

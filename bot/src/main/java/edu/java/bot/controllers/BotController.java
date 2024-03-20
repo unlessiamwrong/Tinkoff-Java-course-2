@@ -26,5 +26,6 @@ public class BotController {
     )
     @PostMapping("/updates")
     public void postUpdate(@RequestBody LinkUpdateRequest linkUpdateRequest) {
+
     }
 }
