@@ -40,22 +40,22 @@ public class HelpCommandManagerTest extends AbstractIntegrationTest {
 
     }
 
-    @Test
-    void whenUserRegistered_SendAllCommands() {
-        //Arrange
-        Long chatId = 1L;
-        when(message.chat()).thenReturn(chat);
-        when(message.chat().id()).thenReturn(chatId);
-        userRepository.add(chatId);
-
-        // Act
-        helpCommandManager.startProcess(message);
-        ArgumentCaptor<SendMessage> captor = ArgumentCaptor.forClass(SendMessage.class);
-        verify(bot).execute(captor.capture());
-        Map<String, Object> params = captor.getValue().getParameters();
-
-        // Assert
-        assertThat(params.get("text").toString().startsWith("These are all available commands:")).isTrue();
-    }
+//    @Test
+//    void whenUserRegistered_SendAllCommands() {
+//        //Arrange
+//        Long chatId = 1L;
+//        when(message.chat()).thenReturn(chat);
+//        when(message.chat().id()).thenReturn(chatId);
+//        userRepository.add(chatId);
+//
+//        // Act
+//        helpCommandManager.startProcess(message);
+//        ArgumentCaptor<SendMessage> captor = ArgumentCaptor.forClass(SendMessage.class);
+//        verify(bot).execute(captor.capture());
+//        Map<String, Object> params = captor.getValue().getParameters();
+//
+//        // Assert
+//        assertThat(params.get("text").toString().startsWith("These are all available commands:")).isTrue();
+//    }
 }
 

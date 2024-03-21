@@ -1,13 +1,21 @@
 package edu.java.bot.commands;
 
-import edu.java.bot.repositories.Link;
-import edu.java.bot.repositories.User;
+import com.pengrad.telegrambot.model.Message;
+import edu.java.bot.clients.ScrapperClient;
+import edu.java.bot.dto.requests.RemoveLinkRequest;
+import edu.java.bot.utilities.others.Mapper;
+import java.net.URI;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
+@RequiredArgsConstructor
 @Order(4)
 public class UntrackCommand implements TelegramBotCommand {
+
+    private final ScrapperClient scrapperClient;
 
     @Override
     public String name() {
@@ -19,14 +27,13 @@ public class UntrackCommand implements TelegramBotCommand {
         return "Stop tracking link";
     }
 
-    public boolean execute(User user, String possibleLink) {
-        for (Link link : user.links) {
-            if (link.url.equals(possibleLink)) {
-                user.removeLink(link);
-                return true;
-            }
+    public String execute(Message message) {
+        try {
+            scrapperClient.deleteLink(message.chat().id(), new RemoveLinkRequest(URI.create(message.text())));
+            return "Link untracked successfully";
+        } catch (WebClientResponseException e) {
+            return Mapper.getExceptionMessage(e.getResponseBodyAsString());
         }
-        return false;
     }
 
 }

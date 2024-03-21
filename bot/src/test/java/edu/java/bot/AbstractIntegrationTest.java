@@ -11,9 +11,8 @@ import edu.java.bot.commands.UntrackCommand;
 import edu.java.bot.commands.commandmanagers.HelpCommandManager;
 import edu.java.bot.commands.commandmanagers.ListCommandManager;
 import edu.java.bot.commands.commandmanagers.StartCommandManager;
-import edu.java.bot.commands.commandmanagers.trackcommandmanager.TrackCommandManager;
-import edu.java.bot.commands.commandmanagers.untrackcommandmanager.UntrackCommandManager;
-import edu.java.bot.repositories.UserRepository;
+import edu.java.bot.commands.commandmanagers.TrackCommandManager;
+import edu.java.bot.commands.commandmanagers.UntrackCommandManager;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,8 +26,6 @@ public abstract class AbstractIntegrationTest {
     private static final WireMockServer wireMockServer = new WireMockServer();
     @MockBean
     protected TelegramBot bot;
-    @Autowired
-    protected UserRepository userRepository;
     @Autowired
     protected GitHubClient gitHubClient;
     @Autowired
@@ -65,6 +62,5 @@ public abstract class AbstractIntegrationTest {
     @AfterEach
     public void reset() {
         wireMockServer.resetAll();
-        userRepository.users.clear();
     }
 }

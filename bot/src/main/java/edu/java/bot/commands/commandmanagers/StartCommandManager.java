@@ -5,7 +5,6 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.clients.ScrapperClient;
 import edu.java.bot.commands.StartCommand;
-import edu.java.bot.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 public class StartCommandManager implements CommandManager {
 
     private final TelegramBot bot;
-    private final UserRepository userRepository;
     private final StartCommand startCommand;
 
     private final ScrapperClient scrapperClient;

@@ -27,10 +27,10 @@ public class HelpCommandManager implements CommandManager {
 
     @Override
     public void startProcess(Message message) {
-        String response = "These are all available commands: \n";
+        StringBuilder response = new StringBuilder("These are all available commands: \n");
         for (TelegramBotCommand command : commands) {
-            response += command.name() + " - " + command.description().toLowerCase() + "\n";
+            response.append(command.name()).append(" - ").append(command.description().toLowerCase()).append("\n");
         }
-        bot.execute(new SendMessage(message.chat().id(), response));
+        bot.execute(new SendMessage(message.chat().id(), response.toString()));
     }
 }

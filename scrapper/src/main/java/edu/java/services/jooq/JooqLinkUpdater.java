@@ -4,6 +4,7 @@ import edu.java.domain.jdbc.Link;
 import edu.java.dto.requests.LinkUpdateRequest;
 import edu.java.repositories.jooq.JooqLinkRepository;
 import edu.java.services.LinkUpdater;
+import edu.java.utilities.ConvertDateTime;
 import edu.java.utilities.links.DataSet;
 import edu.java.utilities.links.GetLinkDataItems;
 import java.net.URI;
@@ -48,7 +49,7 @@ public class JooqLinkUpdater implements LinkUpdater<Link> {
         String linkUrl = link.getName();
         String message =
             linkUrl + " is updated with " + dataSet.activityType() + " by " + dataSet.authorName()
-                + " at " + currentDateTime;
+                + " at " + ConvertDateTime.execute(currentDateTime) + " (GMT+3)";
 
         return new LinkUpdateRequest(
             link.getId(),

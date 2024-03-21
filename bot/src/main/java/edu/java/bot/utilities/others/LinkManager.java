@@ -30,7 +30,7 @@ public class LinkManager {
             currentCommandManager = commandManagerMap.get("/track");
             currentCommandManager.startProcess(message);
         } else if (message.replyToMessage() != null
-            && message.replyToMessage().text().startsWith("Please choose link to untrack")) {
+            && message.replyToMessage().text().startsWith("Please choose")) {
             currentCommandManager = commandManagerMap.get("/untrack");
             currentCommandManager.startProcess(message);
         } else {

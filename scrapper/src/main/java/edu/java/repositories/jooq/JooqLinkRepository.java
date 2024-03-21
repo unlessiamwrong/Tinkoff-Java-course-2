@@ -17,7 +17,7 @@ import static edu.java.domain.jooq.tables.UserLinks.USER_LINKS;
 @RequiredArgsConstructor
 public class JooqLinkRepository {
 
-    private static final int INTERVAL_FOR_CHECK = 5;
+    private static final int INTERVAL_FOR_CHECK = 1;
     private final DSLContext create;
     private final JooqUserRepository jooqUserRepository;
     private final GetLinkDataRepository getLinkDataRepository;

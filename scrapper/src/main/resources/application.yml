@@ -1,12 +1,12 @@
 app:
   scheduler:
     enable: true
-    interval: 20000
-    force-check-delay: 20000
+    interval: 10000
+    force-check-delay: 10000
   bot_base_url: http://localhost:8080/
   github_base_url: https://api.github.com
   stackof_base_url: https://api.stackexchange.com
-  database-access-type: "jpa"
+  database-access-type: "jooq"
 
 spring:
   application:
