@@ -1,9 +1,9 @@
-package edu.java.bot;
+package edu.java.bot.commandManagers;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.pengrad.telegrambot.TelegramBot;
-import edu.java.bot.clients.GitHubClient;
-import edu.java.bot.clients.StackOfClient;
+import edu.java.bot.clients.ScrapperClient;
+import edu.java.bot.commands.HelpCommand;
 import edu.java.bot.commands.ListCommand;
 import edu.java.bot.commands.StartCommand;
 import edu.java.bot.commands.TrackCommand;
@@ -21,15 +21,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
-public abstract class AbstractIntegrationTest {
+public abstract class AbstractIntegrationManagersTest {
 
-    private static final WireMockServer wireMockServer = new WireMockServer();
     @MockBean
     protected TelegramBot bot;
-    @Autowired
-    protected GitHubClient gitHubClient;
-    @Autowired
-    protected StackOfClient stackOfClient;
+    @MockBean
+    protected StartCommand startCommand;
+    @MockBean
+    protected HelpCommand helpCommand;
+    @MockBean
+    protected TrackCommand trackCommand;
+    @MockBean
+    protected ListCommand listCommand;
+    @MockBean
+    protected UntrackCommand untrackCommand;
     @Autowired
     protected StartCommandManager startCommandManager;
     @Autowired
@@ -40,27 +45,6 @@ public abstract class AbstractIntegrationTest {
     protected UntrackCommandManager untrackCommandManager;
     @Autowired
     protected ListCommandManager listCommandManager;
-    @Autowired
-    protected StartCommand startCommand;
-    @Autowired
-    protected TrackCommand trackCommand;
-    @Autowired
-    protected ListCommand listCommand;
-    @Autowired
-    protected UntrackCommand untrackCommand;
 
-    @BeforeAll
-    public static void setUp() {
-        wireMockServer.start();
-    }
 
-    @AfterAll
-    public static void shutDown() {
-        wireMockServer.stop();
-    }
-
-    @AfterEach
-    public void reset() {
-        wireMockServer.resetAll();
-    }
 }

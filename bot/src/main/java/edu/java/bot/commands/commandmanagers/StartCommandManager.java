@@ -15,8 +15,6 @@ public class StartCommandManager implements CommandManager {
     private final TelegramBot bot;
     private final StartCommand startCommand;
 
-    private final ScrapperClient scrapperClient;
-
     @Override
     public String commandName() {
         return "/start";

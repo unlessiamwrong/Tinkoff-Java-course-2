@@ -27,9 +27,9 @@ public class StartCommand implements TelegramBotCommand {
     public String execute(Long userId) {
         try {
             scrapperClient.postUser(userId);
+            return "You are successfully registered";
         } catch (WebClientResponseException e) {
             return Mapper.getExceptionMessage(e.getResponseBodyAsString());
         }
-        return "You are successfully registered";
     }
 }

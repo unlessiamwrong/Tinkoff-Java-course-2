@@ -1,7 +1,6 @@
 app:
   telegram-token: ${TELEGRAM_TOKEN}
-  scheduler:
-    interval: 15
+  scrapper_base_url: http://localhost:8090/
   github_base_url: http://localhost:8080/
   stackof_base_url: http://localhost:8080/
 

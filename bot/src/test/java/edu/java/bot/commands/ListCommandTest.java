@@ -1,14 +1,11 @@
 //package edu.java.bot.commands;
 //
-//import edu.java.bot.AbstractIntegrationTest;
-//import edu.java.bot.dto.responses.GitHubRepositoryResponse;
-//import edu.java.bot.repositories.Link;
-//import edu.java.bot.repositories.User;
 //import java.util.List;
+//import edu.java.bot.commandManagers.AbstractIntegrationCommandsTest;
 //import org.junit.jupiter.api.Test;
 //import static org.assertj.core.api.Assertions.assertThat;
 //
-//class ListCommandTest extends AbstractIntegrationTest {
+//class ListCommandTest extends AbstractIntegrationCommandsTest {
 //
 //    @Test
 //    void whenUseListCommand_ReturnUserLinks() {
