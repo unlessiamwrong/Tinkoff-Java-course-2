@@ -1,15 +1,16 @@
-package edu.java.scrapper;
+package edu.java.scrapper.liquibase;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import edu.java.scrapper.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class LiquibaseTest extends IntegrationTest {
+class LiquibaseTest extends AbstractIntegrationTest {
 
     @Test
     void whenUse_Insertion_AddRowToDB() throws SQLException {

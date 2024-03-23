@@ -1,0 +1,9 @@
+app:
+  stackof_base_url: http://localhost:8080/
+  github_base_url: http://localhost:8080/
+
+server:
+  port: 8090
+
+logging:
+  config: classpath:log4j2-plain.xml
