@@ -1,37 +1,25 @@
 package edu.java.bot.commandManagers;
 
-import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 class UntrackCommandManagerTest extends AbstractIntegrationManagersTest {
 
-    @Mock
-    Message message;
-    @Mock
-    Chat chat;
-
     @BeforeEach
-    void setMocks() {
+    void setupMocks() {
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(1L);
-        when(message.text()).thenReturn("textStub");
+        when(message.text()).thenReturn("stub");
         when(listCommand.execute(anyLong())).thenReturn("");
-
     }
 
     @Test

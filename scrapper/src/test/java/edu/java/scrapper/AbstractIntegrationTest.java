@@ -40,28 +40,19 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.ArrayNode;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.ObjectNode;
 import static org.mockito.Mockito.when;
 
-@MockBean(LinkUpdaterScheduler.class)
 @ActiveProfiles("test")
 @SpringBootTest
 @Testcontainers
 public abstract class AbstractIntegrationTest {
 
-    protected static final byte[] NOT_FOUND =
-        "{\"description\":\"Not Found\",\"code\":\"404\",\"exceptionName\":\"NotFoundException\",\"exceptionMessage\":\"User is not found\"}".getBytes();
-    protected static final byte[] CONFLICT =
-        "{\"description\":\"Not Found\",\"code\":\"404\",\"exceptionName\":\"NotFoundException\",\"exceptionMessage\":\"User is already registered\"}".getBytes();
-    private static final WireMockServer wireMockServer = new WireMockServer();
-    public static PostgreSQLContainer<?> POSTGRES;
+    protected static final WireMockServer wireMockServer = new WireMockServer();
+    protected static PostgreSQLContainer<?> POSTGRES;
     protected static ObjectNode jsonResponseAsObject = JsonNodeFactory.instance.objectNode().put("stub", "stub")
         .put("stub", "stub");
-    protected static ArrayNode jsonResponseAsArray = JsonNodeFactory.instance.arrayNode()
-        .add(JsonNodeFactory.instance.objectNode().put("stub", "stub"))
-        .add(JsonNodeFactory.instance.objectNode().put("stub", "stub"));
 
     static {
         POSTGRES = new PostgreSQLContainer<>("postgres:15")
@@ -86,18 +77,20 @@ public abstract class AbstractIntegrationTest {
     protected StackOfClient stackOfClient;
     @Autowired
     protected GitHubClient gitHubClient;
-    @MockBean
-    protected GetLinkDataRepository getLinkDataRepository;
-    @MockBean
-    protected GetLinkDataItems getLinkDataItems;
-    protected JdbcLinkRepository jdbcLinkRepository;
-    protected JdbcUserRepository jdbcUserRepository;
-    protected JooqUserRepository jooqUserRepository;
-    protected JooqLinkRepository jooqLinkRepository;
     @Autowired
     protected JpaUserRepository jpaUserRepository;
     @Autowired
     protected JpaLinkRepository jpaLinkRepository;
+    @MockBean
+    protected GetLinkDataRepository getLinkDataRepository;
+    @MockBean
+    protected GetLinkDataItems getLinkDataItems;
+    @MockBean
+    protected LinkUpdaterScheduler linkUpdaterScheduler;
+    protected JdbcLinkRepository jdbcLinkRepository;
+    protected JdbcUserRepository jdbcUserRepository;
+    protected JooqUserRepository jooqUserRepository;
+    protected JooqLinkRepository jooqLinkRepository;
 
     private static void runMigrations(JdbcDatabaseContainer<?> c) throws SQLException, LiquibaseException {
         Connection connection =
@@ -108,6 +101,13 @@ public abstract class AbstractIntegrationTest {
         liquibase.update(new Contexts(), new LabelExpression());
     }
 
+    @DynamicPropertySource
+    private static void jdbcProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
+        registry.add("spring.datasource.username", POSTGRES::getUsername);
+        registry.add("spring.datasource.password", POSTGRES::getPassword);
+    }
+
     @BeforeAll
     public static void startWireMock() {
         wireMockServer.start();
@@ -116,13 +116,6 @@ public abstract class AbstractIntegrationTest {
     @AfterAll
     public static void shutdownWireMock() {
         wireMockServer.stop();
-    }
-
-    @DynamicPropertySource
-    static void jdbcProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
-        registry.add("spring.datasource.username", POSTGRES::getUsername);
-        registry.add("spring.datasource.password", POSTGRES::getPassword);
     }
 
     @BeforeEach
@@ -138,14 +131,8 @@ public abstract class AbstractIntegrationTest {
             new JooqLinkRepository(context, jooqUserRepository, getLinkDataRepository, getLinkDataItems);
 
         //Mocks
-        when(getLinkDataRepository.execute("linkStubOne")).thenReturn(OffsetDateTime.now());
-        when(getLinkDataItems.execute("linkStubOne")).thenReturn(new DataSet(
-            OffsetDateTime.now(),
-            "authorStub",
-            "activityStub"
-        ));
-        when(getLinkDataRepository.execute("linkStubTwo")).thenReturn(OffsetDateTime.now());
-        when(getLinkDataItems.execute("linkStubTwo")).thenReturn(new DataSet(
+        when(getLinkDataRepository.execute("linkStub")).thenReturn(OffsetDateTime.now());
+        when(getLinkDataItems.execute("linkStub")).thenReturn(new DataSet(
             OffsetDateTime.now(),
             "authorStub",
             "activityStub"

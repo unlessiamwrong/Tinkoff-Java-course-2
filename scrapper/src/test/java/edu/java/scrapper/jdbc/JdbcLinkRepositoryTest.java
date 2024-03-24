@@ -13,7 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JdbcLinkRepositoryTest extends AbstractIntegrationTest {
 
     private final User user = new User(1);
-    private final Link link = Link.builder().id(1).name("linkStubOne").build();
+    private final Link link = Link.builder().id(1).name("linkStub").build();
+
 
     @Test
     void whenUse_Add_AddRowToLinks() {
@@ -110,7 +111,7 @@ public class JdbcLinkRepositoryTest extends AbstractIntegrationTest {
         Link currentLink = jdbcLinkRepository.getLinkFromUser(user.getId(), URI.create(link.getName()));
 
         //Assert
-        assertThat(currentLink.getName()).isEqualTo("linkStubOne");
+        assertThat(currentLink.getName()).isEqualTo("linkStub");
     }
 
     @Test
@@ -119,7 +120,7 @@ public class JdbcLinkRepositoryTest extends AbstractIntegrationTest {
         jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
 
         //Act
-        Link link = jdbcLinkRepository.getLinkFromUser(user.getId(), URI.create("linkStubOne"));
+        Link link = jdbcLinkRepository.getLinkFromUser(user.getId(), URI.create("linkStub"));
 
         //Assert
         assertThat(link).isNull();

@@ -6,13 +6,17 @@ import com.pengrad.telegrambot.model.Message;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
+
 @SpringBootTest
+@ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 public abstract class AbstractIntegrationCommandsTest {
 
     private static final WireMockServer wireMockServer = new WireMockServer();
@@ -21,6 +25,7 @@ public abstract class AbstractIntegrationCommandsTest {
     protected Message message;
     @Mock
     protected Chat chat;
+
 
     @Autowired
     protected StartCommand startCommand;

@@ -1,10 +1,8 @@
 package edu.java.bot.commands;
 
-import java.util.List;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.ArrayNode;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.testcontainers.shaded.com.google.common.net.HttpHeaders;

@@ -1,33 +1,28 @@
 package edu.java.bot.commandManagers;
 
-import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.util.Map;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 public class TrackCommandManagerTest extends AbstractIntegrationManagersTest {
-    @Mock
-    Message message;
-    @Mock
-    Chat chat;
+
+    @BeforeEach
+    void setupMocks() {
+        when(message.chat()).thenReturn(chat);
+        when(message.chat().id()).thenReturn(1L);
+        when(message.text()).thenReturn("stub");
+    }
 
     @Test
     void whenUserNotRegistered_SendCorrectResponse() {
         //Arrange
-        when(message.chat()).thenReturn(chat);
-        when(message.chat().id()).thenReturn(1L);
-        when(message.text()).thenReturn("textStub");
         when(trackCommand.execute(any(Message.class))).thenReturn("You are not registered. To do so use /start command");
 
         // Act
@@ -43,9 +38,6 @@ public class TrackCommandManagerTest extends AbstractIntegrationManagersTest {
     @Test
     void whenUserRegistered_AndMessageTextEqualsTrackCommand_SendCorrectResponse() {
         //Arrange
-        when(message.chat()).thenReturn(chat);
-        when(message.chat().id()).thenReturn(1L);
-        when(message.text()).thenReturn("textStub");
         when(trackCommand.execute(any(Message.class))).thenReturn("Please enter your link");
 
         // Act
@@ -61,9 +53,6 @@ public class TrackCommandManagerTest extends AbstractIntegrationManagersTest {
     @Test
     void whenUserRegistered_AndMessageTextEqualsSupportedLink_SendCorrectResponse() {
         //Arrange
-        when(message.chat()).thenReturn(chat);
-        when(message.chat().id()).thenReturn(1L);
-        when(message.text()).thenReturn("linkStub");
         when(trackCommand.execute(any(Message.class))).thenReturn("Link added successfully");
 
         // Act
@@ -79,9 +68,6 @@ public class TrackCommandManagerTest extends AbstractIntegrationManagersTest {
     @Test
     void whenUserRegistered_AndMessageTextEqualsUnsupportedLink_SendCorrectResponse() {
         //Arrange
-        when(message.chat()).thenReturn(chat);
-        when(message.chat().id()).thenReturn(1L);
-        when(message.text()).thenReturn("linkStub");
         when(trackCommand.execute(any(Message.class))).thenReturn(
             "Unsupported link. Github and StackOverflow are only allowed.");
 

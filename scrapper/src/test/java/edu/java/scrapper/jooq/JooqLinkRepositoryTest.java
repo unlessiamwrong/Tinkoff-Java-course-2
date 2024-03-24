@@ -16,7 +16,7 @@ public class JooqLinkRepositoryTest extends AbstractIntegrationTest {
     private final long userId = 1L;
     private final Link link = Link.builder()
         .id(1)
-        .name("linkStubOne")
+        .name("linkStub")
         .build();
 
     @Test
@@ -114,7 +114,7 @@ public class JooqLinkRepositoryTest extends AbstractIntegrationTest {
         Link currentLink = jooqLinkRepository.getLinkFromUser(userId, URI.create(link.getName()));
 
         //Assert
-        assertThat(currentLink.getName()).isEqualTo("linkStubOne");
+        assertThat(currentLink.getName()).isEqualTo("linkStub");
     }
 
     @Test

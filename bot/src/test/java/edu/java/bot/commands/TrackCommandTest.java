@@ -54,6 +54,7 @@ class TrackCommandTest extends AbstractIntegrationCommandsTest {
         assertThat(response).isEqualTo("Link is incorrect");
 
     }
+
     @Test
     void whenUseTrackCommand_AndUserRegistered_AndLinkCorrect_AndLinkExists_ReturnCorrectExceptionMessage() {
         //Arrange

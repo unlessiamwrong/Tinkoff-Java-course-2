@@ -1,6 +1,5 @@
 package edu.java.bot.commands;
 
-
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -33,6 +32,7 @@ class UntrackCommandTest extends AbstractIntegrationCommandsTest {
         assertThat(response).isEqualTo("User is not registered");
 
     }
+
     @Test
     void whenUseUntrackCommand_AndUserRegistered_AndLinkDoesntExist_ReturnCorrectExceptionMessage() {
         //Arrange
@@ -54,6 +54,7 @@ class UntrackCommandTest extends AbstractIntegrationCommandsTest {
         assertThat(response).isEqualTo("Link does not exist");
 
     }
+
     @Test
     void whenUseUntrackCommand_AndUserRegistered_AndLinkExists_ReturnCorrectResponse() {
         //Arrange
@@ -75,6 +76,5 @@ class UntrackCommandTest extends AbstractIntegrationCommandsTest {
         assertThat(response).isEqualTo("Link untracked successfully");
 
     }
-
 
 }
