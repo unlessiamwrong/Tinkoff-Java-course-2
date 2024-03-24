@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
 public class JdbcUserRepositoryTest extends AbstractIntegrationTest {
 
     private final User user = new User(1);

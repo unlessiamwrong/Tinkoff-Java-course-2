@@ -22,7 +22,9 @@ public class JpaLinkUpdater implements LinkUpdater<Link> {
 
     @Override
     public List<LinkUpdateRequest> update() {
-        List<Link> notUpdatedLinks = jpaLinkRepository.findAll();
+        List<Link> notUpdatedLinks =
+            jpaLinkRepository.findLinksByLastCheckForUpdateIsNullOrLessThanDate(OffsetDateTime.now()
+                .minusSeconds(30));
         List<LinkUpdateRequest> linkUpdateRequests = new ArrayList<>(notUpdatedLinks.size());
         if (notUpdatedLinks.isEmpty()) {
             return linkUpdateRequests;

@@ -13,6 +13,8 @@ import org.springframework.data.repository.query.Param;
 public interface JpaLinkRepository extends JpaRepository<Link, Long> {
 
     Link findByNameLike(String urlString);
+    @Query("SELECT l FROM Link l WHERE l.lastCheckForUpdate IS NULL OR l.lastCheckForUpdate < :date")
+    List<Link> findLinksByLastCheckForUpdateIsNullOrLessThanDate(@Param("date") OffsetDateTime date);
 
     @Query("SELECT l.id FROM User u JOIN u.userLinks l WHERE u.id <> :userId AND l.id = :linkId")
     List<Long> findLinkIdsByLinkIdFromOtherUsers(

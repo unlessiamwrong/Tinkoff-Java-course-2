@@ -6,7 +6,7 @@ app:
   bot_base_url: http://localhost:8080/
   github_base_url: https://api.github.com
   stackof_base_url: https://api.stackexchange.com
-  database-access-type: "jooq"
+  database-access-type: "jpa"
 
 spring:
   application:
