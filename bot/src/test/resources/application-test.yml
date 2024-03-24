@@ -1,6 +1,6 @@
 app:
   telegram-token: ${TELEGRAM_TOKEN}
-  scrapper_base_url: http://localhost:8090/
+  scrapper_base_url: http://localhost:8080/
   github_base_url: http://localhost:8080/
   stackof_base_url: http://localhost:8080/
 

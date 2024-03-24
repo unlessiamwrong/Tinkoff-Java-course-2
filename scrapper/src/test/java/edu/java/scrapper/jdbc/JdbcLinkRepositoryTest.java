@@ -2,30 +2,19 @@ package edu.java.scrapper.jdbc;
 
 import edu.java.domain.jdbc.Link;
 import edu.java.domain.jdbc.User;
-import edu.java.repositories.jdbc.JdbcLinkRepository;
-import edu.java.repositories.jdbc.JdbcUserRepository;
 import edu.java.scrapper.AbstractIntegrationTest;
-import edu.java.utilities.links.DataSet;
-import edu.java.utilities.links.GetLinkDataItems;
-import edu.java.utilities.links.GetLinkDataRepository;
 import java.net.URI;
-import java.time.OffsetDateTime;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class JdbcLinkRepositoryTest extends AbstractIntegrationTest {
 
     private final User user = new User(1);
     private final Link link = Link.builder().id(1).name("linkStubOne").build();
+
     @Test
     void whenUse_Add_AddRowToLinks() {
         //Arrange

@@ -4,13 +4,12 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import edu.java.dto.responses.github.commits.GitHubCommitResponse;
 import edu.java.dto.responses.github.repository.GitHubRepositoryResponse;
 import edu.java.scrapper.AbstractIntegrationTest;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
-import java.util.List;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.willReturn;
 
 public class GitHubClientTest extends AbstractIntegrationTest {
     @Test
@@ -28,6 +27,7 @@ public class GitHubClientTest extends AbstractIntegrationTest {
         //Assert
         assertThat(response).isNotNull();
     }
+
     @Test
     public void when_UseGETCommits_ToGitHubRepository_ReturnMockBody() {
         //Arrange

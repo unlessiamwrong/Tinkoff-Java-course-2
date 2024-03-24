@@ -3,7 +3,6 @@ package edu.java.bot.commands.commandmanagers;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.clients.ScrapperClient;
 import edu.java.bot.commands.StartCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

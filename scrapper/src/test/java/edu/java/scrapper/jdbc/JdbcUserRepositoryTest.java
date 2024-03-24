@@ -1,21 +1,17 @@
 package edu.java.scrapper.jdbc;
 
 import edu.java.domain.jdbc.User;
-import edu.java.repositories.jdbc.JdbcUserRepository;
-import java.util.List;
 import edu.java.scrapper.AbstractIntegrationTest;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class JdbcUserRepositoryTest extends AbstractIntegrationTest {
 
     private final User user = new User(1);
+
     @Test
     void whenUse_Add_AddRowToUsers() {
         //Act

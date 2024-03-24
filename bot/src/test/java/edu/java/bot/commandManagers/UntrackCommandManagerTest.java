@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,20 +26,19 @@ class UntrackCommandManagerTest extends AbstractIntegrationManagersTest {
     Chat chat;
 
     @BeforeEach
-    void setMocks(){
+    void setMocks() {
         when(message.chat()).thenReturn(chat);
         when(message.chat().id()).thenReturn(1L);
         when(message.text()).thenReturn("textStub");
         when(listCommand.execute(anyLong())).thenReturn("");
 
-
     }
+
     @Test
     void whenUserNotRegistered_SendCorrectResponse() {
         //Arrange
         when(untrackCommand.execute(any(Message.class))).thenReturn(
             "You are not registered. To do so use /start command");
-
 
         // Act
         untrackCommandManager.startProcess(message);
@@ -56,7 +56,6 @@ class UntrackCommandManagerTest extends AbstractIntegrationManagersTest {
         //Arrange
         when(untrackCommand.execute(any(Message.class))).thenReturn(
             "There are no links that are tracked. You can add links with command /track");
-
 
         // Act
         untrackCommandManager.startProcess(message);
@@ -91,7 +90,6 @@ class UntrackCommandManagerTest extends AbstractIntegrationManagersTest {
         //Arrange
         when(untrackCommand.execute(any(Message.class))).thenReturn("Link untracked successfully");
 
-
         // Act
         untrackCommandManager.startProcess(message);
         ArgumentCaptor<SendMessage> captor = ArgumentCaptor.forClass(SendMessage.class);
@@ -106,7 +104,8 @@ class UntrackCommandManagerTest extends AbstractIntegrationManagersTest {
     @Test
     void whenUserRegistered_AndLinksNotEmpty_AndMessageTextEqualsLink_AndLinkNotExist_SendCorrectResponse() {
         //Arrange
-        when(untrackCommand.execute(any(Message.class))).thenReturn("There is no such link. Please choose from current /list");
+        when(untrackCommand.execute(any(Message.class))).thenReturn(
+            "There is no such link. Please choose from current /list");
 
         // Act
         untrackCommandManager.startProcess(message);

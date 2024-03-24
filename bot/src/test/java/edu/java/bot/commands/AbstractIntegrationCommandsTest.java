@@ -1,37 +1,27 @@
-package edu.java.bot.commandManagers;
+package edu.java.bot.commands;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.pengrad.telegrambot.TelegramBot;
-import edu.java.bot.clients.ScrapperClient;
-import edu.java.bot.commands.HelpCommand;
-import edu.java.bot.commands.ListCommand;
-import edu.java.bot.commands.StartCommand;
-import edu.java.bot.commands.TrackCommand;
-import edu.java.bot.commands.UntrackCommand;
-import edu.java.bot.commands.commandmanagers.HelpCommandManager;
-import edu.java.bot.commands.commandmanagers.ListCommandManager;
-import edu.java.bot.commands.commandmanagers.StartCommandManager;
-import edu.java.bot.commands.commandmanagers.TrackCommandManager;
-import edu.java.bot.commands.commandmanagers.UntrackCommandManager;
+import com.pengrad.telegrambot.model.Chat;
+import com.pengrad.telegrambot.model.Message;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @SpringBootTest
 public abstract class AbstractIntegrationCommandsTest {
 
     private static final WireMockServer wireMockServer = new WireMockServer();
-    protected static final byte[] NOT_FOUND =
-        "{\"description\":\"Not Found\",\"code\":\"404\",\"exceptionName\":\"NotFoundException\",\"exceptionMessage\":\"User is not found\"}".getBytes();
-    protected static final byte[] CONFLICT =
-        "{\"description\":\"Not Found\",\"code\":\"404\",\"exceptionName\":\"NotFoundException\",\"exceptionMessage\":\"User is already registered\"}".getBytes();
-    @MockBean
-    protected TelegramBot bot;
-    @MockBean
-    protected ScrapperClient scrapperClient;
+
+    @Mock
+    protected Message message;
+    @Mock
+    protected Chat chat;
+
     @Autowired
     protected StartCommand startCommand;
     @Autowired
@@ -43,10 +33,10 @@ public abstract class AbstractIntegrationCommandsTest {
     @Autowired
     protected UntrackCommand untrackCommand;
 
-
     @BeforeAll
     public static void setup() {
         wireMockServer.start();
+
     }
 
     @AfterAll

@@ -15,7 +15,7 @@ public class JpaLinkRepositoryTest extends AbstractIntegrationTest {
     private final Link link = new Link();
 
     @BeforeEach
-    void setupEntities(){
+    void setupEntities() {
         user.setId(1L);
         link.setName("stub");
         link.setLastUpdate(OffsetDateTime.now());

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 public class ServiceApplication {
@@ -16,8 +15,7 @@ public class ServiceApplication {
 
     private final Map<String, CommandManager> commandManagerMap = new HashMap<>();
 
-    @Autowired
-    ServiceApplication(LinkManager linkManager, List<CommandManager> commandManagerList) {
+    @Autowired ServiceApplication(LinkManager linkManager, List<CommandManager> commandManagerList) {
         this.linkManager = linkManager;
         for (CommandManager commandManager : commandManagerList) {
             commandManagerMap.put(commandManager.commandName(), commandManager);

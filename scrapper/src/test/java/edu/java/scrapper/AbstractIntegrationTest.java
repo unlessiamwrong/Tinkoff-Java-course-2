@@ -51,6 +51,33 @@ import static org.mockito.Mockito.when;
 @Testcontainers
 public abstract class AbstractIntegrationTest {
 
+    protected static final byte[] NOT_FOUND =
+        "{\"description\":\"Not Found\",\"code\":\"404\",\"exceptionName\":\"NotFoundException\",\"exceptionMessage\":\"User is not found\"}".getBytes();
+    protected static final byte[] CONFLICT =
+        "{\"description\":\"Not Found\",\"code\":\"404\",\"exceptionName\":\"NotFoundException\",\"exceptionMessage\":\"User is already registered\"}".getBytes();
+    private static final WireMockServer wireMockServer = new WireMockServer();
+    public static PostgreSQLContainer<?> POSTGRES;
+    protected static ObjectNode jsonResponseAsObject = JsonNodeFactory.instance.objectNode().put("stub", "stub")
+        .put("stub", "stub");
+    protected static ArrayNode jsonResponseAsArray = JsonNodeFactory.instance.arrayNode()
+        .add(JsonNodeFactory.instance.objectNode().put("stub", "stub"))
+        .add(JsonNodeFactory.instance.objectNode().put("stub", "stub"));
+
+    static {
+        POSTGRES = new PostgreSQLContainer<>("postgres:15")
+            .withDatabaseName("scrapper")
+            .withUsername("postgres")
+            .withPassword("postgres");
+        POSTGRES.start();
+
+        try {
+            runMigrations(POSTGRES);
+        } catch (SQLException | LiquibaseException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     @Autowired
     protected JdbcTemplate jdbcTemplate;
     @Autowired
@@ -67,22 +94,36 @@ public abstract class AbstractIntegrationTest {
     protected JdbcUserRepository jdbcUserRepository;
     protected JooqUserRepository jooqUserRepository;
     protected JooqLinkRepository jooqLinkRepository;
-
     @Autowired
     protected JpaUserRepository jpaUserRepository;
     @Autowired
     protected JpaLinkRepository jpaLinkRepository;
-    private static final WireMockServer wireMockServer = new WireMockServer();
-    protected static ObjectNode jsonResponseAsObject = JsonNodeFactory.instance.objectNode().put("stub", "stub")
-        .put("stub", "stub");
 
-    protected static ArrayNode jsonResponseAsArray = JsonNodeFactory.instance.arrayNode()
-        .add(JsonNodeFactory.instance.objectNode().put("stub", "stub"))
-        .add(JsonNodeFactory.instance.objectNode().put("stub", "stub"));
-    protected static final byte[] NOT_FOUND =
-        "{\"description\":\"Not Found\",\"code\":\"404\",\"exceptionName\":\"NotFoundException\",\"exceptionMessage\":\"User is not found\"}".getBytes();
-    protected static final byte[] CONFLICT =
-        "{\"description\":\"Not Found\",\"code\":\"404\",\"exceptionName\":\"NotFoundException\",\"exceptionMessage\":\"User is already registered\"}".getBytes();
+    private static void runMigrations(JdbcDatabaseContainer<?> c) throws SQLException, LiquibaseException {
+        Connection connection =
+            DriverManager.getConnection(POSTGRES.getJdbcUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
+        Database database =
+            DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+        Liquibase liquibase = new Liquibase("/master.yml", new ClassLoaderResourceAccessor(), database);
+        liquibase.update(new Contexts(), new LabelExpression());
+    }
+
+    @BeforeAll
+    public static void startWireMock() {
+        wireMockServer.start();
+    }
+
+    @AfterAll
+    public static void shutdownWireMock() {
+        wireMockServer.stop();
+    }
+
+    @DynamicPropertySource
+    static void jdbcProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
+        registry.add("spring.datasource.username", POSTGRES::getUsername);
+        registry.add("spring.datasource.password", POSTGRES::getPassword);
+    }
 
     @BeforeEach
     void setupRepositories() {
@@ -112,55 +153,12 @@ public abstract class AbstractIntegrationTest {
 
     }
 
-    public static PostgreSQLContainer<?> POSTGRES;
-
-    static {
-        POSTGRES = new PostgreSQLContainer<>("postgres:15")
-            .withDatabaseName("scrapper")
-            .withUsername("postgres")
-            .withPassword("postgres");
-        POSTGRES.start();
-
-        try {
-            runMigrations(POSTGRES);
-        } catch (SQLException | LiquibaseException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    private static void runMigrations(JdbcDatabaseContainer<?> c) throws SQLException, LiquibaseException {
-        Connection connection =
-            DriverManager.getConnection(POSTGRES.getJdbcUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
-        Database database =
-            DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
-        Liquibase liquibase = new Liquibase("/master.yml", new ClassLoaderResourceAccessor(), database);
-        liquibase.update(new Contexts(), new LabelExpression());
-    }
-
-    @BeforeAll
-    public static void startWireMock() {
-        wireMockServer.start();
-    }
-
-    @AfterAll
-    public static void shutdownWireMock() {
-        wireMockServer.stop();
-    }
-
     @AfterEach
     public void resetDbAndWireMock() {
         jdbcTemplate.update("DELETE FROM user_links");
         jdbcTemplate.update("DELETE FROM links");
         jdbcTemplate.update("DELETE FROM users");
         wireMockServer.resetAll();
-    }
-
-    @DynamicPropertySource
-    static void jdbcProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
-        registry.add("spring.datasource.username", POSTGRES::getUsername);
-        registry.add("spring.datasource.password", POSTGRES::getPassword);
     }
 
 }
