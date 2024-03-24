@@ -10,13 +10,9 @@ import edu.java.repositories.jooq.JooqUserRepository;
 import edu.java.repositories.jpa.JpaLinkRepository;
 import edu.java.repositories.jpa.JpaUserRepository;
 import edu.java.scheduler.LinkUpdaterScheduler;
-import edu.java.utilities.links.DataSet;
-import edu.java.utilities.links.GetLinkDataItems;
-import edu.java.utilities.links.GetLinkDataRepository;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.time.OffsetDateTime;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -29,7 +25,6 @@ import org.jooq.DSLContext;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -42,7 +37,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.ObjectNode;
-import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -69,6 +63,8 @@ public abstract class AbstractIntegrationTest {
 
     }
 
+    @MockBean
+    protected LinkUpdaterScheduler linkUpdaterScheduler;
     @Autowired
     protected JdbcTemplate jdbcTemplate;
     @Autowired
@@ -81,15 +77,13 @@ public abstract class AbstractIntegrationTest {
     protected JpaUserRepository jpaUserRepository;
     @Autowired
     protected JpaLinkRepository jpaLinkRepository;
-    @MockBean
-    protected GetLinkDataRepository getLinkDataRepository;
-    @MockBean
-    protected GetLinkDataItems getLinkDataItems;
-    @MockBean
-    protected LinkUpdaterScheduler linkUpdaterScheduler;
+    @Autowired
     protected JdbcLinkRepository jdbcLinkRepository;
+    @Autowired
     protected JdbcUserRepository jdbcUserRepository;
+    @Autowired
     protected JooqUserRepository jooqUserRepository;
+    @Autowired
     protected JooqLinkRepository jooqLinkRepository;
 
     private static void runMigrations(JdbcDatabaseContainer<?> c) throws SQLException, LiquibaseException {
@@ -116,28 +110,6 @@ public abstract class AbstractIntegrationTest {
     @AfterAll
     public static void shutdownWireMock() {
         wireMockServer.stop();
-    }
-
-    @BeforeEach
-    void setupRepositories() {
-        //Jdbc
-        jdbcUserRepository = new JdbcUserRepository(jdbcTemplate);
-        jdbcLinkRepository =
-            new JdbcLinkRepository(jdbcTemplate, jdbcUserRepository, getLinkDataRepository, getLinkDataItems);
-
-        //Jooq
-        jooqUserRepository = new JooqUserRepository(context);
-        jooqLinkRepository =
-            new JooqLinkRepository(context, jooqUserRepository, getLinkDataRepository, getLinkDataItems);
-
-        //Mocks
-        when(getLinkDataRepository.execute("linkStub")).thenReturn(OffsetDateTime.now());
-        when(getLinkDataItems.execute("linkStub")).thenReturn(new DataSet(
-            OffsetDateTime.now(),
-            "authorStub",
-            "activityStub"
-        ));
-
     }
 
     @AfterEach

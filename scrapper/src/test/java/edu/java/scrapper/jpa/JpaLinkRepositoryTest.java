@@ -5,14 +5,20 @@ import edu.java.domain.jpa.User;
 import edu.java.scrapper.AbstractIntegrationTest;
 import java.time.OffsetDateTime;
 import java.util.List;
+import edu.java.utilities.links.DataSet;
+import edu.java.utilities.links.GetLinkDataItems;
+import edu.java.utilities.links.GetLinkDataRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 public class JpaLinkRepositoryTest extends AbstractIntegrationTest {
 
     private final User user = new User();
     private final Link link = new Link();
+
 
     @BeforeEach
     void setupEntities() {

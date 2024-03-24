@@ -4,14 +4,42 @@ import edu.java.domain.jdbc.Link;
 import edu.java.domain.jdbc.User;
 import edu.java.scrapper.AbstractIntegrationTest;
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.List;
+import edu.java.scrapper.TestConfiguration;
+import edu.java.utilities.links.DataSet;
+import edu.java.utilities.links.GetLinkDataItems;
+import edu.java.utilities.links.GetLinkDataRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
+@Import(TestConfiguration.class)
 public class JdbcLinkRepositoryTest extends AbstractIntegrationTest {
 
     private final User user = new User(1);
     private final Link link = Link.builder().id(1).name("linkStub").build();
+
+    @Autowired
+    GetLinkDataRepository getLinkDataRepository;
+
+    @Autowired
+    GetLinkDataItems getLinkDataItems;
+
+    @BeforeEach
+    void setup(){
+        when(getLinkDataRepository.execute("linkStub")).thenReturn(OffsetDateTime.now());
+        when(getLinkDataItems.execute("linkStub")).thenReturn(new DataSet(
+            OffsetDateTime.now(),
+            "authorStub",
+            "activityStub"
+        ));
+    }
 
     @Test
     void whenUse_Add_AddRowToLinks() {

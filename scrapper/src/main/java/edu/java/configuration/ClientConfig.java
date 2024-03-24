@@ -14,21 +14,21 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 public class ClientConfig {
 
     @Bean
-    BotClient botClient(@Value("${app.bot_base_url}") String botClientBaseUrl) {
+    BotClient botClient(@Value("${app.bot-base-url}") String botClientBaseUrl) {
         WebClient client = WebClient.builder().baseUrl(botClientBaseUrl).build();
         HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(WebClientAdapter.create(client)).build();
         return factory.createClient(BotClient.class);
     }
 
     @Bean
-    GitHubClient gitHubClient(@Value("${app.github_base_url}") String gitHubBaseUrl) {
+    GitHubClient gitHubClient(@Value("${app.github-base-url}") String gitHubBaseUrl) {
         WebClient client = WebClient.builder().baseUrl(gitHubBaseUrl).build();
         HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(WebClientAdapter.create(client)).build();
         return factory.createClient(GitHubClient.class);
     }
 
     @Bean
-    StackOfClient stackOfClient(@Value("${app.stackof_base_url}") String stackOfBaseUrl) {
+    StackOfClient stackOfClient(@Value("${app.stackof-base-url}") String stackOfBaseUrl) {
         WebClient client = WebClient.builder().baseUrl(stackOfBaseUrl).build();
         HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(WebClientAdapter.create(client)).build();
         return factory.createClient(StackOfClient.class);

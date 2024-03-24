@@ -2,9 +2,15 @@ package edu.java.scrapper.jdbc;
 
 import edu.java.domain.jdbc.User;
 import edu.java.scrapper.AbstractIntegrationTest;
+import java.time.OffsetDateTime;
 import java.util.List;
+import edu.java.utilities.links.DataSet;
+import edu.java.utilities.links.GetLinkDataItems;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 public class JdbcUserRepositoryTest extends AbstractIntegrationTest {
 
