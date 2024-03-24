@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import static edu.java.utilities.links.LinkChecker.isLinkValid;
 
 @RequiredArgsConstructor
+@SuppressWarnings("MultipleStringLiterals")
 public class JpaLinkService implements LinkService {
 
     private final JpaUserRepository jpaUserRepository;

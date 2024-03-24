@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
@@ -25,7 +24,6 @@ public abstract class AbstractIntegrationCommandsTest {
     protected Message message;
     @Mock
     protected Chat chat;
-
 
     @Autowired
     protected StartCommand startCommand;

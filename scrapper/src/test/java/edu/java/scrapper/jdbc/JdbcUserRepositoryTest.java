@@ -4,7 +4,6 @@ import edu.java.domain.jdbc.User;
 import edu.java.scrapper.AbstractIntegrationTest;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class JdbcUserRepositoryTest extends AbstractIntegrationTest {

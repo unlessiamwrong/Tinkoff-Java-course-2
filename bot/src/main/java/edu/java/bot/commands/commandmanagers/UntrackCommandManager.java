@@ -14,13 +14,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UntrackCommandManager implements CommandManager {
 
+    private static final String COMMAND_NAME = "/untrack";
     private final TelegramBot bot;
     private final UntrackCommand untrackCommand;
     private final ListCommand listCommand;
 
     @Override
     public String commandName() {
-        return "/untrack";
+        return COMMAND_NAME;
     }
 
     @Override
@@ -30,7 +31,7 @@ public class UntrackCommandManager implements CommandManager {
 
         if (errorMessage != null) {
             bot.execute(new SendMessage(message.chat().id(), errorMessage));
-        } else if (message.text().equals("/untrack")) {
+        } else if (message.text().equals(COMMAND_NAME)) {
             bot.execute(new SendMessage(
                 message.chat().id(),
                 "Please choose link to untrack. \n" + listCommandResponse

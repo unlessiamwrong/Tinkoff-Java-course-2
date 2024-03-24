@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class Mapper {
 
     public static String getExceptionMessage(String json) {

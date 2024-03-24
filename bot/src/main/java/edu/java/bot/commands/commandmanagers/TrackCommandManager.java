@@ -14,12 +14,13 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings("MissingSwitchDefault")
 public class TrackCommandManager implements CommandManager {
 
+    private static final String COMMAND_NAME = "/track";
     private final TelegramBot bot;
     private final TrackCommand trackCommand;
 
     @Override
     public String commandName() {
-        return "/track";
+        return COMMAND_NAME;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class TrackCommandManager implements CommandManager {
 
         if (errorMessage != null) {
             bot.execute(new SendMessage(message.chat().id(), errorMessage));
-        } else if (message.text().equals("/track")) {
+        } else if (message.text().equals(COMMAND_NAME)) {
             bot.execute(new SendMessage(message.chat().id(), "Please enter your link").replyMarkup(new ForceReply()));
         } else {
             bot.execute(new SendMessage(message.chat().id(), trackCommandResponse));

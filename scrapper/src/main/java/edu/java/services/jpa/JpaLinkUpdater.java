@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JpaLinkUpdater implements LinkUpdater<Link> {
 
+    private static final int INTERVAL_FOR_CHECK_IN_MINUTES = 1;
+
     private final JpaLinkRepository jpaLinkRepository;
 
     private final GetLinkDataItems getLinkDataItems;
@@ -24,7 +26,7 @@ public class JpaLinkUpdater implements LinkUpdater<Link> {
     public List<LinkUpdateRequest> update() {
         List<Link> notUpdatedLinks =
             jpaLinkRepository.findLinksByLastCheckForUpdateIsNullOrLessThanDate(OffsetDateTime.now()
-                .minusSeconds(30));
+                .minusMinutes(INTERVAL_FOR_CHECK_IN_MINUTES));
         List<LinkUpdateRequest> linkUpdateRequests = new ArrayList<>(notUpdatedLinks.size());
         if (notUpdatedLinks.isEmpty()) {
             return linkUpdateRequests;

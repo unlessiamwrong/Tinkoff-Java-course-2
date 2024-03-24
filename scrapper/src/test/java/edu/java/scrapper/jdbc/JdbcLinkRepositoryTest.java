@@ -6,15 +6,12 @@ import edu.java.scrapper.AbstractIntegrationTest;
 import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
-
 
 public class JdbcLinkRepositoryTest extends AbstractIntegrationTest {
 
     private final User user = new User(1);
     private final Link link = Link.builder().id(1).name("linkStub").build();
-
 
     @Test
     void whenUse_Add_AddRowToLinks() {

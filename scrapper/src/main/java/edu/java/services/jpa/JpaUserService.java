@@ -12,7 +12,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-
+@SuppressWarnings("MultipleStringLiterals")
 public class JpaUserService implements UserService {
 
     private final JpaUserRepository jpaUserRepository;
