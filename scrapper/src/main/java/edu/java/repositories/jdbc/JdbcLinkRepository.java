@@ -24,8 +24,8 @@ public class JdbcLinkRepository {
 
     private final GetLinkDataItems getLinkDataItems;
 
-    public Link add(long userId, URI url) {
-        User user = jdbcUserRepository.getUser(userId);
+    public Link add(long chatId, URI url) {
+        User user = jdbcUserRepository.getUserByChatId(chatId);
         Link link = null;
 
         if (user != null) {
@@ -47,7 +47,7 @@ public class JdbcLinkRepository {
                     .build();
                 jdbcTemplate.update(
                     "INSERT INTO user_links(user_id, link_id) VALUES(?,?)",
-                    userId,
+                    user.getId(),
                     linkId
                 );
             }

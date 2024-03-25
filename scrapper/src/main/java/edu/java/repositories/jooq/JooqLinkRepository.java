@@ -23,8 +23,8 @@ public class JooqLinkRepository {
     private final GetLinkDataRepository getLinkDataRepository;
     private final GetLinkDataItems getLinkDataItems;
 
-    public Link add(long userId, URI url) {
-        User user = jooqUserRepository.getUser(userId);
+    public Link add(long chatId, URI url) {
+        User user = jooqUserRepository.getUserByChatId(chatId);
         Link link = null;
 
         if (user != null) {
@@ -41,6 +41,7 @@ public class JooqLinkRepository {
                 .where(LINKS.NAME.eq(urlString))
                 .fetchOne()
                 .getId();
+
             if (linkId != null) {
                 link = Link.builder()
                     .id(linkId)
@@ -48,7 +49,7 @@ public class JooqLinkRepository {
                     .lastUpdate(lastUpdateAt)
                     .build();
                 create.insertInto(USER_LINKS)
-                    .set(USER_LINKS.USER_ID, userId)
+                    .set(USER_LINKS.USER_ID, user.getId())
                     .set(USER_LINKS.LINK_ID, linkId)
                     .execute();
             }

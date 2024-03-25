@@ -13,11 +13,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function1;
+import org.jooq.Function2;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row1;
+import org.jooq.Row2;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -50,7 +51,12 @@ public class Users extends TableImpl<UsersRecord> {
      * The column <code>USERS.ID</code>.
      */
     public final TableField<UsersRecord, Long> ID =
-        createField(DSL.name("ID"), SQLDataType.BIGINT.nullable(false), this, "");
+        createField(DSL.name("ID"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
+    /**
+     * The column <code>USERS.CHAT_ID</code>.
+     */
+    public final TableField<UsersRecord, Long> CHAT_ID =
+        createField(DSL.name("CHAT_ID"), SQLDataType.BIGINT.nullable(false), this, "");
 
     private Users(Name alias, Table<UsersRecord> aliased) {
         this(alias, aliased, null);
@@ -98,6 +104,12 @@ public class Users extends TableImpl<UsersRecord> {
     @Nullable
     public Schema getSchema() {
         return aliased() ? null : DefaultSchema.DEFAULT_SCHEMA;
+    }
+
+    @Override
+    @NotNull
+    public Identity<UsersRecord, Long> getIdentity() {
+        return (Identity<UsersRecord, Long>) super.getIdentity();
     }
 
     @Override
@@ -152,19 +164,19 @@ public class Users extends TableImpl<UsersRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row1 type methods
+    // Row2 type methods
     // -------------------------------------------------------------------------
 
     @Override
     @NotNull
-    public Row1<Long> fieldsRow() {
-        return (Row1) super.fieldsRow();
+    public Row2<Long, Long> fieldsRow() {
+        return (Row2) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function1<? super Long, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function2<? super Long, ? super Long, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -172,7 +184,7 @@ public class Users extends TableImpl<UsersRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function1<? super Long, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super Long, ? super Long, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

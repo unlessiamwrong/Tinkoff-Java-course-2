@@ -28,6 +28,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -38,9 +39,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.ObjectNode;
 
-@ActiveProfiles("test")
 @SpringBootTest
 @Testcontainers
+@ActiveProfiles("test")
+@Import(TestConfiguration.class)
 public abstract class AbstractIntegrationTest {
 
     protected static final WireMockServer wireMockServer = new WireMockServer();

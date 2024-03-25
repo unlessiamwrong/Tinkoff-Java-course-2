@@ -24,29 +24,32 @@ public class JooqLinkService implements LinkService {
     private final JooqUserRepository jooqUserRepository;
 
     @Override
-    public LinkResponse add(long userId, URI url) {
-        User user = jooqUserRepository.getUser(userId);
+    public LinkResponse add(long chatId, URI url) {
+        User user = jooqUserRepository.getUserByChatId(chatId);
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
+
         if (!isLinkValid(url)) {
             throw new InvalidParamsException("Link:'" + url + "' is invalid. Use Github's or StackOverflow's links");
         }
-        Link link = jooqLinkRepository.getLinkFromUser(userId, url);
+
+        Link link = jooqLinkRepository.getLinkFromUser(user.getId(), url);
         if (link != null) {
             throw new LinkAlreadyExists("Link:'" + url + "' already exists");
         }
-        return Mapper.executeForObject(jooqLinkRepository.add(userId, url));
+        return Mapper.executeForObject(jooqLinkRepository.add(chatId, url));
     }
 
     @Override
-    public LinkResponse remove(long userId, URI url) {
-        User user = jooqUserRepository.getUser(userId);
+    public LinkResponse remove(long chatId, URI url) {
+        User user = jooqUserRepository.getUserByChatId(chatId);
 
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
 
+        long userId = user.getId();
         Link link = jooqLinkRepository.getLinkFromUser(userId, url);
         if (link == null) {
             throw new NotFoundException("Link:'" + url + "' does not exist");
@@ -57,11 +60,12 @@ public class JooqLinkService implements LinkService {
     }
 
     @Override
-    public ListLinksResponse listAll(long userId) {
-        User user = jooqUserRepository.getUser(userId);
+    public ListLinksResponse listAll(long chatId) {
+        User user = jooqUserRepository.getUserByChatId(chatId);
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
-        return Mapper.executeForList(jooqLinkRepository.findAllUserLinks(userId));
+
+        return Mapper.executeForList(jooqLinkRepository.findAllUserLinks(user.getId()));
     }
 }

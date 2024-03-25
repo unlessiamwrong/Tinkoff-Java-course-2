@@ -23,29 +23,30 @@ public class JdbcLinkService implements LinkService {
     private final JdbcUserRepository jdbcUserRepository;
 
     @Override
-    public LinkResponse add(long userId, URI url) {
-        User user = jdbcUserRepository.getUser(userId);
+    public LinkResponse add(long chatId, URI url) {
+        User user = jdbcUserRepository.getUserByChatId(chatId);
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
         if (!isLinkValid(url)) {
             throw new InvalidParamsException("Link:'" + url + "' is invalid. Use Github's or StackOverflow's links");
         }
-        Link link = jdbcLinkRepository.getLinkFromUser(userId, url);
+        Link link = jdbcLinkRepository.getLinkFromUser(user.getId(), url);
         if (link != null) {
             throw new LinkAlreadyExists("Link:'" + url + "' already exists");
         }
-        return Mapper.executeForObject(jdbcLinkRepository.add(userId, url));
+        return Mapper.executeForObject(jdbcLinkRepository.add(chatId, url));
     }
 
     @Override
-    public LinkResponse remove(long userId, URI url) {
-        User user = jdbcUserRepository.getUser(userId);
+    public LinkResponse remove(long chatId, URI url) {
+        User user = jdbcUserRepository.getUserByChatId(chatId);
 
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
 
+        long userId = user.getId();
         Link link = jdbcLinkRepository.getLinkFromUser(userId, url);
         if (link == null) {
             throw new NotFoundException("Link:'" + url + "' does not exist");
@@ -56,11 +57,11 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public ListLinksResponse listAll(long userId) {
-        User user = jdbcUserRepository.getUser(userId);
+    public ListLinksResponse listAll(long chatId) {
+        User user = jdbcUserRepository.getUserByChatId(chatId);
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
-        return Mapper.executeForList(jdbcLinkRepository.findAllUserLinks(userId));
+        return Mapper.executeForList(jdbcLinkRepository.findAllUserLinks(user.getId()));
     }
 }

@@ -1,34 +1,32 @@
 package edu.java.scrapper.jooq;
 
-import edu.java.domain.jooq.tables.records.UsersRecord;
+import edu.java.domain.jdbc.User;
 import edu.java.scrapper.AbstractIntegrationTest;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import static edu.java.domain.jooq.Tables.USERS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class JooqUserRepositoryTest extends AbstractIntegrationTest {
 
-    private final UsersRecord user = new UsersRecord(1L);
+    private final User user = new User();
 
     @Test
     void whenUse_Add_AddRowToUsers() {
         //Act
         jooqUserRepository.add(user);
-        Long userId = context.select(USERS.ID)
-            .from(USERS)
-            .where(USERS.ID.eq(user.getId()))
-            .fetchOne()
-            .into(Long.class);
+        var users = context.selectFrom(USERS);
 
         //Assert
-        assertThat(userId).isEqualTo(1);
+        assertThat(users).hasSize(1);
 
     }
 
     @Test
     void whenUse_Remove_DeleteRowFromUsers() {
         //Arrange
-        context.insertInto(USERS).set(USERS.ID, user.getId()).execute();
+        jooqUserRepository.add(user);
+        user.setId(context.select(USERS.ID).from(USERS).fetchOne().into(Long.class));
 
         //Act
         jooqUserRepository.remove(user);
@@ -42,7 +40,8 @@ public class JooqUserRepositoryTest extends AbstractIntegrationTest {
     @Test
     void whenUse_FindAll_AndUsersExist_ReturnAllFromUsers() {
         //Arrange
-        context.insertInto(USERS).set(USERS.ID, user.getId()).execute();
+        jooqUserRepository.add(user);
+        user.setId(context.select(USERS.ID).from(USERS).fetchOne().into(Long.class));
 
         //Act
         var users = jooqUserRepository.findAll();
@@ -55,7 +54,7 @@ public class JooqUserRepositoryTest extends AbstractIntegrationTest {
     @Test
     void whenUse_FindAll_AndUsersDontExist_ReturnEmptyList() {
         //Act
-        var users = jooqUserRepository.findAll();
+        List<User> users = jooqUserRepository.findAll();
 
         //Assert
         assertThat(users).isEmpty();

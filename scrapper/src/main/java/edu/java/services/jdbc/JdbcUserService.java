@@ -14,21 +14,21 @@ public class JdbcUserService implements UserService {
     private final JdbcUserRepository jdbcUserRepository;
 
     @Override
-    public void add(long userId) {
-        User user = jdbcUserRepository.getUser(userId);
+    public void add(long chatId) {
+        User user = jdbcUserRepository.getUserByChatId(chatId);
         if (user != null) {
-            throw new UserAlreadyRegisteredException("User with id:'" + userId + "' is already registered");
+            throw new UserAlreadyRegisteredException("User with id:'" + chatId + "' is already registered");
         }
-        jdbcUserRepository.add(new User(userId));
+        jdbcUserRepository.add(new User(chatId));
 
     }
 
     @Override
-    public void remove(long userId) {
-        User user = jdbcUserRepository.getUser(userId);
+    public void remove(long chatId) {
+        User user = jdbcUserRepository.getUserByChatId(chatId);
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
-        jdbcUserRepository.remove(new User(userId));
+        jdbcUserRepository.remove(new User(user.getId(), chatId));
     }
 }

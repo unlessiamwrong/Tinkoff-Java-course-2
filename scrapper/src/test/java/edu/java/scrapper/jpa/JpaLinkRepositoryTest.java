@@ -5,24 +5,18 @@ import edu.java.domain.jpa.User;
 import edu.java.scrapper.AbstractIntegrationTest;
 import java.time.OffsetDateTime;
 import java.util.List;
-import edu.java.utilities.links.DataSet;
-import edu.java.utilities.links.GetLinkDataItems;
-import edu.java.utilities.links.GetLinkDataRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 public class JpaLinkRepositoryTest extends AbstractIntegrationTest {
 
     private final User user = new User();
     private final Link link = new Link();
 
-
     @BeforeEach
     void setupEntities() {
-        user.setId(1L);
+        user.setChatId(1L);
         link.setName("stub");
         link.setLastUpdate(OffsetDateTime.now());
     }
@@ -64,7 +58,6 @@ public class JpaLinkRepositoryTest extends AbstractIntegrationTest {
 
         //Act
         jpaUserRepository.removeUserLink(user.getId(), link.getId());
-        jpaUserRepository.delete(user);
         jpaLinkRepository.delete(link);
         var links = jpaLinkRepository.findAll();
 
@@ -81,7 +74,6 @@ public class JpaLinkRepositoryTest extends AbstractIntegrationTest {
 
         //Act
         jpaUserRepository.removeUserLink(user.getId(), link.getId());
-        jpaUserRepository.delete(user);
         jpaLinkRepository.delete(link);
         var userLinks = jpaUserRepository.findAllUserLinksByUserId(user.getId());
 

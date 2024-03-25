@@ -31,16 +31,17 @@ public class JpaLinkService implements LinkService {
     private final GetLinkDataRepository getLinkDataRepository;
 
     @Override
-    public LinkResponse add(long userId, URI url) {
-        User user = jpaUserRepository.findById(userId).orElse(null);
+    public LinkResponse add(long chatId, URI url) {
+        User user = jpaUserRepository.findByChatId(chatId);
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
 
         if (!isLinkValid(url)) {
             throw new InvalidParamsException("Link:'" + url + "' is invalid. Use Github's or StackOverflow's links");
         }
 
+        Long userId = user.getId();
         String urlString = url.toString();
         Link link = new Link();
         link.setLastUpdate(getLinkLastUpdate(urlString));
@@ -68,12 +69,13 @@ public class JpaLinkService implements LinkService {
     }
 
     @Override
-    public LinkResponse remove(long userId, URI url) {
-        User user = jpaUserRepository.findById(userId).orElse(null);
+    public LinkResponse remove(long chatId, URI url) {
+        User user = jpaUserRepository.findByChatId(chatId);
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
 
+        Long userId = user.getId();
         String urlString = url.toString();
         Link linkFromLinks = jpaLinkRepository.findByNameLike(urlString);
 
@@ -96,12 +98,13 @@ public class JpaLinkService implements LinkService {
     }
 
     @Override
-    public ListLinksResponse listAll(long userId) {
-        User user = jpaUserRepository.findById(userId).orElse(null);
+    public ListLinksResponse listAll(long chatId) {
+        User user = jpaUserRepository.findByChatId(chatId);
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
 
+        Long userId = user.getId();
         List<Link> allUserLinks = jpaUserRepository.findAllUserLinksByUserId(userId);
         List<LinkResponse> allUserLinksDTO = new ArrayList<>(allUserLinks.size());
         for (Link link : allUserLinks) {

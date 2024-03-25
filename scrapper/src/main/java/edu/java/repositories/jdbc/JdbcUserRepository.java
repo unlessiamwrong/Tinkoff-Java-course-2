@@ -13,7 +13,7 @@ public class JdbcUserRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public void add(User user) {
-        jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
+        jdbcTemplate.update("INSERT INTO users(chat_id) VALUES(?)", user.getChatId());
     }
 
     public void remove(User user) {
@@ -45,10 +45,10 @@ public class JdbcUserRepository {
         });
     }
 
-    public User getUser(long userId) {
+    public User getUserByChatId(long userId) {
         try {
             return jdbcTemplate.queryForObject(
-                "SELECT * FROM users WHERE id=?",
+                "SELECT * FROM users WHERE chat_id=?",
                 new BeanPropertyRowMapper<>(User.class),
                 userId
             );

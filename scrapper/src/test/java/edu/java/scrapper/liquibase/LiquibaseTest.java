@@ -15,7 +15,7 @@ class LiquibaseTest extends AbstractIntegrationTest {
         //Arrange
         Connection connection =
             DriverManager.getConnection(POSTGRES.getJdbcUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
-        String query = "INSERT INTO users (id) VALUES (1)";
+        String query = "INSERT INTO users (chat_id) VALUES (1)";
         Statement statement = connection.createStatement();
 
         //Act
@@ -23,10 +23,6 @@ class LiquibaseTest extends AbstractIntegrationTest {
 
         //Assert
         assertThat(rowsInserted).isEqualTo(1);
-
-        //Clear DB
-        statement.executeUpdate("DELETE FROM users");
-
     }
 }
 

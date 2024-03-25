@@ -19,22 +19,23 @@ public class JpaUserService implements UserService {
     private final JpaLinkRepository jpaLinkRepository;
 
     @Override
-    public void add(long userId) {
-        if (jpaUserRepository.findById(userId).orElse(null) != null) {
-            throw new UserAlreadyRegisteredException("User with id:'" + userId + "' is already registered");
+    public void add(long chatId) {
+        if (jpaUserRepository.findByChatId(chatId) != null) {
+            throw new UserAlreadyRegisteredException("User with id:'" + chatId + "' is already registered");
         }
         User user = new User();
-        user.setId(userId);
+        user.setChatId(chatId);
         jpaUserRepository.save(user);
     }
 
     @Override
-    public void remove(long userId) {
-        User user = jpaUserRepository.findById(userId).orElse(null);
+    public void remove(long chatId) {
+        User user = jpaUserRepository.findByChatId(chatId);
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
 
+        Long userId = user.getId();
         List<Link> allUserLinks = jpaUserRepository.findAllUserLinksByUserId(userId);
         List<Link> linksToDelete = new ArrayList<>(allUserLinks.size());
         for (Link link : allUserLinks) {
