@@ -11,11 +11,9 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @SuppressWarnings("ReturnCount")
 @RequiredArgsConstructor
-@Component
 public class GetLinkDataItems {
 
     private final GitHubLinkParser gitHubLinkParser;

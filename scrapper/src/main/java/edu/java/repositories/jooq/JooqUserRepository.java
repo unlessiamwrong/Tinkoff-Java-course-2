@@ -1,27 +1,24 @@
 package edu.java.repositories.jooq;
 
 import edu.java.domain.jdbc.User;
-import edu.java.domain.jooq.tables.records.UsersRecord;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Component;
 import static edu.java.domain.jooq.tables.Links.LINKS;
 import static edu.java.domain.jooq.tables.UserLinks.USER_LINKS;
 import static edu.java.domain.jooq.tables.Users.USERS;
 
 @RequiredArgsConstructor
-@Component
 public class JooqUserRepository {
 
     private final DSLContext create;
 
-    public void add(UsersRecord user) {
-        create.insertInto(USERS).set(USERS.ID, user.getId()).execute();
+    public void add(User user) {
+        create.insertInto(USERS).set(USERS.CHAT_ID, user.getChatId()).execute();
     }
 
-    public void remove(UsersRecord user) {
+    public void remove(User user) {
         Long userId = user.getId();
         List<Long> linkIds =
             create.selectFrom(USER_LINKS).where(USER_LINKS.USER_ID.eq(userId))
@@ -50,12 +47,8 @@ public class JooqUserRepository {
         return users;
     }
 
-    public User getUser(long userId) {
-
-        UsersRecord user = create.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
-        if (user == null) {
-            return null;
-        }
-        return new User(user.getId());
+    public User getUserByChatId(long chatId) {
+        return create.selectFrom(USERS).where(USERS.CHAT_ID.eq(chatId)).fetchOne().into(User.class);
     }
+
 }

@@ -1,9 +1,7 @@
 app:
   telegram-token: ${TELEGRAM_TOKEN}
-  scheduler:
-    interval: 15000
-  github_base_url: https://api.github.com
-  stackof_base_url: https://api.stackexchange.com
+  scrapper-base-url: http://localhost:8090/
+
 
 spring:
   application:

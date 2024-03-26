@@ -1,14 +1,13 @@
 package edu.java.services;
 
-import edu.java.domain.jdbc.Link;
 import edu.java.dto.requests.LinkUpdateRequest;
 import edu.java.utilities.links.DataSet;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-public interface LinkUpdater {
+public interface LinkUpdater<T> {
     List<LinkUpdateRequest> update();
 
-    LinkUpdateRequest prepareUpdate(OffsetDateTime currentDateTime, Link link, DataSet dataSet);
+    LinkUpdateRequest prepareUpdate(OffsetDateTime currentDateTime, T entity, DataSet dataSet);
 
 }

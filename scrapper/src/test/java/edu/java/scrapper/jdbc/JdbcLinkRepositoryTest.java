@@ -2,159 +2,131 @@ package edu.java.scrapper.jdbc;
 
 import edu.java.domain.jdbc.Link;
 import edu.java.domain.jdbc.User;
-import edu.java.repositories.jdbc.JdbcLinkRepository;
-import edu.java.repositories.jdbc.JdbcUserRepository;
+import edu.java.scrapper.AbstractIntegrationTest;
 import edu.java.utilities.links.DataSet;
 import edu.java.utilities.links.GetLinkDataItems;
 import edu.java.utilities.links.GetLinkDataRepository;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-public class JdbcLinkRepositoryTest extends IntegrationTest {
+public class JdbcLinkRepositoryTest extends AbstractIntegrationTest {
+
+    private final User user = new User(1);
+    private final Link link = Link.builder().name("linkStub").build();
+
+    private final DataSet dataSet = new DataSet(
+        OffsetDateTime.of(0, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC),
+        "authorStub",
+        "activityStub"
+    );
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    GetLinkDataRepository getLinkDataRepository;
 
-    @Mock
-    private GetLinkDataRepository getLinkDataRepository;
-
-    @Mock
-    private GetLinkDataItems getLinkDataItems;
-
-    private JdbcLinkRepository jdbcLinkRepository;
-
-    private JdbcUserRepository jdbcUserRepository;
+    @Autowired
+    GetLinkDataItems getLinkDataItems;
 
     @BeforeEach
-    void setUp() {
-        jdbcUserRepository = new JdbcUserRepository(jdbcTemplate);
-        jdbcLinkRepository =
-            new JdbcLinkRepository(jdbcTemplate, jdbcUserRepository, getLinkDataRepository, getLinkDataItems);
-        when(getLinkDataRepository.execute("linkStubOne")).thenReturn(OffsetDateTime.now());
-        when(getLinkDataItems.execute("linkStubOne")).thenReturn(new DataSet(
-            OffsetDateTime.now(),
-            "authorStub",
-            "activityStub"
-        ));
-        when(getLinkDataRepository.execute("linkStubTwo")).thenReturn(OffsetDateTime.now());
-        when(getLinkDataItems.execute("linkStubTwo")).thenReturn(new DataSet(
-            OffsetDateTime.now(),
-            "authorStub",
-            "activityStub"
-        ));
-    }
-
-    @AfterEach
-    void reset() {
-        jdbcTemplate.update("DELETE FROM user_links");
-        jdbcTemplate.update("DELETE FROM links");
-        jdbcTemplate.update("DELETE FROM users");
+    void setup() {
+        when(getLinkDataRepository.execute("linkStub")).thenReturn(dataSet.dateTime());
+        when(getLinkDataItems.execute("linkStub")).thenReturn(dataSet);
     }
 
     @Test
     void whenUse_Add_AddRowToLinks() {
         //Arrange
-        User user = new User(1);
-        Link link = Link.builder().id(1).name("linkStubOne").build();
-        jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
+        jdbcUserRepository.add(user);
+        Long userId = jdbcTemplate.queryForObject("SELECT chat_id FROM users", Long.class);
 
         //Act
-        jdbcLinkRepository.add(user.getId(), URI.create(link.getName()));
-        var possibleLinks = jdbcTemplate.queryForList("SELECT * FROM links");
+        jdbcLinkRepository.add(userId, URI.create(link.getName()));
+        var links = jdbcTemplate.queryForList("SELECT * FROM links");
 
         //Assert
-        assertThat(possibleLinks).hasSize(1);
+        assertThat(links).hasSize(1);
 
     }
 
     @Test
     void whenUse_Add_AddRowToUserLinks() {
         //Arrange
-        User user = new User(1);
-        Link link = Link.builder().id(1).name("linkStubOne").build();
-        jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
+        jdbcUserRepository.add(user);
+        Long userId = jdbcTemplate.queryForObject("SELECT chat_id FROM users", Long.class);
 
         //Act
-        jdbcLinkRepository.add(user.getId(), URI.create(link.getName()));
-        var possibleLinks = jdbcTemplate.queryForList("SELECT * FROM user_links");
+        jdbcLinkRepository.add(userId, URI.create(link.getName()));
+        var links = jdbcTemplate.queryForList("SELECT * FROM user_links");
 
         //Assert
-        assertThat(possibleLinks).hasSize(1);
+        assertThat(links).hasSize(1);
 
     }
 
     @Test
     void whenUse_Remove_RemoveRowFromLinks() {
         //Arrange
-        User user = new User(1);
-        Link link = Link.builder().id(1).name("linkStubOne").build();
-        jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
-        jdbcLinkRepository.add(user.getId(), URI.create(link.getName()));
+        jdbcUserRepository.add(user);
+        jdbcLinkRepository.add(user.getChatId(), URI.create(link.getName()));
+        link.setId(jdbcTemplate.queryForObject("SELECT id FROM links", Long.class));
+        Long userId = jdbcTemplate.queryForObject("SELECT id FROM users", Long.class);
 
         //Act
-        jdbcLinkRepository.remove(user.getId(), link);
-        jdbcUserRepository.remove(user);
-        var possibleLinks = jdbcTemplate.queryForList("SELECT * FROM links WHERE name=?", link.getName());
+        jdbcLinkRepository.remove(userId, link);
+
+        var links = jdbcTemplate.queryForList("SELECT * FROM links WHERE name=?", link.getName());
 
         //Assert
-        assertThat(possibleLinks).hasSize(0);
+        assertThat(links).hasSize(0);
 
     }
 
     @Test
     void whenUse_Remove_RemoveRowFromUserLinks() {
         //Arrange
-        User user = new User(1);
-        Link link = Link.builder().id(1).name("linkStubOne").build();
-        jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
-        jdbcLinkRepository.add(user.getId(), URI.create(link.getName()));
+        jdbcUserRepository.add(user);
+        jdbcLinkRepository.add(user.getChatId(), URI.create(link.getName()));
+        link.setId(jdbcTemplate.queryForObject("SELECT id FROM links", Long.class));
+        Long userId = jdbcTemplate.queryForObject("SELECT id FROM users", Long.class);
 
         //Act
-        jdbcLinkRepository.remove(user.getId(), link);
-        jdbcUserRepository.remove(user);
-        var possibleLinks = jdbcTemplate.queryForList("SELECT * FROM user_links");
+        jdbcLinkRepository.remove(userId, link);
+        var links = jdbcTemplate.queryForList("SELECT * FROM user_links");
 
         //Assert
-        assertThat(possibleLinks).hasSize(0);
+        assertThat(links).hasSize(0);
 
     }
 
     @Test
     void whenUse_findAllUserLinks_AndUserHasLinks_ReturnListOfLinks() {
         //Arrange
-        User user = new User(1);
-        Link linkOne = Link.builder().id(1).name("linkStubOne").build();
-        Link linkTwo = Link.builder().id(2).name("linkStubTwo").build();
-        jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
-        jdbcLinkRepository.add(user.getId(), URI.create(linkOne.getName()));
-        jdbcLinkRepository.add(user.getId(), URI.create(linkTwo.getName()));
+        jdbcUserRepository.add(user);
+        jdbcLinkRepository.add(user.getChatId(), URI.create(link.getName()));
+        link.setId(jdbcTemplate.queryForObject("SELECT id FROM links", Long.class));
+        Long userId = jdbcTemplate.queryForObject("SELECT id FROM users", Long.class);
 
         //Act
-        List<Link> links = jdbcLinkRepository.findAllUserLinks(user.getId());
+        List<Link> links = jdbcLinkRepository.findAllUserLinks(userId);
 
         //Assert
-        assertThat(links).hasSize(2);
+        assertThat(links).hasSize(1);
     }
 
     @Test
     void whenUse_findAllUserLinks_AndUserDoesntHaveLinks_ReturnEmptyList() {
         //Arrange
-        User user = new User(1);
-        jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
+        jdbcUserRepository.add(user);
+        Long userId = jdbcTemplate.queryForObject("SELECT id FROM users", Long.class);
 
         //Act
-        List<Link> links = jdbcLinkRepository.findAllUserLinks(user.getId());
+        List<Link> links = jdbcLinkRepository.findAllUserLinks(userId);
 
         //Assert
         assertThat(links).isEmpty();
@@ -163,26 +135,25 @@ public class JdbcLinkRepositoryTest extends IntegrationTest {
     @Test
     void whenUse_getLinkFromUser_AndUserHasLink_ReturnLink() {
         //Arrange
-        User user = new User(1);
-        Link link = Link.builder().id(1).name("linkStubOne").build();
-        jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
-        jdbcLinkRepository.add(user.getId(), URI.create(link.getName()));
+        jdbcUserRepository.add(user);
+        jdbcLinkRepository.add(user.getChatId(), URI.create(link.getName()));
+        Long userId = jdbcTemplate.queryForObject("SELECT id FROM users", Long.class);
 
         //Act
-        link = jdbcLinkRepository.getLinkFromUser(user.getId(), URI.create(link.getName()));
+        Link currentLink = jdbcLinkRepository.getLinkFromUser(userId, URI.create(link.getName()));
 
         //Assert
-        assertThat(link.getName()).isEqualTo("linkStubOne");
+        assertThat(currentLink.getName()).isEqualTo("linkStub");
     }
 
     @Test
     void whenUse_getLinkFromUser_AndUserDoesntHaveLink_ReturnNull() {
         //Arrange
-        User user = new User(1);
-        jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
+        jdbcUserRepository.add(user);
+        Long userId = jdbcTemplate.queryForObject("SELECT id FROM users", Long.class);
 
         //Act
-        Link link = jdbcLinkRepository.getLinkFromUser(user.getId(), URI.create("linkStubOne"));
+        Link link = jdbcLinkRepository.getLinkFromUser(userId, URI.create("linkStub"));
 
         //Assert
         assertThat(link).isNull();

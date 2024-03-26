@@ -39,8 +39,7 @@ public class Keys {
         Internal.createUniqueKey(Links.LINKS, DSL.name("CONSTRAINT_45"), new TableField[] {Links.LINKS.NAME}, true);
     public static final UniqueKey<LinksRecord> CONSTRAINT_451 =
         Internal.createUniqueKey(Links.LINKS, DSL.name("CONSTRAINT_451"), new TableField[] {Links.LINKS.ID}, true);
-    public static final UniqueKey<UserLinksRecord> CONSTRAINT_C67 = Internal.createUniqueKey(
-        UserLinks.USER_LINKS,
+    public static final UniqueKey<UserLinksRecord> CONSTRAINT_C67 = Internal.createUniqueKey(UserLinks.USER_LINKS,
         DSL.name("CONSTRAINT_C67"),
         new TableField[] {UserLinks.USER_LINKS.USER_ID, UserLinks.USER_LINKS.LINK_ID},
         true
@@ -53,8 +52,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final ForeignKey<UserLinksRecord, UsersRecord> CONSTRAINT_C =
-        Internal.createForeignKey(
-            UserLinks.USER_LINKS,
+        Internal.createForeignKey(UserLinks.USER_LINKS,
             DSL.name("CONSTRAINT_C"),
             new TableField[] {UserLinks.USER_LINKS.USER_ID},
             Keys.CONSTRAINT_4,
@@ -62,8 +60,7 @@ public class Keys {
             true
         );
     public static final ForeignKey<UserLinksRecord, LinksRecord> CONSTRAINT_C6 =
-        Internal.createForeignKey(
-            UserLinks.USER_LINKS,
+        Internal.createForeignKey(UserLinks.USER_LINKS,
             DSL.name("CONSTRAINT_C6"),
             new TableField[] {UserLinks.USER_LINKS.LINK_ID},
             Keys.CONSTRAINT_451,

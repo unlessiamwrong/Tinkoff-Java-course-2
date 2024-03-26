@@ -7,6 +7,6 @@ public record LinkUpdateRequest(
     long id,
     URI url,
     String description,
-    List<Long> tgChatIds
+    List<Long> userIds
 ) {
 }

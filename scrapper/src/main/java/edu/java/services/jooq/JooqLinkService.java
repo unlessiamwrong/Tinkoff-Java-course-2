@@ -13,56 +13,59 @@ import edu.java.services.LinkService;
 import edu.java.utilities.Mapper;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import static edu.java.utilities.links.LinkChecker.isLinkValid;
 
 @SuppressWarnings("MultipleStringLiterals")
 @RequiredArgsConstructor
-@Service
 public class JooqLinkService implements LinkService {
-
-    private final JooqUserRepository jooqUserRepository;
 
     private final JooqLinkRepository jooqLinkRepository;
 
+    private final JooqUserRepository jooqUserRepository;
+
     @Override
-    public LinkResponse add(long userId, URI url) {
-        User user = jooqUserRepository.getUser(userId);
+    public LinkResponse add(long chatId, URI url) {
+        User user = jooqUserRepository.getUserByChatId(chatId);
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
+
         if (!isLinkValid(url)) {
             throw new InvalidParamsException("Link:'" + url + "' is invalid. Use Github's or StackOverflow's links");
         }
-        Link link = jooqLinkRepository.getLinkFromUser(userId, url);
+
+        Link link = jooqLinkRepository.getLinkFromUser(user.getId(), url);
         if (link != null) {
             throw new LinkAlreadyExists("Link:'" + url + "' already exists");
         }
-        return Mapper.executeForObject(jooqLinkRepository.add(userId, url));
+        return Mapper.executeForObject(jooqLinkRepository.add(chatId, url));
     }
 
     @Override
-    public LinkResponse remove(long userId, URI url) {
-        User user = jooqUserRepository.getUser(userId);
+    public LinkResponse remove(long chatId, URI url) {
+        User user = jooqUserRepository.getUserByChatId(chatId);
 
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
+
+        long userId = user.getId();
         Link link = jooqLinkRepository.getLinkFromUser(userId, url);
         if (link == null) {
             throw new NotFoundException("Link:'" + url + "' does not exist");
-        } else {
-            jooqLinkRepository.remove(userId, link);
         }
+
+        jooqLinkRepository.remove(userId, link);
         return Mapper.executeForObject(link);
     }
 
     @Override
-    public ListLinksResponse listAll(long userId) {
-        User user = jooqUserRepository.getUser(userId);
+    public ListLinksResponse listAll(long chatId) {
+        User user = jooqUserRepository.getUserByChatId(chatId);
         if (user == null) {
-            throw new NotFoundException("User with id:'" + userId + "' is not found");
+            throw new NotFoundException("User with id:'" + chatId + "' is not found");
         }
-        return Mapper.executeForList(jooqLinkRepository.findAllUserLinks(userId));
+
+        return Mapper.executeForList(jooqLinkRepository.findAllUserLinks(user.getId()));
     }
 }

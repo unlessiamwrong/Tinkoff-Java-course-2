@@ -4,22 +4,15 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.commands.StartCommand;
-import edu.java.bot.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class StartCommandManager implements CommandManager {
 
     private final TelegramBot bot;
-    private final UserRepository userRepository;
     private final StartCommand startCommand;
-
-    @Autowired StartCommandManager(TelegramBot bot, UserRepository userRepository, StartCommand startCommand) {
-        this.bot = bot;
-        this.userRepository = userRepository;
-        this.startCommand = startCommand;
-    }
 
     @Override
     public String commandName() {
@@ -28,12 +21,8 @@ public class StartCommandManager implements CommandManager {
 
     @Override
     public void startProcess(Message message) {
-        Long chatId = message.chat().id();
-        if (userRepository.get(chatId) != null) {
-            bot.execute(new SendMessage(chatId, "You are already registered. To track link use command /track"));
-        } else {
-            startCommand.execute(chatId);
-            bot.execute(new SendMessage(chatId, "You are successfully registered"));
-        }
+        String result = startCommand.execute(message.chat().id());
+        bot.execute(new SendMessage(message.chat().id(), result));
+
     }
 }

@@ -10,26 +10,21 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Component;
 import static edu.java.domain.jooq.tables.Links.LINKS;
 import static edu.java.domain.jooq.tables.UserLinks.USER_LINKS;
 
 @SuppressWarnings("LineLength")
 @RequiredArgsConstructor
-@Component
 public class JooqLinkRepository {
 
-    private static final int INTERVAL_FOR_CHECK = 5;
+    private static final int INTERVAL_FOR_CHECK = 1;
     private final DSLContext create;
-
     private final JooqUserRepository jooqUserRepository;
-
+    private final GetLinkDataRepository getLinkDataRepository;
     private final GetLinkDataItems getLinkDataItems;
 
-    private final GetLinkDataRepository getLinkDataRepository;
-
-    public Link add(long userId, URI url) {
-        User user = jooqUserRepository.getUser(userId);
+    public Link add(long chatId, URI url) {
+        User user = jooqUserRepository.getUserByChatId(chatId);
         Link link = null;
 
         if (user != null) {
@@ -46,6 +41,7 @@ public class JooqLinkRepository {
                 .where(LINKS.NAME.eq(urlString))
                 .fetchOne()
                 .getId();
+
             if (linkId != null) {
                 link = Link.builder()
                     .id(linkId)
@@ -53,7 +49,7 @@ public class JooqLinkRepository {
                     .lastUpdate(lastUpdateAt)
                     .build();
                 create.insertInto(USER_LINKS)
-                    .set(USER_LINKS.USER_ID, userId)
+                    .set(USER_LINKS.USER_ID, user.getId())
                     .set(USER_LINKS.LINK_ID, linkId)
                     .execute();
             }
@@ -68,7 +64,8 @@ public class JooqLinkRepository {
             .where(USER_LINKS.USER_ID.eq(userId), USER_LINKS.LINK_ID.eq(linkId))
             .execute();
         List<Long> possibleUserLinkRelation =
-            create.selectFrom(USER_LINKS)
+            create.select(USER_LINKS.LINK_ID)
+                .from(USER_LINKS)
                 .where(USER_LINKS.LINK_ID.eq(linkId))
                 .fetchInto(Long.class);
         if (possibleUserLinkRelation.isEmpty()) {
@@ -96,7 +93,8 @@ public class JooqLinkRepository {
     public Link getLinkFromUser(long userId, URI url) {
         String urlString = url.toString();
         List<Long> listLinkIdFromLinks =
-            create.selectFrom(LINKS)
+            create.select(LINKS.ID)
+                .from(LINKS)
                 .where(LINKS.NAME.eq(urlString))
                 .fetchInto(Long.class);
         if (listLinkIdFromLinks.isEmpty()) {

@@ -1,53 +1,32 @@
 package edu.java.scrapper.jdbc;
 
 import edu.java.domain.jdbc.User;
-import edu.java.repositories.jdbc.JdbcUserRepository;
+import edu.java.scrapper.AbstractIntegrationTest;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-public class JdbcUserRepositoryTest extends IntegrationTest {
+public class JdbcUserRepositoryTest extends AbstractIntegrationTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    private JdbcUserRepository jdbcUserRepository;
-
-    @BeforeEach
-    void setUp() {
-        jdbcUserRepository = new JdbcUserRepository(jdbcTemplate);
-    }
-
-    @AfterEach
-    void reset() {
-        jdbcTemplate.update("DELETE FROM users");
-    }
+    private final User user = new User();
 
     @Test
     void whenUse_Add_AddRowToUsers() {
-        //Arrange
-        User user = new User(1);
-
         //Act
         jdbcUserRepository.add(user);
-        Long userId = jdbcTemplate.queryForObject("SELECT id FROM users WHERE id = ?", Long.class, user.getId());
+        var users = jdbcTemplate.queryForList("SELECT * FROM users");
 
         //Assert
-        assertThat(userId).isEqualTo(1);
+        assertThat(users).hasSize(1);
 
     }
 
     @Test
     void whenUse_Remove_DeleteRowFromUsers() {
         //Arrange
-        User user = new User(1);
-        jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", user.getId());
+        jdbcUserRepository.add(user);
+        Long userId = jdbcTemplate.queryForObject("SELECT id FROM users", Long.class);
+        user.setId(userId);
 
         //Act
         jdbcUserRepository.remove(user);
@@ -57,6 +36,7 @@ public class JdbcUserRepositoryTest extends IntegrationTest {
         });
 
         //Assert
+
         assertThat(possibleUser).isEmpty();
 
     }
@@ -64,21 +44,18 @@ public class JdbcUserRepositoryTest extends IntegrationTest {
     @Test
     void whenUse_FindAll_AndUsersExist_ReturnAllFromUsers() {
         //Arrange
-        User userOne = new User(1);
-        User userTwo = new User(2);
-        jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", userOne.getId());
-        jdbcTemplate.update("INSERT INTO users(id) VALUES(?)", userTwo.getId());
+        jdbcUserRepository.add(user);
 
         //Act
         List<User> users = jdbcUserRepository.findAll();
 
         //Assert
-        assertThat(users).hasSize(2);
+        assertThat(users).hasSize(1);
 
     }
 
     @Test
-    void whenUse_FindAll_AndUsersDontExist_ReturnNull() {
+    void whenUse_FindAll_AndUsersDontExist_ReturnEmptyList() {
         //Act
         List<User> users = jdbcUserRepository.findAll();
 

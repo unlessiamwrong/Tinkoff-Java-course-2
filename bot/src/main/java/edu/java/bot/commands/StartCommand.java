@@ -1,20 +1,18 @@
 package edu.java.bot.commands;
 
-import edu.java.bot.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import edu.java.bot.clients.ScrapperClient;
+import edu.java.bot.utilities.others.Mapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
+@RequiredArgsConstructor
 @Order(1)
 public class StartCommand implements TelegramBotCommand {
 
-    private final UserRepository userRepository;
-
-    @Autowired
-    public StartCommand(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final ScrapperClient scrapperClient;
 
     @Override
     public String name() {
@@ -26,7 +24,12 @@ public class StartCommand implements TelegramBotCommand {
         return "Registration";
     }
 
-    public void execute(Long userId) {
-        userRepository.add(userId);
+    public String execute(Long userId) {
+        try {
+            scrapperClient.postUser(userId);
+            return "You are successfully registered";
+        } catch (WebClientResponseException e) {
+            return Mapper.getExceptionMessage(e.getResponseBodyAsString());
+        }
     }
 }
