@@ -42,7 +42,7 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.ObjectNode;
 @SpringBootTest
 @Testcontainers
 @ActiveProfiles("test")
-@Import(TestConfiguration.class)
+@Import(TestConfig.class)
 public abstract class AbstractIntegrationTest {
 
     protected static final WireMockServer wireMockServer = new WireMockServer();

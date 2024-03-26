@@ -8,6 +8,7 @@ import edu.java.utilities.links.GetLinkDataItems;
 import edu.java.utilities.links.GetLinkDataRepository;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,12 @@ public class JdbcLinkRepositoryTest extends AbstractIntegrationTest {
     private final User user = new User(1);
     private final Link link = Link.builder().name("linkStub").build();
 
+    private final DataSet dataSet = new DataSet(
+        OffsetDateTime.of(0, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC),
+        "authorStub",
+        "activityStub"
+    );
+
     @Autowired
     GetLinkDataRepository getLinkDataRepository;
 
@@ -28,12 +35,8 @@ public class JdbcLinkRepositoryTest extends AbstractIntegrationTest {
 
     @BeforeEach
     void setup() {
-        when(getLinkDataRepository.execute("linkStub")).thenReturn(OffsetDateTime.now());
-        when(getLinkDataItems.execute("linkStub")).thenReturn(new DataSet(
-            OffsetDateTime.now(),
-            "authorStub",
-            "activityStub"
-        ));
+        when(getLinkDataRepository.execute("linkStub")).thenReturn(dataSet.dateTime());
+        when(getLinkDataItems.execute("linkStub")).thenReturn(dataSet);
     }
 
     @Test
