@@ -8,6 +8,8 @@ spring:
     name: bot
   jackson:
     time-zone: UTC
+  kafka:
+    bootstrap-servers: localhost:29092
 
 server:
   port: 8080
