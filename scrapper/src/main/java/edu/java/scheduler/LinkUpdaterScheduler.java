@@ -15,11 +15,13 @@ import org.springframework.stereotype.Component;
 public class LinkUpdaterScheduler {
 
     private final LinkUpdater<?> linkUpdater;
-    private final KafkaTemplate<String, List<LinkUpdateRequest>> updateKafkaTemplate;
+    private final KafkaTemplate<String, LinkUpdateRequest> updateKafkaTemplate;
 
     @Scheduled(fixedDelayString = "${app.scheduler.interval}")
     public void update() {
         List<LinkUpdateRequest> updates = linkUpdater.update();
-        updateKafkaTemplate.send("update", updates);
+        for(LinkUpdateRequest update: updates){
+            updateKafkaTemplate.send("update", update);
+        }
     }
 }

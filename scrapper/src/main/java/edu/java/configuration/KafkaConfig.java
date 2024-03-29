@@ -66,7 +66,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, List<LinkUpdateRequest>> updateProducerFactory() {
+    public ProducerFactory<String, LinkUpdateRequest> updateProducerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:29092");
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -77,7 +77,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, List<LinkUpdateRequest>> updateKafkaTemplate() {
+    public KafkaTemplate<String, LinkUpdateRequest> updateKafkaTemplate() {
         return new KafkaTemplate<>(updateProducerFactory());
     }
 

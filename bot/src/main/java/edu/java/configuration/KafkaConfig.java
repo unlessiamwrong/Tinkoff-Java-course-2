@@ -50,7 +50,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, List<LinkUpdateRequest>> updateConsumerFactory() {
+    public ConsumerFactory<String, LinkUpdateRequest> updateConsumerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:29092");
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -60,15 +60,15 @@ public class KafkaConfig {
         return new DefaultKafkaConsumerFactory<>(
             configProps,
             new StringDeserializer(),
-            new JsonDeserializer<List<LinkUpdateRequest>>(List.class)
+            new JsonDeserializer<>(LinkUpdateRequest.class)
         );
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, List<LinkUpdateRequest>>
+    public ConcurrentKafkaListenerContainerFactory<String, LinkUpdateRequest>
     updateKafkaListenerContainerFactory() {
 
-        ConcurrentKafkaListenerContainerFactory<String, List<LinkUpdateRequest>> factory =
+        ConcurrentKafkaListenerContainerFactory<String, LinkUpdateRequest> factory =
             new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(updateConsumerFactory());
         return factory;

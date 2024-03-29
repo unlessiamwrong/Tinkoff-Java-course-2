@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.dto.kafka.Response;
 import edu.java.dto.requests.LinkUpdateRequest;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -23,12 +22,11 @@ public class KafkaMessageListener {
 
     @KafkaListener(id = "id1",
                    topics = "update", containerFactory = "updateKafkaListenerContainerFactory")
-    public void getUpdate(List<LinkUpdateRequest> updates) {
-        for (LinkUpdateRequest linkUpdateRequest : updates) {
-            for (Long userId : linkUpdateRequest.userIds()) {
-                bot.execute(new SendMessage(userId, linkUpdateRequest.description()));
-            }
+    public void getUpdate(LinkUpdateRequest update) {
+        System.out.println(update);
+        for (Long userId : update.userIds()) {
+            bot.execute(new SendMessage(userId, update.description()));
         }
     }
-
 }
+
