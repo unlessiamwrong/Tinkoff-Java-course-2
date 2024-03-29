@@ -2,6 +2,10 @@ package edu.java.configuration;
 
 import edu.java.dto.kafka.Message;
 import edu.java.dto.kafka.Response;
+import edu.java.dto.requests.LinkUpdateRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -16,8 +20,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
-import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 public class KafkaConfig {
@@ -36,6 +38,7 @@ public class KafkaConfig {
             new JsonDeserializer<>(Response.class)
         );
     }
+
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Response>
     responseKafkaListenerContainerFactory() {
@@ -47,13 +50,39 @@ public class KafkaConfig {
     }
 
     @Bean
+    public ConsumerFactory<String, List<LinkUpdateRequest>> updateConsumerFactory() {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:29092");
+        configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
+
+        return new DefaultKafkaConsumerFactory<>(
+            configProps,
+            new StringDeserializer(),
+            new JsonDeserializer<List<LinkUpdateRequest>>(List.class)
+        );
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, List<LinkUpdateRequest>>
+    updateKafkaListenerContainerFactory() {
+
+        ConcurrentKafkaListenerContainerFactory<String, List<LinkUpdateRequest>> factory =
+            new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(updateConsumerFactory());
+        return factory;
+    }
+
+    @Bean
     public ProducerFactory<String, Message> messageProducerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:29092");
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(
             ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-            JsonSerializer.class);
+            JsonSerializer.class
+        );
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
@@ -61,6 +90,5 @@ public class KafkaConfig {
     public KafkaTemplate<String, Message> messageKafkaTemplate() {
         return new KafkaTemplate<>(messageProducerFactory());
     }
-
 
 }
