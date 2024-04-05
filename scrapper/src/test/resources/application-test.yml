@@ -2,3 +2,5 @@ app:
   stackof-base-url: http://localhost:8080/
   github-base-url: http://localhost:8080/
   database-access-type: "jpa"
+  updater-access-type: "kafka"
+

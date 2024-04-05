@@ -5,9 +5,9 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.commands.TrackCommand;
+import edu.java.utilities.others.AnalyzeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import java.net.URI;
 
 @Component
 @RequiredArgsConstructor
@@ -25,12 +25,15 @@ public class TrackCommandManager implements CommandManager {
 
     @Override
     public void startProcess(Message message) {
-        Long userId = message.chat().id();
-        String text = message.text();
-        if (text.equals(COMMAND_NAME)) {
-            bot.execute(new SendMessage(userId, "Please enter your link").replyMarkup(new ForceReply()));
+        String response = trackCommand.execute(message);
+        String errorMessage = AnalyzeResponse.getErrorMessage(response);
+
+        if (errorMessage != null) {
+            bot.execute(new SendMessage(message.chat().id(), errorMessage));
+        } else if (message.text().equals(COMMAND_NAME)) {
+            bot.execute(new SendMessage(message.chat().id(), "Please enter your link").replyMarkup(new ForceReply()));
         } else {
-            trackCommand.execute(userId, URI.create(text));
+            bot.execute(new SendMessage(message.chat().id(), response));
         }
     }
 }

@@ -4,6 +4,7 @@ import edu.java.dto.responses.ApiErrorResponse;
 import edu.java.exceptions.InvalidParamsException;
 import edu.java.exceptions.LinkAlreadyExists;
 import edu.java.exceptions.NotFoundException;
+import edu.java.exceptions.TooManyRequestsException;
 import edu.java.exceptions.UserAlreadyRegisteredException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.TOO_MANY_REQUESTS;
 
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
@@ -20,6 +22,8 @@ public class ExceptionControllerAdvice {
     private static final String NOT_FOUND_CODE = "404";
 
     private static final String CONFLICT_CODE = "409";
+
+    private static final String TOO_MANY_REQUESTS_CODE = "429";
 
     @ExceptionHandler(InvalidParamsException.class)
     public ResponseEntity<ApiErrorResponse> invalidParams(InvalidParamsException ex) {
@@ -43,6 +47,12 @@ public class ExceptionControllerAdvice {
     public ResponseEntity<ApiErrorResponse> notFoundException(NotFoundException ex) {
         ApiErrorResponse response = createError(ex, NOT_FOUND.getReasonPhrase(), NOT_FOUND_CODE);
         return ResponseEntity.status(NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(TooManyRequestsException.class)
+    public ResponseEntity<ApiErrorResponse> tooManyRequests(TooManyRequestsException ex) {
+        ApiErrorResponse response = createError(ex, TOO_MANY_REQUESTS.getReasonPhrase(), TOO_MANY_REQUESTS_CODE);
+        return ResponseEntity.status(TOO_MANY_REQUESTS).body(response);
     }
 
     private ApiErrorResponse createError(Throwable exception, String description, String httpCode) {

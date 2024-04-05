@@ -1,11 +1,11 @@
 package edu.java.commands;
 
 import edu.java.clients.ScrapperClient;
-import edu.java.dto.kafka.Message;
+import edu.java.utilities.others.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.Order;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
 @RequiredArgsConstructor
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 public class StartCommand implements TelegramBotCommand {
 
     private final ScrapperClient scrapperClient;
-    private final KafkaTemplate<String, Message> messageKafkaTemplate;
 
     @Override
     public String name() {
@@ -25,7 +24,13 @@ public class StartCommand implements TelegramBotCommand {
         return "Registration";
     }
 
-    public void execute(Long userId) {
-        messageKafkaTemplate.send("message", new Message(userId, "start", null));
+    public String execute(Long userId) {
+        try {
+            scrapperClient.postUser(userId);
+            return "You are successfully registered";
+        } catch (WebClientResponseException e) {
+            return Mapper.getExceptionMessage(e.getResponseBodyAsString());
+        }
     }
 }
+

@@ -9,7 +9,7 @@ import edu.java.repositories.jooq.JooqLinkRepository;
 import edu.java.repositories.jooq.JooqUserRepository;
 import edu.java.repositories.jpa.JpaLinkRepository;
 import edu.java.repositories.jpa.JpaUserRepository;
-import edu.java.scheduler.LinkUpdaterScheduler;
+import edu.java.scheduler.Scheduler;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -66,7 +66,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     @MockBean
-    protected LinkUpdaterScheduler linkUpdaterScheduler;
+    protected Scheduler scheduler;
     @Autowired
     protected JdbcTemplate jdbcTemplate;
     @Autowired
@@ -98,7 +98,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     @DynamicPropertySource
-    private static void jdbcProperties(DynamicPropertyRegistry registry) {
+    private static void properties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
         registry.add("spring.datasource.username", POSTGRES::getUsername);
         registry.add("spring.datasource.password", POSTGRES::getPassword);

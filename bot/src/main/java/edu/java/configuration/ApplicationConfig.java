@@ -12,7 +12,11 @@ public record ApplicationConfig(
 
     String scrapperBaseUrl,
     String gitHubBaseUrl,
-    String stackOfBaseUrl
+    String stackOfBaseUrl,
+
+    int retryMaxAttempts,
+
+    int retryDelay
 
 ) {
 }

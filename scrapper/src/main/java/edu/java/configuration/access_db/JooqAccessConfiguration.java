@@ -1,4 +1,4 @@
-package edu.java.configuration.access;
+package edu.java.configuration.access_db;
 
 import edu.java.domain.jdbc.Link;
 import edu.java.repositories.jooq.JooqLinkRepository;

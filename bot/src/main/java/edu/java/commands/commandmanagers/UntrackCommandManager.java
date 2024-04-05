@@ -6,7 +6,7 @@ import com.pengrad.telegrambot.model.request.ForceReply;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.commands.ListCommand;
 import edu.java.commands.UntrackCommand;
-import java.net.URI;
+import edu.java.utilities.others.AnalyzeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,12 +26,18 @@ public class UntrackCommandManager implements CommandManager {
 
     @Override
     public void startProcess(Message message) {
-        Long userId = message.chat().id();
-        String text = message.text();
-        if (text.equals(COMMAND_NAME)) {
-            bot.execute(new SendMessage(userId, "Please enter your link to untrack").replyMarkup(new ForceReply()));
+        String listCommandResponse = listCommand.execute(message.chat().id());
+        String errorMessage = AnalyzeResponse.getErrorMessage(listCommandResponse);
+
+        if (errorMessage != null) {
+            bot.execute(new SendMessage(message.chat().id(), errorMessage));
+        } else if (message.text().equals(COMMAND_NAME)) {
+            bot.execute(new SendMessage(
+                message.chat().id(),
+                "Please choose link to untrack. \n" + listCommandResponse
+            ).replyMarkup(new ForceReply()));
         } else {
-            untrackCommand.execute(userId, URI.create(text));
+            bot.execute(new SendMessage(message.chat().id(), untrackCommand.execute(message)));
         }
     }
 }

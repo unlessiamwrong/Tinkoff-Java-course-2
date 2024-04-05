@@ -7,6 +7,10 @@ app:
   github-base-url: https://api.github.com
   stackof-base-url: https://api.stackexchange.com
   database-access-type: "jpa"
+  updater-access-type: "kafka"
+  retry-max-attempts: 2
+  retry-delay: 100
+
 
 spring:
   application:
@@ -19,6 +23,27 @@ spring:
     enabled: false
   kafka:
     bootstrap-servers: localhost:29092
+
+
+  cache:
+    cache-names: rate-limit-bucket
+    caffeine:
+      spec: maximumSize=50000,expireAfterAccess=3600s
+
+bucket4j:
+  enabled: true
+  filters:
+    - cache-name: rate-limit-bucket
+      url: .*
+      strategy: first
+      http-status-code: TOO_MANY_REQUESTS
+      http-response-body: "{\"exceptionMessage\": \"You have exhausted your API Request Quota\"}"
+      rate-limits:
+        - cache-key: getRemoteAddr()
+          bandwidths:
+            - capacity: 5
+              time: 1
+              unit: minutes
 
 
 server:

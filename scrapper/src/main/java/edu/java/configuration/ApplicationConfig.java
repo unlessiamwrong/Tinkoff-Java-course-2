@@ -1,6 +1,7 @@
 package edu.java.configuration;
 
-import edu.java.configuration.access.AccessType;
+import edu.java.configuration.access_db.AccessTypeDb;
+import edu.java.configuration.access_updater.AccessTypeUpdater;
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,7 +15,12 @@ public record ApplicationConfig(
     String botBaseUrl,
     String gitHubBaseUrl,
     String stackOfBaseUrl,
-    AccessType databaseAccessType
+    AccessTypeDb databaseAccessType,
+
+    AccessTypeUpdater updaterAccessType,
+    int retryMaxAttempts,
+
+    int retryDelay
 ) {
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }

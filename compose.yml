@@ -50,11 +50,11 @@ services:
       kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic message --replication-factor 1 --partitions 2
       kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic response --replication-factor 1 --partitions 2
       kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic update --replication-factor 1 --partitions 2
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic update_dlq --replication-factor 1 --partitions 2
 
       echo -e 'Successfully created the following topics:'
       kafka-topics --bootstrap-server kafka:9092 --list
       "
-
 
   liquibase-migrations:
     image: liquibase/liquibase:4.25
@@ -71,6 +71,7 @@ services:
       - ./migrations:/liquibase/changelog
     networks:
       - backend
+
 
 volumes:
   postgresql: { }

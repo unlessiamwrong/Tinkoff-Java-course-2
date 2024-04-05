@@ -16,7 +16,6 @@ import edu.java.utilities.links.GetLinkDataRepository;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import static edu.java.utilities.links.LinkChecker.isLinkValid;

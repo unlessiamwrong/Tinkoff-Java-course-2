@@ -1,4 +1,4 @@
-package edu.java.configuration.access;
+package edu.java.configuration.access_db;
 
 import edu.java.domain.jpa.Link;
 import edu.java.repositories.jpa.JpaLinkRepository;

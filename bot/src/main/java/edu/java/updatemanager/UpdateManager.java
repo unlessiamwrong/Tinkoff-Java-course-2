@@ -13,11 +13,18 @@ public class UpdateManager {
 
     private final TelegramBot bot;
 
+    public void sendUpdate(LinkUpdateRequest linkUpdateRequest) {
+        for (Long userId : linkUpdateRequest.userIds()) {
+            bot.execute(new SendMessage(userId, linkUpdateRequest.description()));
+        }
+    }
+
     public void sendUpdates(List<LinkUpdateRequest> linkUpdateRequests) {
-        for (LinkUpdateRequest linkUpdateRequest : linkUpdateRequests) {
-            for (Long userId : linkUpdateRequest.userIds()) {
-                bot.execute(new SendMessage(userId, linkUpdateRequest.description()));
+        for (LinkUpdateRequest update : linkUpdateRequests) {
+            for (Long userId : update.userIds()) {
+                bot.execute(new SendMessage(userId, update.description()));
             }
         }
     }
+
 }

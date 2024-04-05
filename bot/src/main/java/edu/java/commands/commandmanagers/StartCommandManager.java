@@ -21,7 +21,7 @@ public class StartCommandManager implements CommandManager {
 
     @Override
     public void startProcess(Message message) {
-        startCommand.execute(message.chat().id());
-
+        String response = startCommand.execute(message.chat().id());
+        bot.execute(new SendMessage(message.chat().id(), response));
     }
 }

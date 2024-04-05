@@ -23,6 +23,15 @@ public class ListCommandManager implements CommandManager {
 
     @Override
     public void startProcess(Message message) {
-        listCommand.execute(message.chat().id());
+        String response = listCommand.execute(message.chat().id());
+        String errorMessage = AnalyzeResponse.getErrorMessage(response);
+
+        if (errorMessage != null) {
+            bot.execute(new SendMessage(message.chat().id(), errorMessage));
+        } else if (response.equals("Your current tracked links: \n")) {
+            bot.execute(new SendMessage(message.chat().id(), "List is empty. You can add links with command /track"));
+        } else {
+            bot.execute(new SendMessage(message.chat().id(), response));
+        }
     }
 }

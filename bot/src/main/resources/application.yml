@@ -1,15 +1,20 @@
 app:
   telegram-token: ${TELEGRAM_TOKEN}
   scrapper-base-url: http://localhost:8090/
-
+  retry-max-attempts: 2
+  retry-delay: 100
 
 spring:
   application:
-    name: bot
+    name: bot, scrapper
   jackson:
     time-zone: UTC
   kafka:
     bootstrap-servers: localhost:29092
+  docker:
+    compose:
+      enabled: true
+      file: compose.yml
 
 server:
   port: 8080
