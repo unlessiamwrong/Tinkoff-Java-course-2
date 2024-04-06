@@ -1,6 +1,7 @@
 package edu.java.scrapper;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import edu.java.clients.BotClient;
 import edu.java.clients.GitHubClient;
 import edu.java.clients.StackOfClient;
 import edu.java.repositories.jdbc.JdbcLinkRepository;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
@@ -47,7 +49,8 @@ public abstract class AbstractIntegrationTest {
 
     protected static final WireMockServer wireMockServer = new WireMockServer();
     protected static PostgreSQLContainer<?> POSTGRES;
-    protected static ObjectNode jsonResponseAsObject = JsonNodeFactory.instance.objectNode().put("stub", "stub")
+    protected static ObjectNode jsonResponseAsObject = JsonNodeFactory.instance.objectNode()
+        .put("stub", "stub")
         .put("stub", "stub");
 
     static {
@@ -67,14 +70,16 @@ public abstract class AbstractIntegrationTest {
 
     @MockBean
     protected Scheduler scheduler;
+    @SpyBean
+    protected BotClient botClient;
+    @SpyBean
+    protected StackOfClient stackOfClient;
+    @SpyBean
+    protected GitHubClient gitHubClient;
     @Autowired
     protected JdbcTemplate jdbcTemplate;
     @Autowired
     protected DSLContext context;
-    @Autowired
-    protected StackOfClient stackOfClient;
-    @Autowired
-    protected GitHubClient gitHubClient;
     @Autowired
     protected JpaUserRepository jpaUserRepository;
     @Autowired
