@@ -11,7 +11,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -58,8 +57,6 @@ public class StackOfClientTest extends AbstractIntegrationTest {
     public void whenUse_GetQuestion_AndServerReturnsException_RetryIsWorking() {
         //Arrange
         stubFor(get(urlEqualTo("/questions/test?site=stackoverflow"))
-            .inScenario("exception")
-            .whenScenarioStateIs(STARTED)
             .willReturn(aResponse().withStatus(500)));
 
         //Act
@@ -74,8 +71,6 @@ public class StackOfClientTest extends AbstractIntegrationTest {
         //Arrange
         stubFor(get(urlEqualTo(
             "/questions/test/answers?order=desc&sort=activity&site=stackoverflow"))
-            .inScenario("exception")
-            .whenScenarioStateIs(STARTED)
             .willReturn(aResponse().withStatus(500)));
         //Act
         assertThrows(WebClientException.class, () -> stackOfClient

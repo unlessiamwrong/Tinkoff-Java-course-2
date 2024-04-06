@@ -14,7 +14,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -62,8 +61,6 @@ public class GitHubClientTest extends AbstractIntegrationTest {
     public void whenUse_GetRepository_AndServerReturnsException_RetryIsWorking() {
         //Arrange
         stubFor(get(urlEqualTo("/repos/test/test"))
-            .inScenario("exception")
-            .whenScenarioStateIs(STARTED)
             .willReturn(aResponse().withStatus(500)));
 
         //Act
@@ -77,8 +74,6 @@ public class GitHubClientTest extends AbstractIntegrationTest {
     public void whenUse_GetCommits_AndServerReturnsException_RetryIsWorking() {
         //Arrange
         stubFor(get(urlEqualTo("/repos/test/test/commits"))
-            .inScenario("exception")
-            .whenScenarioStateIs(STARTED)
             .willReturn(aResponse().withStatus(500)));
 
         //Act
