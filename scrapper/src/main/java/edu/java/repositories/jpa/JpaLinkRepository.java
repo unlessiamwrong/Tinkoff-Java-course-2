@@ -15,18 +15,18 @@ public interface JpaLinkRepository extends JpaRepository<Link, Long> {
 
     Link findByNameLike(String urlString);
 
-    @EntityGraph(attributePaths = "userLinks")
+    @EntityGraph(attributePaths = "linkUsers")
     @Query("SELECT l FROM Link l WHERE l.lastCheckForUpdate IS NULL OR l.lastCheckForUpdate < :date")
     List<Link> findLinksByLastCheckForUpdateIsNullOrLessThanDate(@Param("date") OffsetDateTime date);
 
-    @EntityGraph(attributePaths = "userLinks")
+    @EntityGraph(attributePaths = "linkUsers")
     @Query("SELECT l.id FROM User u JOIN u.userLinks l WHERE u.id <> :userId AND l.id = :linkId")
     List<Long> findLinkIdsByLinkIdFromOtherUsers(
         @Param("userId") Long userId,
         @Param("linkId") Long linkId
     );
 
-    @EntityGraph(attributePaths = "userLinks")
+    @EntityGraph(attributePaths = "linkUsers")
     @Query("SELECT u FROM User u JOIN u.userLinks l WHERE l.id = :linkId")
     List<User> findUsersByLinkId(@Param("linkId") Long linkId);
 

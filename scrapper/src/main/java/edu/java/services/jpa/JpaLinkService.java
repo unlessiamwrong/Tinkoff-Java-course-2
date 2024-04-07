@@ -57,7 +57,7 @@ public class JpaLinkService implements LinkService {
         Long linkId;
         Link possibleLinkFromLinks = jpaLinkRepository.findByNameLike(urlString);
         if (possibleLinkFromLinks == null) {
-            jpaLinkRepository.saveAndFlush(link);
+            jpaLinkRepository.save(link);
             linkId = link.getId();
         } else {
             linkId = possibleLinkFromLinks.getId();

@@ -5,6 +5,7 @@ import edu.java.domain.jpa.User;
 import edu.java.dto.requests.LinkUpdateRequest;
 import edu.java.repositories.jpa.JpaLinkRepository;
 import edu.java.services.LinkUpdater;
+import edu.java.utilities.ConvertDateTime;
 import edu.java.utilities.links.DataSet;
 import edu.java.utilities.links.GetLinkDataItems;
 import java.net.URI;
@@ -53,7 +54,7 @@ public class JpaLinkUpdater implements LinkUpdater<Link> {
         String linkUrl = link.getName();
         String message =
             linkUrl + " is updated with " + dataSet.activityType() + " by " + dataSet.authorName()
-                + " at " + currentDateTime;
+                + " at " + ConvertDateTime.execute(currentDateTime) + " (GMT+3)";
 
         jpaLinkRepository.updateLinkWithLastUpdateAndLastCheckForUpdate(
             link.getId(),
@@ -67,7 +68,7 @@ public class JpaLinkUpdater implements LinkUpdater<Link> {
             message,
             jpaLinkRepository.findUsersByLinkId(link.getId())
                 .stream()
-                .map(User::getId)
+                .map(User::getChatId)
                 .toList()
 
         );

@@ -2,21 +2,19 @@ package edu.java.scrapper.jpa;
 
 import edu.java.domain.jpa.User;
 import edu.java.scrapper.AbstractIntegrationTest;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
-
 
 public class JpaUserRepositoryTest extends AbstractIntegrationTest {
 
     private final User user = new User();
 
     @BeforeEach
-    void setupChatId(){
+    void setupChatId() {
         user.setChatId(1L);
     }
-
 
     @Test
     void whenUse_Add_AddRowToUsers() {

@@ -21,22 +21,19 @@ import static org.mockito.Mockito.when;
 
 public class JooqLinkRepositoryTest extends AbstractIntegrationTest {
 
-    @Autowired
-    GetLinkDataRepository getLinkDataRepository;
-
-    @Autowired
-    GetLinkDataItems getLinkDataItems;
-
     private final User user = new User(1);
     private final Link link = Link.builder()
         .name("linkStub")
         .build();
-
     private final DataSet dataSet = new DataSet(
         OffsetDateTime.of(0, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC),
         "authorStub",
         "activityStub"
     );
+    @Autowired
+    GetLinkDataRepository getLinkDataRepository;
+    @Autowired
+    GetLinkDataItems getLinkDataItems;
 
     @BeforeEach
     void setup() {

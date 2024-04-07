@@ -1,4 +1,55 @@
 app:
+  bot-base-url: http://localhost:8080/
   stackof-base-url: http://localhost:8080/
   github-base-url: http://localhost:8080/
   database-access-type: "jpa"
+  updater-access-type: "kafka"
+  retry-max-attempts: 2
+  retry-delay: 100
+
+
+
+spring:
+  application:
+    name: scrapper
+  datasource:
+    url: jdbc:postgresql://localhost:5437/scrapper
+    username: postgres
+    password: postgres
+  liquibase:
+    enabled: false
+  kafka:
+    bootstrap-servers: localhost:29092
+
+
+  cache:
+    cache-names: rate-limit-bucket
+    caffeine:
+      spec: maximumSize=50000,expireAfterAccess=3600s
+
+bucket4j:
+  enabled: true
+  filters:
+    - cache-name: rate-limit-bucket
+      url: .*
+      strategy: first
+      http-status-code: TOO_MANY_REQUESTS
+      http-response-body: "{\"exceptionMessage\": \"You have exhausted your API Request Quota\"}"
+      rate-limits:
+        - cache-key: getRemoteAddr()
+          bandwidths:
+            - capacity: 5
+              time: 1
+              unit: minutes
+
+
+server:
+  port: 8090
+
+logging:
+  config: classpath:log4j2-plain.xml
+
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
