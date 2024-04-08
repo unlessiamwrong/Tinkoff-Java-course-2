@@ -16,6 +16,27 @@ spring:
       enabled: true
       file: compose.yml
 
+management:
+  server:
+    port: 8081
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: /
+      exposure:
+        include: ["info", "health", "prometheus"]
+      path-mapping:
+        prometheus: metrics
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics.tags:
+    application: ${spring.application.name}
+
 server:
   port: 8080
 
