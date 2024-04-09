@@ -10,6 +10,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.support.serializer.JsonSerializer;
@@ -33,7 +34,7 @@ public class KafkaConsumerTest {
         kafkaOne.start();
     }
 
-    @MockBean
+    @Mock
     PrometheusMeterRegistry prometheusMeterRegistry;
     @MockBean
     private TelegramBot bot;
