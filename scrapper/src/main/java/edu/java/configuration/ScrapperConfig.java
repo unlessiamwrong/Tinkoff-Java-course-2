@@ -6,6 +6,8 @@ import edu.java.utilities.links.GetLinkDataItems;
 import edu.java.utilities.links.GetLinkDataRepository;
 import edu.java.utilities.parser.GitHubLinkParser;
 import edu.java.utilities.parser.StackOfLinkParser;
+import io.micrometer.prometheus.PrometheusConfig;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 import lombok.RequiredArgsConstructor;
 import org.jooq.conf.RenderQuotedNames;
 import org.jooq.impl.DefaultConfiguration;
@@ -47,6 +49,11 @@ public class ScrapperConfig {
             .withRenderSchema(false)
             .withRenderFormatted(true)
             .withRenderQuotedNames(RenderQuotedNames.NEVER);
+    }
+
+    @Bean
+    public PrometheusMeterRegistry prometheusMeterRegistry(){
+        return new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
     }
 
 }
