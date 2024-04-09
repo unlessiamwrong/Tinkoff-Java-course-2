@@ -52,7 +52,7 @@ public class ScrapperConfig {
     }
 
     @Bean
-    public PrometheusMeterRegistry prometheusMeterRegistry(){
+    public PrometheusMeterRegistry prometheusMeterRegistry() {
         return new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
     }
 

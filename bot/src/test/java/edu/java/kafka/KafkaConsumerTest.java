@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import edu.java.dto.requests.LinkUpdateRequest;
 import java.util.HashMap;
 import java.util.Map;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -32,6 +33,8 @@ public class KafkaConsumerTest {
         kafkaOne.start();
     }
 
+    @MockBean
+    PrometheusMeterRegistry prometheusMeterRegistry;
     @MockBean
     private TelegramBot bot;
 

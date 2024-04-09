@@ -3,6 +3,7 @@ package edu.java.commands;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
@@ -20,6 +22,8 @@ public abstract class AbstractIntegrationCommandsTest {
 
     private static final WireMockServer wireMockServer = new WireMockServer();
 
+    @MockBean
+    PrometheusMeterRegistry prometheusMeterRegistry;
     @Mock
     protected Message message;
     @Mock

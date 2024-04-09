@@ -14,6 +14,7 @@ import edu.java.scheduler.Scheduler;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -68,6 +69,9 @@ public abstract class AbstractIntegrationTest {
 
     }
 
+
+    @MockBean
+    PrometheusMeterRegistry prometheusMeterRegistry;
     @MockBean
     protected Scheduler scheduler;
     @SpyBean
