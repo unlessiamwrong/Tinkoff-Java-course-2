@@ -3,6 +3,7 @@ package edu.java.commands;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,6 +21,8 @@ public abstract class AbstractIntegrationCommandsTest {
 
     private static final WireMockServer wireMockServer = new WireMockServer();
 
+    @Mock
+    PrometheusMeterRegistry prometheusMeterRegistry;
     @Mock
     protected Message message;
     @Mock

@@ -6,10 +6,13 @@ import edu.java.dto.responses.LinkResponse;
 import edu.java.dto.responses.ListLinksResponse;
 import edu.java.services.LinkService;
 import edu.java.services.UserService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +25,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ScrapperController {
 
+    private final Counter requestsCounter;
     private final UserService userService;
     private final LinkService linkService;
+
+    @Autowired
+    public ScrapperController(
+        UserService userService,
+        LinkService linkService,
+        PrometheusMeterRegistry prometheusMeterRegistry
+    ) {
+        this.userService = userService;
+        this.linkService = linkService;
+        requestsCounter = prometheusMeterRegistry.counter("requestsCounter");
+    }
 
     /**
      * Register chat
@@ -39,6 +54,7 @@ public class ScrapperController {
     )
     @PostMapping("/users/{id}")
     public void postUser(@PathVariable("id") long id) {
+        requestsCounter.increment();
         userService.add(id);
     }
 
@@ -57,6 +73,7 @@ public class ScrapperController {
     )
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable("id") long id) {
+        requestsCounter.increment();
         userService.remove(id);
     }
 
@@ -75,6 +92,7 @@ public class ScrapperController {
     )
     @GetMapping("/links")
     public ListLinksResponse getLinks(@RequestParam long userId) {
+        requestsCounter.increment();
         return linkService.listAll(userId);
 
     }
@@ -95,6 +113,7 @@ public class ScrapperController {
     )
     @PostMapping("/links")
     public LinkResponse postLink(@RequestParam long userId, @RequestBody @Valid AddLinkRequest addLinkRequest) {
+        requestsCounter.increment();
         return linkService.add(userId, addLinkRequest.link());
 
     }
@@ -119,6 +138,7 @@ public class ScrapperController {
         @RequestParam long userId,
         @RequestBody @Valid RemoveLinkRequest removeLinkRequest
     ) {
+        requestsCounter.increment();
         return linkService.remove(userId, removeLinkRequest.link());
     }
 

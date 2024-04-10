@@ -24,7 +24,6 @@ spring:
   kafka:
     bootstrap-servers: localhost:29092
 
-
   cache:
     cache-names: rate-limit-bucket
     caffeine:
@@ -41,10 +40,30 @@ bucket4j:
       rate-limits:
         - cache-key: getRemoteAddr()
           bandwidths:
-            - capacity: 5
+            - capacity: 100
               time: 1
               unit: minutes
 
+management:
+  server:
+    port: 8091
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: /
+      exposure:
+        include: ["info", "health", "prometheus"]
+      path-mapping:
+        prometheus: metrics
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics.tags:
+    application: ${spring.application.name}
 
 server:
   port: 8090

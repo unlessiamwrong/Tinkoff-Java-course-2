@@ -13,6 +13,7 @@ import edu.java.commands.commandmanagers.ListCommandManager;
 import edu.java.commands.commandmanagers.StartCommandManager;
 import edu.java.commands.commandmanagers.TrackCommandManager;
 import edu.java.commands.commandmanagers.UntrackCommandManager;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,6 +25,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 @ExtendWith(MockitoExtension.class)
 public abstract class AbstractIntegrationManagersTest {
 
+    @Mock
+    PrometheusMeterRegistry prometheusMeterRegistry;
     @Mock
     protected Message message;
     @Mock

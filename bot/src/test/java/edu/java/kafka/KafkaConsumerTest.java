@@ -4,11 +4,13 @@ import com.pengrad.telegrambot.TelegramBot;
 import edu.java.dto.requests.LinkUpdateRequest;
 import java.util.HashMap;
 import java.util.Map;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.support.serializer.JsonSerializer;
@@ -32,6 +34,8 @@ public class KafkaConsumerTest {
         kafkaOne.start();
     }
 
+    @Mock
+    PrometheusMeterRegistry prometheusMeterRegistry;
     @MockBean
     private TelegramBot bot;
 

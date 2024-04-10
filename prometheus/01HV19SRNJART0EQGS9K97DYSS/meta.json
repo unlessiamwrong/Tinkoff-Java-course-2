@@ -1,0 +1,17 @@
+{
+	"ulid": "01HV19SRNJART0EQGS9K97DYSS",
+	"minTime": 1712651243098,
+	"maxTime": 1712656800000,
+	"stats": {
+		"numSamples": 284919,
+		"numSeries": 308,
+		"numChunks": 2340
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01HV19SRNJART0EQGS9K97DYSS"
+		]
+	},
+	"version": 1
+}
