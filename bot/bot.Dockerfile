@@ -1,5 +1,11 @@
-FROM openjdk:21
-
+FROM openjdk:21 as builder
 COPY target/bot.jar bot.jar
+RUN java -Djarmode=layertools -jar bot.jar extract
 
-ENTRYPOINT ["java","-jar","bot.jar"]
+FROM openjdk:21
+COPY --from=builder dependencies/ ./
+COPY --from=builder snapshot-dependencies/ ./
+COPY --from=builder spring-boot-loader/ ./
+COPY --from=builder application/ ./
+
+ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
